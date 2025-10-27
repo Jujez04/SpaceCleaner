@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef VERTEX_H
-#define VERTEX_H
-
 #include <glad/glad.h>
 
 namespace vrtx {
@@ -59,5 +56,3 @@ namespace vrtx {
 
 
 }
-
-#endif

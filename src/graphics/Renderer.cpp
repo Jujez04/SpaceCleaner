@@ -1,10 +1,18 @@
 #include "graphics/Renderer.h"
+
+#include <memory>
+
 #include "graphics/MeshManager.h"
 #include "graphics/ShaderHandler.h"
 #include "graphics/ShaderManager.h"
 #include "graphics/Vertex.h"
-#include <memory>
 
+/**
+* Construttore del Renderer, in pratica inizializza tutto il processo di rendering
+* tramite vertex buffer, vertex array e shader.
+* @param vertices vertici da disegnare
+* @param size dimensione dei vertici
+*/
 Renderer::Renderer(const float* vertices, size_t size) {
 	setup(vertices, size);
 	std::string vertexPath = "resources/vertex.glsl";
@@ -12,12 +20,6 @@ Renderer::Renderer(const float* vertices, size_t size) {
 	shader = std::make_unique<Shader>(vertexPath, fragmentPath);
 	vertexBuffer->unbind();
 	vertexArray->unbind();
-}
-
-void Renderer::draw(unsigned int vertexCount) const {
-	shader->use();
-	vertexArray->bind();
-	glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 }
 
 void Renderer::setup(const float* vertices, size_t size) {
@@ -28,5 +30,11 @@ void Renderer::setup(const float* vertices, size_t size) {
 	vertexBuffer->setData(vertices, size);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	//Chiama la shader
 }
+
+void Renderer::draw(unsigned int vertexCount) const {
+	shader->use();
+	vertexArray->bind();
+	glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+}
+

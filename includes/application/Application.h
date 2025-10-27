@@ -1,9 +1,6 @@
 #pragma once
 #include <memory>
 
-#ifndef APPLICATION_H
-#define APPLICATION_H
-
 class Window;
 class Renderer;
 
@@ -21,5 +18,3 @@ private:
     void update();
     void rendering();
 };
-
-#endif
