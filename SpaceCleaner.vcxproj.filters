@@ -105,7 +105,7 @@
     <ClCompile Include="src\scene\SceneManager.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\Shader.cpp">
+    <ClCompile Include="src\core\Shader.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\core\entities\SpaceCleaner.cpp">
@@ -123,19 +123,22 @@
     <ClCompile Include="src\scene\Window.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\Mesh.cpp">
+    <ClCompile Include="src\core\Mesh.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\Users\justi\Downloads\Laboratorio I-20250926\LaboratorioI\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\IndexBuffer.cpp">
+    <ClCompile Include="src\graphics\MeshManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\VertexBuffer.cpp">
+    <ClCompile Include="src\graphics\ShaderManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\VertexArray.cpp">
+    <ClCompile Include="src\graphics\ShaderHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -197,7 +200,7 @@
     <ClInclude Include="includes\scene\SceneManager.h">
       <Filter>Header Files\scene</Filter>
     </ClInclude>
-    <ClInclude Include="includes\graphics\Shader.h">
+    <ClInclude Include="includes\core\Shader.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="includes\core\entities\SpaceCleaner.h">
@@ -215,17 +218,23 @@
     <ClInclude Include="includes\scene\Window.h">
       <Filter>Header Files\scene</Filter>
     </ClInclude>
-    <ClInclude Include="includes\graphics\Mesh.h">
+    <ClInclude Include="includes\core\Mesh.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="includes\graphics\IndexBuffer.h">
+    <ClInclude Include="includes\graphics\MeshManager.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="includes\graphics\VertexArray.h">
+    <ClInclude Include="includes\graphics\Vertex.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="includes\graphics\VertexBuffer.h">
-      <Filter>Header Files\graphics</Filter>
+    <ClInclude Include="includes\graphics\ShaderManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\graphics\ShaderHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\Utilities.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

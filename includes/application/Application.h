@@ -5,15 +5,17 @@
 #define APPLICATION_H
 
 class Window;
+class Renderer;
 
 class Application {
 public:
     Application();
     ~Application();
-    void run();
+    void init();
 
 private:
     std::unique_ptr<Window> window;
+    std::unique_ptr<Renderer> renderer;
     void gameLoop();
     void processInput();
     void update();

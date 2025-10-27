@@ -6,7 +6,7 @@ int main() {
 		throw std::runtime_error("Failded to initialize GLFW");
 	}
 	std::unique_ptr<Application> app = std::make_unique<Application>();
-	app->run();
+	app->init();
 	glfwTerminate();
 	return 0;
 }
