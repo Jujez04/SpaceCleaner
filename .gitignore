@@ -1,0 +1,86 @@
+# ===========================
+# Visual Studio specific
+# ===========================
+.vs/
+*.VC.db
+*.VC.VC.opendb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.opensdf
+*.sdf
+*.cachefile
+*.db
+*.db-shm
+*.db-wal
+
+# ===========================
+# Build directories
+# ===========================
+build/
+bin/
+obj/
+Debug/
+Release/
+x64/
+x86/
+[Bb]uild*/
+[Dd]ebug*/
+[Rr]elease*/
+
+# ===========================
+# C++ generated / compiled files
+# ===========================
+*.obj
+*.pch
+*.pdb
+*.idb
+*.ipch
+*.res
+*.o
+*.so
+*.exe
+*.dll
+*.lib
+*.a
+*.out
+*.ilk
+*.iobj
+*.ipdb
+
+# ===========================
+# CMake specific (if used)
+# ===========================
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# ===========================
+# Editor / OS temporary files
+# ===========================
+*.log
+*.tmp
+*.swp
+*.bak
+*.DS_Store
+*.Thumbs.db
+
+# ===========================
+# JetBrains / VSCode / other IDEs
+# ===========================
+.idea/
+.vscode/
+*.code-workspace
+
+# ===========================
+# GitHub Copilot / AI index files
+# ===========================
+CopilotIndices/
+
+# ===========================
+# Precompiled headers (VS)
+# ===========================
+ipch/
