@@ -141,17 +141,17 @@
     <ClCompile Include="src\core\entities\Obstacle.cpp" />
     <ClCompile Include="src\core\entities\SpaceCleaner.cpp" />
     <ClCompile Include="src\graphics\MeshManager.cpp" />
-    <ClCompile Include="src\core\Mesh.cpp" />
+    <ClCompile Include="src\graphics\Mesh.cpp" />
     <ClCompile Include="src\graphics\ShaderHandler.cpp" />
     <ClCompile Include="src\graphics\ShaderManager.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
     <ClCompile Include="src\scene\SceneManager.cpp" />
     <ClCompile Include="src\ui-debug\UISystem.cpp" />
-    <ClCompile Include="src\core\ResourceManager.cpp" />
+    <ClCompile Include="src\application\ResourceManager.cpp" />
     <ClCompile Include="src\core\Timer.cpp" />
-    <ClCompile Include="src\scene\Window.cpp" />
+    <ClCompile Include="src\application\Window.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />
-    <ClCompile Include="src\core\Shader.cpp" />
+    <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\LaunchApp.cpp" />
     <ClCompile Include="src\Utilities.cpp" />
   </ItemGroup>
@@ -173,18 +173,18 @@
     <ClInclude Include="includes\core\entities\Obstacle.h" />
     <ClInclude Include="includes\core\entities\SpaceCleaner.h" />
     <ClInclude Include="includes\graphics\MeshManager.h" />
-    <ClInclude Include="includes\core\Mesh.h" />
+    <ClInclude Include="includes\graphics\Mesh.h" />
     <ClInclude Include="includes\graphics\ShaderHandler.h" />
     <ClInclude Include="includes\graphics\ShaderManager.h" />
     <ClInclude Include="includes\graphics\Vertex.h" />
     <ClInclude Include="includes\scene\Scene.h" />
     <ClInclude Include="includes\scene\SceneManager.h" />
     <ClInclude Include="includes\ui-debug\UISystem.h" />
-    <ClInclude Include="includes\core\ResourceManager.h" />
+    <ClInclude Include="includes\application\ResourceManager.h" />
     <ClInclude Include="includes\core\Timer.h" />
-    <ClInclude Include="includes\scene\Window.h" />
+    <ClInclude Include="includes\application\Window.h" />
     <ClInclude Include="includes\graphics\Renderer.h" />
-    <ClInclude Include="includes\core\Shader.h" />
+    <ClInclude Include="includes\graphics\Shader.h" />
     <ClInclude Include="includes\LaunchApp.h" />
     <ClInclude Include="includes\Utilities.h" />
   </ItemGroup>

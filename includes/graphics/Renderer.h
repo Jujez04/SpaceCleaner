@@ -1,10 +1,8 @@
 #pragma once
 #include <memory>
 #include <glad/glad.h>
-#include <core/Shader.h>
-#include <graphics/Vertex.h>
 
-class ShaderHandler;
+class Shader;
 
 namespace vrtx {
 	class VertexArray;
@@ -15,7 +13,7 @@ class Renderer {
 public:
 	Renderer() = default;
 	Renderer(const float* vertices, size_t size);
-	~Renderer() = default;
+	~Renderer();
 
 	void setup(const float* vertices, size_t size);
 

@@ -1,4 +1,4 @@
-#include "core/Shader.h"
+#include "graphics/Shader.h"
 #include "Utilities.h"
 
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) {

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef SHADER_H
-#define SHADER_H
 
 #include <string>
 #include <glm/vec4.hpp>
@@ -27,5 +25,3 @@ public:
 		return id;
 	}
 };
-
-#endif

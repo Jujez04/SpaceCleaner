@@ -1,11 +1,13 @@
 #include "application/Application.h"
-#include "scene/Window.h"
+
 #include <memory>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stdexcept>
+
+#include "application/Window.h"
 #include "graphics/Vertex.h"
-#include "core/Shader.h"
+#include "graphics/Shader.h"
 
 Application::Application() {}
 

@@ -3,8 +3,7 @@
 #include <memory>
 
 #include "graphics/MeshManager.h"
-#include "graphics/ShaderHandler.h"
-#include "graphics/ShaderManager.h"
+#include "graphics/Shader.h"
 #include "graphics/Vertex.h"
 
 /**
@@ -21,6 +20,11 @@ Renderer::Renderer(const float* vertices, size_t size) {
 	vertexBuffer->unbind();
 	vertexArray->unbind();
 }
+
+/**
+* Distruttore di default
+*/
+Renderer::~Renderer() = default;
 
 void Renderer::setup(const float* vertices, size_t size) {
 	vertexArray = std::make_unique<vrtx::VertexArray>();

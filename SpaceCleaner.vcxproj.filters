@@ -96,7 +96,7 @@
     <ClCompile Include="src\graphics\Renderer.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\ResourceManager.cpp">
+    <ClCompile Include="src\application\ResourceManager.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
     <ClCompile Include="src\scene\Scene.cpp">
@@ -105,7 +105,7 @@
     <ClCompile Include="src\scene\SceneManager.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\Shader.cpp">
+    <ClCompile Include="src\graphics\Shader.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\core\entities\SpaceCleaner.cpp">
@@ -120,10 +120,10 @@
     <ClCompile Include="src\LaunchApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\scene\Window.cpp">
+    <ClCompile Include="src\application\Window.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\Mesh.cpp">
+    <ClCompile Include="src\graphics\Mesh.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\Users\justi\Downloads\Laboratorio I-20250926\LaboratorioI\glad.c">
@@ -191,7 +191,7 @@
     <ClInclude Include="includes\graphics\Renderer.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="includes\core\ResourceManager.h">
+    <ClInclude Include="includes\application\ResourceManager.h">
       <Filter>Header Files\core</Filter>
     </ClInclude>
     <ClInclude Include="includes\scene\Scene.h">
@@ -200,7 +200,7 @@
     <ClInclude Include="includes\scene\SceneManager.h">
       <Filter>Header Files\scene</Filter>
     </ClInclude>
-    <ClInclude Include="includes\core\Shader.h">
+    <ClInclude Include="includes\graphics\Shader.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="includes\core\entities\SpaceCleaner.h">
@@ -215,10 +215,10 @@
     <ClInclude Include="includes\LaunchApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="includes\scene\Window.h">
+    <ClInclude Include="includes\application\Window.h">
       <Filter>Header Files\scene</Filter>
     </ClInclude>
-    <ClInclude Include="includes\core\Mesh.h">
+    <ClInclude Include="includes\graphics\Mesh.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="includes\graphics\MeshManager.h">
