@@ -1,11 +1,9 @@
 #pragma once
 #include <glad/glad.h>
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 #include <memory>
-#include "graphics/Renderer.h"
 
-#ifndef WINDOW_H
-#define WINDOW_H
+#include "graphics/Renderer.h"
 
 class Window {
 public:
@@ -20,4 +18,3 @@ private:
 	std::unique_ptr<Renderer> renderer;
 };
 
-#endif

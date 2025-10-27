@@ -4,10 +4,10 @@
 class Window;
 class Renderer;
 
-class Application {
+class Engine {
 public:
-    Application();
-    ~Application();
+    Engine();
+    ~Engine();
     void init();
 
 private:

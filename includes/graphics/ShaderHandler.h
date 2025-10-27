@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef SHADERHANDLER_H
-#define SHADERHANDLER_H
-
 #include <memory>
 #include <string>
 
@@ -22,5 +19,3 @@ private:
 	ShaderManager& shaderManager;
 	std::shared_ptr<Shader> currentShader;
 };
-
-#endif

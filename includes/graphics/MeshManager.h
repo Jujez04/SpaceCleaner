@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef MESHMANAGER_H
-#define MESHMANAGER_H
-
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -22,5 +19,3 @@ public:
 private:
 	std::unordered_map<std::string, std::shared_ptr<Mesh>> meshMap;
 };
-
-#endif

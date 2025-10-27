@@ -1,5 +1,5 @@
 #include "graphics/Shader.h"
-#include "Utilities.h"
+#include "utilities/Utilities.h"
 
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) {
     // Carica il codice dai file
