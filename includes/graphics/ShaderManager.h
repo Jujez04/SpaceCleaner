@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef SHADERMANAGER_H
-#define SHADERMANAGER_H
-
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -30,5 +27,3 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Shader>> shadersMap;
 	
 };
-
-#endif

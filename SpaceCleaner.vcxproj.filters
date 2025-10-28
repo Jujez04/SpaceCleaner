@@ -13,23 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\imgui">
-      <UniqueIdentifier>{c7ae2041-a1d0-4b6f-8c1b-0b6a3631cf0f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\imgui">
-      <UniqueIdentifier>{4a6f9fa4-aa95-4f5b-b133-029e36edec8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\application">
-      <UniqueIdentifier>{c252237b-83e2-469d-a278-9e48c2a9774f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\core">
       <UniqueIdentifier>{9760cfcb-72dd-483d-adf6-760f9b9a331a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\graphics">
       <UniqueIdentifier>{711e9966-6258-4559-8b24-31f5142efe93}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\application">
-      <UniqueIdentifier>{d14f8e3d-0d1f-44c1-b58c-be4077766a4a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\core">
       <UniqueIdentifier>{8080bf7a-bdb7-4937-856e-a5e6bebe15fd}</UniqueIdentifier>
@@ -37,186 +25,180 @@
     <Filter Include="Header Files\graphics">
       <UniqueIdentifier>{b129d79b-55fc-4c4d-909b-f3158a6ae01b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\core\entities">
-      <UniqueIdentifier>{cb1020c2-d39f-4c7f-aac6-71fc729c0035}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\core\entities">
-      <UniqueIdentifier>{4843bad3-f276-42c6-87d0-c4f0ca306eea}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\scene">
       <UniqueIdentifier>{d66a5aa2-5d54-4968-8600-d0be227d0d35}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\scene">
       <UniqueIdentifier>{1b40f376-3790-4dd3-b38b-5fe406c02b72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\ui-debug">
+    <Filter Include="Header Files\dependencies">
+      <UniqueIdentifier>{35b52839-69e2-443d-8583-d994021614d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ecs">
+      <UniqueIdentifier>{1ad4e2a2-c86f-41c4-b81a-d013322a93ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ecs\entities">
+      <UniqueIdentifier>{4843bad3-f276-42c6-87d0-c4f0ca306eea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\dependencies\imgui">
+      <UniqueIdentifier>{c7ae2041-a1d0-4b6f-8c1b-0b6a3631cf0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ecs">
+      <UniqueIdentifier>{db1c37bb-1e8d-41ee-8a29-20189f43090a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dependencies">
+      <UniqueIdentifier>{3295e4ac-3b63-4e79-ac2c-c66d159fbb66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dependencies\imgui">
+      <UniqueIdentifier>{4a6f9fa4-aa95-4f5b-b133-029e36edec8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{e9b06cd5-d6ec-46aa-9628-654f5df869dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ui">
       <UniqueIdentifier>{48a707b1-2e75-4e17-a8ce-8dac1148989a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\ui-debug">
+    <Filter Include="Source Files\physics">
+      <UniqueIdentifier>{542ba712-c712-4e77-84e3-dccb9cc9463e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math">
+      <UniqueIdentifier>{63403cad-74f5-4ea5-8fc9-ce3e8b6ddcfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utilities">
+      <UniqueIdentifier>{a3a6d7fa-2a37-405b-897e-96ed440e4ea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\utilities">
+      <UniqueIdentifier>{d14f8e3d-0d1f-44c1-b58c-be4077766a4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ui">
       <UniqueIdentifier>{5eec28f6-d729-431f-84de-0a79a73644c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\physic">
+      <UniqueIdentifier>{a80e81bf-1b09-4936-96e2-40c880b1c7ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\math">
+      <UniqueIdentifier>{9a0e5b7d-913c-413e-a7f1-f61d01deed73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\game">
+      <UniqueIdentifier>{669fe1f6-1533-4a87-aed7-0c955b71676e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ecs\entities">
+      <UniqueIdentifier>{03ead34f-c665-4a28-9fa7-3a7795655ec1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui.cpp">
-      <Filter>Source Files\imgui</Filter>
+      <Filter>Source Files\dependencies\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_demo.cpp">
-      <Filter>Source Files\imgui</Filter>
+      <Filter>Source Files\dependencies\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_draw.cpp">
-      <Filter>Source Files\imgui</Filter>
+      <Filter>Source Files\dependencies\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_impl_glfw.cpp">
-      <Filter>Source Files\imgui</Filter>
+      <Filter>Source Files\dependencies\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_impl_opengl3.cpp">
-      <Filter>Source Files\imgui</Filter>
+      <Filter>Source Files\dependencies\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_tables.cpp">
-      <Filter>Source Files\imgui</Filter>
+      <Filter>Source Files\dependencies\imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_widgets.cpp">
-      <Filter>Source Files\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\application\Application.cpp">
-      <Filter>Source Files\application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\entities\Entity.cpp">
-      <Filter>Source Files\core\entities</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\entities\EntityComponent.cpp">
-      <Filter>Source Files\core\entities</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\entities\EventHandler.cpp">
-      <Filter>Source Files\core\entities</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\entities\Obstacle.cpp">
-      <Filter>Source Files\core\entities</Filter>
+      <Filter>Source Files\dependencies\imgui</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\Renderer.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\application\ResourceManager.cpp">
-      <Filter>Source Files\core</Filter>
-    </ClCompile>
     <ClCompile Include="src\scene\Scene.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scene\SceneManager.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\Shader.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\entities\SpaceCleaner.cpp">
-      <Filter>Source Files\core\entities</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\Timer.cpp">
-      <Filter>Source Files\core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ui-debug\UISystem.cpp">
-      <Filter>Source Files\ui-debug</Filter>
-    </ClCompile>
     <ClCompile Include="src\LaunchApp.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\application\Window.cpp">
-      <Filter>Source Files\scene</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\Mesh.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\Users\justi\Downloads\Laboratorio I-20250926\LaboratorioI\glad.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\ResourceManager.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\SceneManager.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Window.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Engine.cpp">
+      <Filter>Source Files\core</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\MeshManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\graphics\ShaderManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\ShaderHandler.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utilities.cpp">
+    <ClCompile Include="src\graphics\ShaderManager.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\UISystem.cpp">
+      <Filter>Source Files\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utilities\Timer.cpp">
+      <Filter>Source Files\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utilities\Utilities.cpp">
+      <Filter>Source Files\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\dependencies\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_impl_glfw.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\dependencies\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_impl_opengl3.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\dependencies\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_impl_opengl3_loader.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\dependencies\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_internal.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\dependencies\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imstb_rectpack.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\dependencies\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imstb_textedit.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\dependencies\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imstb_truetype.h">
-      <Filter>Header Files\imgui</Filter>
+      <Filter>Header Files\dependencies\imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imconfig.h">
-      <Filter>Header Files\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\core\entities\Entity.h">
-      <Filter>Header Files\core\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\application\Application.h">
-      <Filter>Header Files\application</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\core\entities\EntityComponent.h">
-      <Filter>Header Files\core\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\core\entities\Event.h">
-      <Filter>Header Files\core\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\core\entities\EventHandler.h">
-      <Filter>Header Files\core\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\core\entities\Obstacle.h">
-      <Filter>Header Files\core\entities</Filter>
+      <Filter>Header Files\dependencies\imgui</Filter>
     </ClInclude>
     <ClInclude Include="includes\graphics\Renderer.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="includes\application\ResourceManager.h">
-      <Filter>Header Files\core</Filter>
-    </ClInclude>
     <ClInclude Include="includes\scene\Scene.h">
-      <Filter>Header Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\scene\SceneManager.h">
       <Filter>Header Files\scene</Filter>
     </ClInclude>
     <ClInclude Include="includes\graphics\Shader.h">
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="includes\core\entities\SpaceCleaner.h">
-      <Filter>Header Files\core\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\core\Timer.h">
-      <Filter>Header Files\core</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\ui-debug\UISystem.h">
-      <Filter>Header Files\ui-debug</Filter>
-    </ClInclude>
     <ClInclude Include="includes\LaunchApp.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\application\Window.h">
-      <Filter>Header Files\scene</Filter>
     </ClInclude>
     <ClInclude Include="includes\graphics\Mesh.h">
       <Filter>Header Files\graphics</Filter>
@@ -233,12 +215,33 @@
     <ClInclude Include="includes\graphics\ShaderHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="includes\Utilities.h">
+    <ClInclude Include="includes\core\Engine.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\core\ResourceManager.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\core\SceneManager.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\core\Window.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\ui\UISystem.h">
+      <Filter>Header Files\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\game\GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include=".gitignore" />
+    <None Include="resources\fragment.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\vertex.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
