@@ -21,6 +21,9 @@ public:
 		: position(pos), rotation(rot), scale(scl) { }
 
 	virtual glm::mat4 getModelMatrix();
+
+	glm::vec2 getPosition() const { return position; }
+	void setPosition(const glm::vec2& pos) { position = pos; }
 };
 
 class MeshComponent : public Component {

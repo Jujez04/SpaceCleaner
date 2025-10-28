@@ -159,6 +159,12 @@
     <ClCompile Include="src\game\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\SpaceCleaner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\Hermite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui.h">
@@ -231,6 +237,12 @@
       <Filter>Header Files\ui</Filter>
     </ClInclude>
     <ClInclude Include="includes\game\GameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\math\Hermite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\game\SpaceCleaner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -19,6 +19,6 @@ Entity::Entity(const std::string& entityName) {
 
 void Entity::onCollision(Entity* other)
 {
-
+	
 }
 

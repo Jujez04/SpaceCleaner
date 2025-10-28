@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 class Shader;
 
@@ -29,4 +30,6 @@ private:
 	std::unique_ptr<vrtx::VertexArray> vertexArray;
 	std::unique_ptr<vrtx::VertexBuffer> vertexBuffer;
 	std::unique_ptr<Shader> shader;
+	glm::mat4 projection;
+	glm::mat4 view;
 };

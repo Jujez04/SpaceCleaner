@@ -139,10 +139,12 @@
     <ClCompile Include="src\core\ResourceManager.cpp" />
     <ClCompile Include="src\core\SceneManager.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
+    <ClCompile Include="src\game\SpaceCleaner.cpp" />
     <ClCompile Include="src\graphics\MeshManager.cpp" />
     <ClCompile Include="src\graphics\Mesh.cpp" />
     <ClCompile Include="src\graphics\ShaderHandler.cpp" />
     <ClCompile Include="src\graphics\ShaderManager.cpp" />
+    <ClCompile Include="src\math\Hermite.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
@@ -166,11 +168,13 @@
     <ClInclude Include="includes\core\SceneManager.h" />
     <ClInclude Include="includes\core\Window.h" />
     <ClInclude Include="includes\game\GameObject.h" />
+    <ClInclude Include="includes\game\SpaceCleaner.h" />
     <ClInclude Include="includes\graphics\MeshManager.h" />
     <ClInclude Include="includes\graphics\Mesh.h" />
     <ClInclude Include="includes\graphics\ShaderHandler.h" />
     <ClInclude Include="includes\graphics\ShaderManager.h" />
     <ClInclude Include="includes\graphics\Vertex.h" />
+    <ClInclude Include="includes\math\Hermite.h" />
     <ClInclude Include="includes\scene\Scene.h" />
     <ClInclude Include="includes\graphics\Renderer.h" />
     <ClInclude Include="includes\graphics\Shader.h" />
