@@ -4,8 +4,6 @@
 
 namespace vrtx {
 
-#define Vertex float;
-
 	class VertexArray {
 	private:
 		unsigned int id;
