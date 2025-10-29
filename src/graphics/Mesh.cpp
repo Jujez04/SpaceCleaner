@@ -2,14 +2,59 @@
 
 #include "graphics/Vertex.h"
 
-Mesh::Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices) {
-	vbo = std::make_unique<vrtx::VertexBuffer>(vertices.data(), vertices.size() * sizeof(float));
-	vao = std::make_unique<vrtx::VertexArray>();
-	ibo = std::make_unique<vrtx::IndexBuffer>(indices.data(), indices.size());
-	vao->bind();
-	vbo->bind();
-	ibo->bind();
+Mesh::Mesh()
+{
 }
 
-void Mesh::draw() const {
+Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
+{
+}
+
+Mesh::~Mesh()
+{
+}
+
+Mesh::Mesh(Mesh&& other) noexcept
+{
+}
+
+Mesh& Mesh::operator=(Mesh&& other) noexcept
+{
+}
+
+void Mesh::setVertices(const std::vector<Vertex>& vertices)
+{
+}
+
+void Mesh::setIndices(const std::vector<unsigned int>& indices)
+{
+}
+
+void Mesh::updateVertices(const std::vector<Vertex>& vertices)
+{
+}
+
+void Mesh::draw() const
+{
+}
+
+void Mesh::drawInstanced(unsigned int instanceCount) const
+{
+}
+
+Mesh Mesh::create()
+{
+	return Mesh();
+}
+
+void Mesh::setupMesh()
+{
+}
+
+void Mesh::cleanup()
+{
+}
+
+void Mesh::calculateNormals()
+{
 }

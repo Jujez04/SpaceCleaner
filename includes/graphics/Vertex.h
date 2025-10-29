@@ -7,6 +7,18 @@
 
 namespace vrtx {
 
+	struct Vertex {
+		glm::vec2 position;
+		glm::vec2 textureCoor;
+		glm::vec4 color;
+
+		Vertex(const glm::vec2& pos = glm::vec2(0.0f),
+			const glm::vec2& tex = glm::vec2(0.0f),
+			const glm::vec4& col = glm::vec4(1.0f))
+			: position(pos), textureCoor(tex), color(col) {
+		}
+	};
+
 	struct VertexBufferElement {
 		unsigned int type;
 		unsigned int count;
@@ -40,7 +52,7 @@ namespace vrtx {
 		template<>
 		void push<float>(int count) {
 			elements.emplace_back(GL_FLOAT, count, GL_FALSE);
-			stride += count * VertexBufferElement::getSizeOfType(GL_FLOAT); // <-- moltiplica per count
+			stride += count * VertexBufferElement::getSizeOfType(GL_FLOAT);
 		}
 
 		template<>
@@ -64,11 +76,7 @@ namespace vrtx {
 	private:
 		unsigned int rendererId;
 	public:
-		VertexBuffer(const void* data, unsigned int size) {
-			glGenBuffers(1, &rendererId);
-			bind();
-			glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-		}
+		VertexBuffer(const void* data, unsigned int size);
 		~VertexBuffer() {
 			glDeleteBuffers(1, &rendererId);
 		}
