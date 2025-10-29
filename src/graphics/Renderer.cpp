@@ -29,15 +29,22 @@ Renderer::~Renderer() = default;
 void Renderer::setup(const float* vertices, size_t size) {
 	vertexArray = std::make_unique<vrtx::VertexArray>();
 	vertexBuffer = std::make_unique<vrtx::VertexBuffer>(vertices, size);
+
+	vrtx::VertexBufferLayout bufferLayout;
+	bufferLayout.push<float>(3);
+	bufferLayout.push<float>(2);
+
 	vertexArray->bind();
 	vertexBuffer->bind();
-	vertexBuffer->setData(vertices, size);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	vertexArray->addBuffer(*vertexBuffer, bufferLayout);
+
+	vertexBuffer->unbind();
+	vertexArray->unbind();
+
 }
 
 void Renderer::draw(unsigned int vertexCount) const {
-	shader->use();
+	shader->bind();
 	vertexArray->bind();
 	glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 }

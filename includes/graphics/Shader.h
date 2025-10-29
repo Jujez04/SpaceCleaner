@@ -4,6 +4,7 @@
 #include <glm/vec4.hpp>
 #include <glad/glad.h>
 
+
 struct ShaderProgramSource {
 	std::string VertexSource;
 	std::string FragmentSource;
@@ -24,13 +25,13 @@ private:
 public:
 	Shader() = default;
 	Shader(const std::string& filepath);
+	Shader(const std::string& vertexShader, const std::string& fragmentShader);
 	~Shader();
 
 	void bind();
 	void unbind();
 
 	void setUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
-	void parseShader(const std::string& filePath);
 private:
 	unsigned int getUniformLocation(const std::string& name);
 	bool compileShader(unsigned int shader, const std::string& type);

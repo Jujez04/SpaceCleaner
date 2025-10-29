@@ -48,9 +48,10 @@ void Engine::init() {
 
     // Initialize renderer with vertex data
     float vertices[] = {
-         0.0f,  0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f
+        // positions        // tex coords
+         0.0f,  0.5f, 0.0f,  0.5f, 1.0f,
+        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f,
+         0.5f, -0.5f, 0.0f,  1.0f, 0.0f
     };
     renderer = std::make_unique<Renderer>(vertices, sizeof(vertices));
 

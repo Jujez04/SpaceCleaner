@@ -15,43 +15,50 @@ namespace vrtx {
 		VertexBufferElement(unsigned int type, unsigned int count, bool normalized)
 			: type(type), count(count), normalized(normalized) {
 		}
+
+		static unsigned int getSizeOfType(unsigned int type) {
+			switch (type) {
+			case GL_FLOAT:			return sizeof(GLfloat);
+			case GL_UNSIGNED_INT:	return sizeof(GLuint);
+			case GL_UNSIGNED_BYTE:	return sizeof(GLubyte);
+			}
+			return 0;
+		}
 	};
 
 	class VertexBufferLayout {
 	private:
 		std::vector<VertexBufferElement> elements;
-		unsigned int stride;
+		unsigned int stride = 0;
 	public:
-
 		VertexBufferLayout() = default;
 		~VertexBufferLayout() = default;
 
 		template<typename T>
-		void push(int count) {
-
-		}
+		void push(int count);
 
 		template<>
 		void push<float>(int count) {
-			elements.push_back({ GL_FLOAT, count, GL_FALSE });
-			stride += sizeof(GL_FLOAT);
+			elements.emplace_back(GL_FLOAT, count, GL_FALSE);
+			stride += count * VertexBufferElement::getSizeOfType(GL_FLOAT); // <-- moltiplica per count
 		}
 
 		template<>
 		void push<unsigned int>(int count) {
-			elements.push_back({ GL_UNSIGNED_INT, count, GL_FALSE });
-			stride += sizeof(GL_INT);
+			elements.emplace_back(GL_UNSIGNED_INT, count, GL_FALSE);
+			stride += count * VertexBufferElement::getSizeOfType(GL_UNSIGNED_INT);
 		}
 
 		template<>
 		void push<unsigned char>(int count) {
-			elements.push_back({ GL_UNSIGNED_BYTE, count, GL_FALSE });
-			stride += sizeof(GL_UNSIGNED_BYTE);
+			elements.emplace_back(GL_UNSIGNED_BYTE, count, GL_FALSE);
+			stride += count * VertexBufferElement::getSizeOfType(GL_UNSIGNED_BYTE);
 		}
 
-		inline const unsigned int getStride() const { return stride; }
+		inline unsigned int getStride() const { return stride; }
 		inline const std::vector<VertexBufferElement>& getElements() const { return elements; }
 	};
+
 
 	class VertexBuffer {
 	private:
@@ -61,6 +68,9 @@ namespace vrtx {
 			glGenBuffers(1, &rendererId);
 			bind();
 			glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+		}
+		~VertexBuffer() {
+			glDeleteBuffers(1, &rendererId);
 		}
 
 		void bind() const {
@@ -79,6 +89,9 @@ namespace vrtx {
 		VertexArray() {
 			glGenVertexArrays(1, &id);
 		}
+		~VertexArray() {
+			glDeleteVertexArrays(1, &id);
+		}
 
 		void bind() const {
 			glBindVertexArray(id);
@@ -88,22 +101,25 @@ namespace vrtx {
 			glBindVertexArray(0);
 		}
 
-		void addBuffer(const VertexBuffer vb, const VertexBufferLayout vbl) {
+		void addBuffer(const VertexBuffer& vb, const VertexBufferLayout& vbl) {
 			vb.bind();
 			const auto& elements = vbl.getElements();
 			unsigned int offset = 0;
 			for (unsigned int i = 0; i < elements.size(); i++) {
 				const auto& element = elements[i];
 				glEnableVertexAttribArray(i);
-				glVertexAttribPointer(i, element.count, element.type, element.normalized,
-					vbl.getStride(), (const void*)offset);
-				offset += element.count * sizeof(element.type); // Da ricontrollare
+				glVertexAttribPointer(
+					i,
+					element.count,
+					element.type,
+					element.normalized ? GL_TRUE : GL_FALSE,
+					static_cast<GLsizei>(vbl.getStride()),
+					reinterpret_cast<const void*>(static_cast<uintptr_t>(offset))
+				);
+				offset += element.count * VertexBufferElement::getSizeOfType(element.type);
 			}
 		}
 
-		void addLayout(VertexBufferLayout bl) {
-
-		}
 	};
 
 
