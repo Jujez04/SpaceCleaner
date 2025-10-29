@@ -1,13 +1,12 @@
 #include "graphics/Shader.h"
-
 #include <vector>
-
 #include "graphics/Renderer.h"
 #include "utilities/Utilities.h"
 
 Shader::Shader(const std::string& filepath) {
-    ShaderProgramSource source = parseShaderFile(filepath);
-    rendererId = createShader(source.VertexSource, source.FragmentSource);
+    std::string vertShader = readFile("resources/vertex.glsl");
+    std::string fragShader = readFile("resources/fragment.glsl");
+    rendererId = createShader(vertShader, fragShader);
 }
 
 Shader::Shader(const std::string& vertexShader, const std::string& fragmentShader)
@@ -20,7 +19,7 @@ Shader::~Shader() {
 }
 
 void Shader::setUniform4f(const std::string& name, float v0, float v1, float v2, float v3) {
-    glUniform4f(getUniformLocation(name), 1, v0, v1, v2);
+    glUniform4f(getUniformLocation(name), v0, v1, v2, v3);  // Fixed: removed the '1'
 }
 
 unsigned int Shader::getUniformLocation(const std::string& name)
@@ -82,30 +81,8 @@ unsigned int Shader::createShader(const std::string& vertexCode, const std::stri
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+
     return rendererId;
-}
-
-ShaderProgramSource Shader::parseShaderFile(const std::string& filePath) {
-    std::ifstream stream(filePath);
-    std::string line;
-    std::stringstream ss[2];
-    enum class ShaderType { NONE = -1, VERTEX = 0, FRAGMENT = 1 };
-    ShaderType type = ShaderType::NONE;
-
-    while (getline(stream, line)) {
-        if (line.find("#shader") != std::string::npos) {
-            if (line.find("vertex") != std::string::npos)
-                type = ShaderType::VERTEX;
-            else if (line.find("fragment") != std::string::npos)
-                type = ShaderType::FRAGMENT;
-        }
-        else {
-            if (type != ShaderType::NONE)
-                ss[(int)type] << line << '\n';
-        }
-    }
-
-    return { ss[0].str(), ss[1].str() };
 }
 
 void Shader::bind() {

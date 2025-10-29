@@ -36,6 +36,5 @@ private:
 	unsigned int getUniformLocation(const std::string& name);
 	bool compileShader(unsigned int shader, const std::string& type);
 	unsigned int createShader(const std::string& vertexCode, const std::string& fragmentCode);
-	ShaderProgramSource parseShaderFile(const std::string& filePath);
 	
 };

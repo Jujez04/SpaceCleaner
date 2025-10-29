@@ -12,13 +12,12 @@
 * @param vertices vertici da disegnare
 * @param size dimensione dei vertici
 */
-Renderer::Renderer(const float* vertices, size_t size) {
+Renderer::Renderer(const float* vertices, size_t size, unsigned int count)
+	: vertexCount(count) {
 	setup(vertices, size);
-	std::string vertexPath = "resources/vertex.glsl";
-	std::string fragmentPath = "resources/fragment.glsl";
+	std::string vertexPath = "../resources/vertex.glsl";
+	std::string fragmentPath = "../resources/fragment.glsl";
 	shader = std::make_unique<Shader>(vertexPath, fragmentPath);
-	vertexBuffer->unbind();
-	vertexArray->unbind();
 }
 
 /**
@@ -32,7 +31,7 @@ void Renderer::setup(const float* vertices, size_t size) {
 
 	vrtx::VertexBufferLayout bufferLayout;
 	bufferLayout.push<float>(3);
-	bufferLayout.push<float>(2);
+	bufferLayout.push<float>(3);
 
 	vertexArray->bind();
 	vertexBuffer->bind();
@@ -43,9 +42,9 @@ void Renderer::setup(const float* vertices, size_t size) {
 
 }
 
-void Renderer::draw(unsigned int vertexCount) const {
+void Renderer::draw() {
 	shader->bind();
 	vertexArray->bind();
-	glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+	glDrawArrays(GL_LINE_LOOP, 0, vertexCount);
 }
 

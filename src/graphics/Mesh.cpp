@@ -2,6 +2,8 @@
 
 #include "graphics/Vertex.h"
 
+/*
+
 Mesh::Mesh()
 {
 }
@@ -58,3 +60,4 @@ void Mesh::cleanup()
 void Mesh::calculateNormals()
 {
 }
+*/

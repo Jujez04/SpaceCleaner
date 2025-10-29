@@ -6,6 +6,7 @@ class Vertex;
  * Classe Mesh che rappresenta la geometria di una figura
  * Gestisce vertici, indici e rendering
  */
+/*
 class Mesh {
 public:
     // Costruttori
@@ -50,3 +51,4 @@ private:
     void cleanup();
     void calculateNormals();
 };
+*/
