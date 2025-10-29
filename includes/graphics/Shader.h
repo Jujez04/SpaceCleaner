@@ -4,24 +4,37 @@
 #include <glm/vec4.hpp>
 #include <glad/glad.h>
 
+struct ShaderProgramSource {
+	std::string VertexSource;
+	std::string FragmentSource;
+
+	ShaderProgramSource(const std::string& vertexSrc, const std::string& fragmentSrc)
+		: VertexSource(vertexSrc), FragmentSource(fragmentSrc) {
+	}
+};
+
 class Shader {
 private:
-	unsigned int id;
+	unsigned int rendererId;
 
 	void assignId() {
-		id = glCreateProgram();
+		rendererId = glCreateProgram();
 	}
 
 public:
 	Shader() = default;
-	Shader(const std::string& vertexPath, const std::string& fragmentPath);
-	~Shader() = default;
+	Shader(const std::string& filepath);
+	~Shader();
 
-	void setUniformMat4(const std::string& name, float v0, float v1, float v2, float v3);
+	void bind();
+	void unbind();
 
-	void use();
-
-	unsigned int getID() const {
-		return id;
-	}
+	void setUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+	void parseShader(const std::string& filePath);
+private:
+	unsigned int getUniformLocation(const std::string& name);
+	bool compileShader(unsigned int shader, const std::string& type);
+	unsigned int createShader(const std::string& vertexCode, const std::string& fragmentCode);
+	ShaderProgramSource parseShaderFile(const std::string& filePath);
+	
 };
