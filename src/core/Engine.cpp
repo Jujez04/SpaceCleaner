@@ -9,6 +9,7 @@
 #include "graphics/Vertex.h"
 #include "graphics/Shader.h"
 #include "math/Hermite.h"
+#include "graphics/Camera.h"
 
 Engine::Engine() {}
 
@@ -26,6 +27,7 @@ void Engine::update() {
 
 void Engine::rendering() {
     renderer->clear();
+    renderer->setCamera(camera->getViewMatrix(), camera->getProjectionMatrix());
 	renderer->draw();
 	window->updateWindow();
 }
@@ -44,8 +46,9 @@ void Engine::init() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
-    window = std::make_unique<Window>(800, 600);
+    int width = 800;
+    int height = 600;
+    window = std::make_unique<Window>(width, height);
 
     std::vector<glm::vec2> controlPoints = {
         glm::vec2(-0.231771f,  0.099537f),
@@ -83,7 +86,7 @@ void Engine::init() {
         vertices.size() * sizeof(float),
         static_cast<unsigned int>(spaceshipOutline.size())
     );
-
+    camera = std::make_unique<Camera>(width, height);
 
     gameLoop();
 }

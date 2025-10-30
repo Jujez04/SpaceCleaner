@@ -30,5 +30,7 @@ public:
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
+	void setCamera(const glm::mat4& viewMat, const glm::mat4& projMat);
+
 	void draw();
 };

@@ -22,7 +22,6 @@ public:
     // Metodi principali
     void setVertices(const std::vector<Vertex>& vertices);
     void setIndices(const std::vector<unsigned int>& indices);
-    void updateVertices(const std::vector<Vertex>& vertices);
 
     // Rendering
     void draw() const;

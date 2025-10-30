@@ -42,8 +42,15 @@ void Renderer::setup(const float* vertices, size_t size) {
 
 }
 
+void Renderer::setCamera(const glm::mat4& viewMat, const glm::mat4& projMat) {
+	view = viewMat;
+	projection = projMat;
+}
+
 void Renderer::draw() {
 	shader->bind();
+	shader->setMat4("view", view);
+	shader->setMat4("projection", projection);
 	vertexArray->bind();
 	glDrawArrays(GL_LINE_LOOP, 0, vertexCount);
 }

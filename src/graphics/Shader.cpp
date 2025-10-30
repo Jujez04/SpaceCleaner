@@ -1,5 +1,8 @@
 #include "graphics/Shader.h"
+
 #include <vector>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "graphics/Renderer.h"
 #include "utilities/Utilities.h"
 
@@ -20,6 +23,13 @@ Shader::~Shader() {
 
 void Shader::setUniform4f(const std::string& name, float v0, float v1, float v2, float v3) {
     glUniform4f(getUniformLocation(name), v0, v1, v2, v3);  // Fixed: removed the '1'
+}
+
+
+void Shader::setMat4(const std::string& name, const glm::mat4& matrix) {
+    // Prende la posizione dell'uniform nello shader
+    // e applica la matrice
+    glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 unsigned int Shader::getUniformLocation(const std::string& name)

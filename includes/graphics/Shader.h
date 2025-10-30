@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <glm/vec4.hpp>
+#include <glm/glm.hpp>
 #include <glad/glad.h>
 
 
@@ -32,6 +32,7 @@ public:
 	void unbind();
 
 	void setUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+	void setMat4(const std::string& name, const glm::mat4& matrix);
 private:
 	unsigned int getUniformLocation(const std::string& name);
 	bool compileShader(unsigned int shader, const std::string& type);

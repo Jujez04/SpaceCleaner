@@ -3,6 +3,7 @@
 
 class Window;
 class Renderer;
+class Camera;
 
 class Engine {
 public:
@@ -13,6 +14,7 @@ public:
 private:
     std::unique_ptr<Window> window;
     std::unique_ptr<Renderer> renderer;
+    std::unique_ptr<Camera> camera;
     void gameLoop();
     void processInput();
     void update();
