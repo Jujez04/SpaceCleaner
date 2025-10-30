@@ -49,8 +49,8 @@ void Renderer::setCamera(const glm::mat4& viewMat, const glm::mat4& projMat) {
 
 void Renderer::draw() {
 	shader->bind();
-	shader->setMat4("view", view);
-	shader->setMat4("projection", projection);
+	shader->setUniformMat4("view", view);
+	shader->setUniformMat4("projection", projection);
 	vertexArray->bind();
 	glDrawArrays(GL_LINE_LOOP, 0, vertexCount);
 }

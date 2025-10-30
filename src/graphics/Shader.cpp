@@ -16,19 +16,14 @@ Shader::~Shader() {
 }
 
 void Shader::setUniform4f(const std::string& name, float v0, float v1, float v2, float v3) {
-    glUniform4f(getUniformLocation(name), v0, v1, v2, v3);
+    glUniform4f(getUniformLocationCached(name), v0, v1, v2, v3);
 }
 
 
-void Shader::setMat4(const std::string& name, const glm::mat4& matrix) {
+void Shader::setUniformMat4(const std::string& name, const glm::mat4& matrix) {
     // Prende la posizione dell'uniform nello shader
     // e applica la matrice
-    glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix));
-}
-
-unsigned int Shader::getUniformLocation(const std::string& name)
-{
-    return glGetUniformLocation(rendererId, name.c_str());
+    glUniformMatrix4fv(getUniformLocationCached(name), 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 bool Shader::compileShader(unsigned int shader, const std::string& type) {
@@ -98,4 +93,14 @@ void Shader::bind() {
 void Shader::unbind()
 {
     glUseProgram(0);
+}
+
+int Shader::getUniformLocationCached(const std::string& name) const {
+    auto it = uniformLocationCache.find(name);
+    if (it != uniformLocationCache.end())
+        return it->second;
+
+    int location = glGetUniformLocation(rendererId, name.c_str());
+    uniformLocationCache[name] = location;
+    return location;
 }
