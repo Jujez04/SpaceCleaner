@@ -9,13 +9,11 @@ namespace vrtx {
 
 	struct Vertex {
 		glm::vec2 position;
-		glm::vec2 textureCoor;
-		glm::vec4 color;
+		glm::vec3 color;
 
 		Vertex(const glm::vec2& pos = glm::vec2(0.0f),
-			const glm::vec2& tex = glm::vec2(0.0f),
-			const glm::vec4& col = glm::vec4(1.0f))
-			: position(pos), textureCoor(tex), color(col) {
+			const glm::vec3& col = glm::vec3(1.0f))
+			: position(pos), color(col) {
 		}
 	};
 

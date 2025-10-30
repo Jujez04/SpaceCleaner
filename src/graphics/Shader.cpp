@@ -6,12 +6,6 @@
 #include "graphics/Renderer.h"
 #include "utilities/Utilities.h"
 
-Shader::Shader(const std::string& filepath) {
-    std::string vertShader = readFile("resources/vertex.glsl");
-    std::string fragShader = readFile("resources/fragment.glsl");
-    rendererId = createShader(vertShader, fragShader);
-}
-
 Shader::Shader(const std::string& vertexShader, const std::string& fragmentShader)
 {
     rendererId = createShader(vertexShader, fragmentShader);
@@ -22,7 +16,7 @@ Shader::~Shader() {
 }
 
 void Shader::setUniform4f(const std::string& name, float v0, float v1, float v2, float v3) {
-    glUniform4f(getUniformLocation(name), v0, v1, v2, v3);  // Fixed: removed the '1'
+    glUniform4f(getUniformLocation(name), v0, v1, v2, v3);
 }
 
 
@@ -40,13 +34,15 @@ unsigned int Shader::getUniformLocation(const std::string& name)
 bool Shader::compileShader(unsigned int shader, const std::string& type) {
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+
     if (!success) {
         int length;
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
         std::vector<char> infoLog(length);
-        glGetShaderInfoLog(shader, length, &length, &infoLog[0]);
+        glGetShaderInfoLog(shader, length, &length, infoLog.data());
+
         std::cerr << "ERROR: Shader compilation failed (" << type << ")\n"
-            << &infoLog[0] << "\n";
+            << infoLog.data() << "\n";
         return false;
     }
     return true;
