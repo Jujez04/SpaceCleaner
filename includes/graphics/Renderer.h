@@ -25,13 +25,10 @@ public:
 
 	void setup(const float* vertices, size_t size);
 
-
 	void clear() const {
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	void draw();
-
-
 };

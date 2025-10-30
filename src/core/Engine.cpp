@@ -48,22 +48,23 @@ void Engine::init() {
     window = std::make_unique<Window>(800, 600);
 
     std::vector<glm::vec2> controlPoints = {
-        glm::vec2(0.0f, 0.6f),    // punta superiore (naso)
-        glm::vec2(0.1f, 0.35f),   // bordo destro fusoliera
-        glm::vec2(0.35f, 0.15f),  // ala destra superiore
-        glm::vec2(0.6f, -0.05f),  // estremità ala destra
-        glm::vec2(0.35f, -0.2f),  // ala destra inferiore
-        glm::vec2(0.15f, -0.4f),  // fusoliera bassa destra
-        glm::vec2(0.1f, -0.55f),  // motore destro
-        glm::vec2(0.0f, -0.6f),   // coda centrale
-        glm::vec2(-0.1f, -0.55f), // motore sinistro
-        glm::vec2(-0.15f, -0.4f), // fusoliera bassa sinistra
-        glm::vec2(-0.35f, -0.2f), // ala sinistra inferiore
-        glm::vec2(-0.6f, -0.05f), // estremità ala sinistra
-        glm::vec2(-0.35f, 0.15f), // ala sinistra superiore
-        glm::vec2(-0.1f, 0.35f),  // bordo sinistro fusoliera
-        glm::vec2(0.0f, 0.6f)     // chiusura del loop
+        glm::vec2(-0.231771f,  0.099537f),
+        glm::vec2(-0.282552f, -0.129630f),
+        glm::vec2(-0.194010f, -0.115741f),
+        glm::vec2(-0.128906f, -0.312500f),
+        glm::vec2(-0.084635f, -0.307870f),
+        glm::vec2(-0.067708f, -0.412037f),
+        glm::vec2(-0.023438f, -0.317130f),
+        glm::vec2(0.029948f, -0.307870f),
+        glm::vec2(0.088542f, -0.087963f),
+        glm::vec2(0.174479f, -0.074074f),
+        glm::vec2(0.083333f,  0.134259f),
+        glm::vec2(0.015625f,  0.016204f),
+        glm::vec2(-0.050781f,  0.564815f),
+        glm::vec2(-0.143229f,  0.016204f),
+        glm::vec2(-0.227865f,  0.099537f)
     };
+
 
     auto tangents = HermiteUtility::calculateTangents(controlPoints, 0.2f);
     auto spaceshipOutline = HermiteUtility::generateClosedHermiteCurve(controlPoints, tangents, 60);

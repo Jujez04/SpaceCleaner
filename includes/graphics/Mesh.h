@@ -26,7 +26,6 @@ public:
 
     // Rendering
     void draw() const;
-    void drawInstanced(unsigned int instanceCount) const;
 
     // Getters
     const std::vector<Vertex>& getVertices() const { return vertices; }
