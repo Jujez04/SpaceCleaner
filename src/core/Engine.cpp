@@ -12,6 +12,7 @@
 #include "graphics/Camera.h"
 #include "graphics/Mesh.h"
 #include "game/SpaceCleaner.h"
+#include "utilities/Utilities.h"
 
 Engine::Engine() {}
 
@@ -31,7 +32,7 @@ void Engine::rendering() {
     renderer->clear();
     renderer->setCamera(camera->getViewMatrix(), camera->getProjectionMatrix());
     if (player)
-        renderer->drawEntity(*player, GL_LINE_LOOP);
+        renderer->drawEntity(*player, GL_TRIANGLES);
     window->updateWindow();
 }
 
@@ -74,8 +75,12 @@ void Engine::init() {
     player = std::make_unique<SpaceCleaner>("SpaceCleaner");
     player->generateHermiteMesh(controlPoints, 60);
     player->getMeshComp().getMeshId();
-    player->getColorComp().setColor(glm::vec4(0.0f, 0.4f, 0.8f, 1.0f));
-    renderer = std::make_unique<Renderer>("resource/vertex.glsl", "resource/fragment.glsl");
+    player->getColorComp().setColor(glm::vec4(0.0f, 0.4f, 0.8f, 1.0f)); 
+    std::string vertexCode = readFile("resources/vertex.glsl");
+    std::string fragmentCode = readFile("resources/fragment.glsl");
+
+    renderer = std::make_unique<Renderer>(vertexCode, fragmentCode);
+
     
     camera = std::make_unique<Camera>(width, height);
 }

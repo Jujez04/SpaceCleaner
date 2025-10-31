@@ -168,6 +168,7 @@
     <ClInclude Include="includes\core\ResourceManager.h" />
     <ClInclude Include="includes\core\SceneManager.h" />
     <ClInclude Include="includes\core\Window.h" />
+    <ClInclude Include="includes\dependencies\earcut.hpp" />
     <ClInclude Include="includes\game\GameObject.h" />
     <ClInclude Include="includes\game\SpaceCleaner.h" />
     <ClInclude Include="includes\graphics\Camera.h" />

@@ -248,6 +248,9 @@
     <ClInclude Include="includes\graphics\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="includes\dependencies\earcut.hpp">
+      <Filter>Source Files\dependencies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
