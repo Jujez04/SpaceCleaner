@@ -14,6 +14,12 @@ glm::mat4 Camera::getViewMatrix() const {
 }
 
 glm::mat4 Camera::getProjectionMatrix() const {
-    // Coordinate ortografiche con origine in basso a sinistra
-    return glm::ortho(0.0f, width, 0.0f, height, -1.0f, 1.0f);
+
+    float aspectRatio = width / height;
+
+    // Proiezione Orto: Mappa il centro dello schermo a (0,0).
+    // Copre da -aspectRatio a +aspectRatio su X
+    return glm::ortho(-1.0f * aspectRatio, 1.0f * aspectRatio,
+        -1.0f, 1.0f,
+        -1.0f, 1.0f);
 }

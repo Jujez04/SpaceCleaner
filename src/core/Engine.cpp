@@ -54,7 +54,8 @@ void Engine::init() {
     int width = 800;
     int height = 600;
     window = std::make_unique<Window>(width, height);
-
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::vector<glm::vec2> controlPoints = {
         glm::vec2(-0.231771f,  0.099537f),
         glm::vec2(-0.282552f, -0.129630f),
@@ -78,7 +79,7 @@ void Engine::init() {
     player->getColorComp().setColor(glm::vec4(0.0f, 0.4f, 0.8f, 1.0f)); 
     std::string vertexCode = readFile("resources/vertex.glsl");
     std::string fragmentCode = readFile("resources/fragment.glsl");
-
+    player->color.setColor(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
     renderer = std::make_unique<Renderer>(vertexCode, fragmentCode);
 
     

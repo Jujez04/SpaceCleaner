@@ -19,13 +19,11 @@ void Shader::setUniform4f(const std::string& name, float v0, float v1, float v2,
     glUniform4f(getUniformLocationCached(name), v0, v1, v2, v3);
 }
 
-void Shader::setUniformVec4(const std::string& name, glm::vec4 vec) {
+void Shader::setUniformVec4(const std::string& name, const glm::vec4& vec) {
     glUniform4fv(getUniformLocationCached(name), 1, glm::value_ptr(vec));
 }
 
 void Shader::setUniformMat4(const std::string& name, const glm::mat4& matrix) {
-    // Prende la posizione dell'uniform nello shader
-    // e applica la matrice
     glUniformMatrix4fv(getUniformLocationCached(name), 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
@@ -66,14 +64,19 @@ unsigned int Shader::createShader(const std::string& vertexCode, const std::stri
         glDeleteShader(fragmentShader);
         return 0;
     }
-
-    assignId();
+    int success;
+    char infoLog[512];
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+    rendererId = glCreateProgram();
     glAttachShader(rendererId, vertexShader);
     glAttachShader(rendererId, fragmentShader);
     glLinkProgram(rendererId);
 
     // Check linking errors
-    int success;
     glGetProgramiv(rendererId, GL_LINK_STATUS, &success);
     if (!success) {
         int length;
@@ -89,7 +92,7 @@ unsigned int Shader::createShader(const std::string& vertexCode, const std::stri
     return rendererId;
 }
 
-void Shader::bind() {
+void Shader::bind() const {
     glUseProgram(rendererId);
 }
 

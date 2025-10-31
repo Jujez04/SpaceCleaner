@@ -14,23 +14,24 @@ private:
 	// ottengo direttamente l'id del programma che voglio usare
 	mutable std::unordered_map<std::string, int> uniformLocationCache;
 
-	void assignId() {
-		rendererId = glCreateProgram();
-	}
-
 public:
 	Shader() = default;
 	Shader(const std::string& vertexShader, const std::string& fragmentShader);
 	~Shader();
+    void bind() const;
+    void unbind();
 
-	void bind();
-	void unbind();
-	int getUniformLocationCached(const std::string& name) const;
-	void setUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
-	void setUniformVec4(const std::string& name, glm::vec4 vec);
-	void setUniformMat4(const std::string& name, const glm::mat4& matrix);
+    // Uniform setters
+    void setUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+    void setUniformVec4(const std::string& name, const glm::vec4& vec);
+    void setUniformMat4(const std::string& name, const glm::mat4& matrix);
+
+    // Utility
+    unsigned int getId() const { return rendererId; }
+    bool isValid() const { return rendererId != 0; }
+
 private:
-	bool compileShader(unsigned int shader, const std::string& type);
-	unsigned int createShader(const std::string& vertexCode, const std::string& fragmentCode);
-	
+    bool compileShader(unsigned int shader, const std::string& type);
+    unsigned int createShader(const std::string& vertexCode, const std::string& fragmentCode);
+    int getUniformLocationCached(const std::string& name) const;
 };

@@ -140,7 +140,7 @@ namespace vrtx {
 		{
 			glGenBuffers(1, &rendererId);
 			bind();
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), data, GL_STATIC_DRAW);
 		}
 		~IndexBuffer() {
 			glDeleteBuffers(1, &rendererId);

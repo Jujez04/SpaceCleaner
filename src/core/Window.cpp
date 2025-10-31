@@ -3,7 +3,7 @@
 #include "GLFW/glfw3.h"
 #include <stdexcept>
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 }
 
