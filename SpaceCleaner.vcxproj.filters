@@ -141,9 +141,6 @@
     <ClCompile Include="src\graphics\MeshManager.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\ShaderHandler.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\ShaderManager.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
@@ -222,9 +219,6 @@
       <Filter>Header Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="includes\graphics\ShaderManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="includes\graphics\ShaderHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="includes\core\Engine.h">

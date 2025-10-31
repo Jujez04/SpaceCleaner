@@ -33,7 +33,7 @@ public:
     ~TransformComponent() override = default;
 
     // Model matrix con caching
-    const glm::mat4& getModelMatrix() const;
+    const glm::mat4 getModelMatrix() const;
 
     // Getters
     const glm::vec2& getPosition() const { return position; }
@@ -55,20 +55,23 @@ public:
 class MeshComponent : public Component {
 private:
     unsigned int meshId;
+    unsigned int shaderId;
     bool visible;
 
 public:
-    MeshComponent() : meshId(0), visible(true) {}
-    explicit MeshComponent(unsigned int id) : meshId(id), visible(true) {}
+    MeshComponent() : meshId(0), shaderId(0), visible(true) {}
+    MeshComponent(unsigned int meshId, unsigned int shaderId) : meshId(meshId), shaderId(shaderId), visible(true) {}
     ~MeshComponent() override = default;
 
     // Visibility
     bool isVisible() const { return visible && enabled; }
     void setVisible(bool vis) { visible = vis; }
 
-    // Mesh ID
+    // Getter e Setter
     unsigned int getMeshId() const { return meshId; }
+    unsigned int getShaderId() const { return shaderId; }
     void setMeshId(unsigned int id) { meshId = id; }
+    void setShaderId(unsigned int id) { shaderId = id; }
 };
 
 class ColorComponent : public Component {
@@ -126,6 +129,9 @@ public:
     int getId() const { return id; }
     const std::string& getName() const { return name; }
     bool isActive() const { return active; }
+    MeshComponent getMeshComp() const { return mesh; }
+    TransformComponent getTransform() const { return transform; }
+    ColorComponent getColorComp() const { return color; }
 
     // State management
     void setActive(bool state) { active = state; }

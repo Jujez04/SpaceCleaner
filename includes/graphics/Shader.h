@@ -27,6 +27,7 @@ public:
 	void unbind();
 	int getUniformLocationCached(const std::string& name) const;
 	void setUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+	void setUniformVec4(const std::string& name, glm::vec4 vec);
 	void setUniformMat4(const std::string& name, const glm::mat4& matrix);
 private:
 	bool compileShader(unsigned int shader, const std::string& type);

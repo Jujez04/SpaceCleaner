@@ -19,6 +19,9 @@ void Shader::setUniform4f(const std::string& name, float v0, float v1, float v2,
     glUniform4f(getUniformLocationCached(name), v0, v1, v2, v3);
 }
 
+void Shader::setUniformVec4(const std::string& name, glm::vec4 vec) {
+
+}
 
 void Shader::setUniformMat4(const std::string& name, const glm::mat4& matrix) {
     // Prende la posizione dell'uniform nello shader

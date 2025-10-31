@@ -143,7 +143,6 @@
     <ClCompile Include="src\graphics\Camera.cpp" />
     <ClCompile Include="src\graphics\MeshManager.cpp" />
     <ClCompile Include="src\graphics\Mesh.cpp" />
-    <ClCompile Include="src\graphics\ShaderHandler.cpp" />
     <ClCompile Include="src\graphics\ShaderManager.cpp" />
     <ClCompile Include="src\graphics\Vertex.cpp" />
     <ClCompile Include="src\math\Hermite.cpp" />
@@ -174,7 +173,6 @@
     <ClInclude Include="includes\graphics\Camera.h" />
     <ClInclude Include="includes\graphics\MeshManager.h" />
     <ClInclude Include="includes\graphics\Mesh.h" />
-    <ClInclude Include="includes\graphics\ShaderHandler.h" />
     <ClInclude Include="includes\graphics\ShaderManager.h" />
     <ClInclude Include="includes\graphics\Vertex.h" />
     <ClInclude Include="includes\math\Hermite.h" />

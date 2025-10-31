@@ -4,6 +4,8 @@
 #include "graphics/Shader.h"
 #include "graphics/Vertex.h"
 #include "graphics/Mesh.h"
+#include "game/SpaceCleaner.h"
+#include "graphics/ShaderManager.h"
 
 Renderer::Renderer(const std::string& vertexPath, const std::string& fragmentPath) {
     shader = std::make_unique<Shader>(vertexPath, fragmentPath);

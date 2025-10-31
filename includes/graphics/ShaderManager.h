@@ -12,8 +12,8 @@ class Shader;
 
 class ShaderManager {
 public:
-	ShaderManager();
-	~ShaderManager();
+	ShaderManager() = default;
+	~ShaderManager() = default;
 
 	// se non esiste uno shader con quel nome lo carico nella mappa e ritorno
 	std::shared_ptr<Shader> load(const std::string& name,

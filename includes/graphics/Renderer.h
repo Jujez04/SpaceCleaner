@@ -7,6 +7,9 @@
 
 class Shader;
 class Mesh;
+class MeshManager;
+class ShaderManager;
+class SpaceCleaner;
 
 class Renderer {
 private:

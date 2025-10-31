@@ -2,6 +2,8 @@
 #include <game/GameObject.h>
 #include <vector>
 
+class MeshManager;
+
 class SpaceCleaner : public Entity {
 private:
 	float speed;
@@ -12,7 +14,6 @@ public:
 	~SpaceCleaner() = default;
 
 	void update(float deltaTime) override;
-	void onCollision(Entity* other) override;
 
 	void setSpeed(float s) {
 		speed = s;

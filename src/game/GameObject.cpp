@@ -3,7 +3,7 @@
 
 int Entity::nextId = 0;
 
-const glm::mat4& TransformComponent::getModelMatrix() const
+const glm::mat4 TransformComponent::getModelMatrix() const
 {
     glm::mat4 model(1.0f);
     model = glm::translate(model, glm::vec3(position, 0.0f));

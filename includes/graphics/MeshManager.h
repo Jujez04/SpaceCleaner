@@ -12,7 +12,9 @@ public:
 	MeshManager();
 	~MeshManager();
 
-	//std::shared_ptr<Mesh> load(const std::string& name,	const std::vector<Vertex>& vertices);
+	std::shared_ptr<Mesh> registerMesh(const std::string& name,
+		const std::vector<float>& vertices,
+		const std::vector<unsigned int>& indices = {});
 
 	std::shared_ptr<Mesh> get(const std::string& name);
 
