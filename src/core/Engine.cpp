@@ -79,7 +79,7 @@ void Engine::init() {
     player->getColorComp().setColor(glm::vec4(0.0f, 0.4f, 0.8f, 1.0f)); 
     std::string vertexCode = readFile("resources/vertex.glsl");
     std::string fragmentCode = readFile("resources/fragment.glsl");
-    player->color.setColor(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+    player->getColorComp().setColor(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
     renderer = std::make_unique<Renderer>(vertexCode, fragmentCode);
 
     
