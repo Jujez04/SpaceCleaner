@@ -6,6 +6,7 @@
 #include "graphics/Mesh.h"
 #include "game/SpaceCleaner.h"
 #include "graphics/ShaderManager.h"
+#include "game/GameObject.h"
 
 Renderer::Renderer(const std::string& vertexPath, const std::string& fragmentPath) {
     shader = std::make_unique<Shader>(vertexPath, fragmentPath);
@@ -39,6 +40,25 @@ void Renderer::drawAll(GLenum mode) {
         if (mesh)
             mesh->draw(*shader, mode);
     }
+
+    shader->unbind();
+}
+
+void Renderer::drawEntity(Entity& entity, GLenum mode) {
+    if (!shader) return;
+    if (!entity.getMeshComp().isVisible()) return;
+
+    shader->bind();
+    shader->setUniformMat4("view", view);
+    shader->setUniformMat4("projection", projection);
+
+    glm::mat4 model = entity.transform.getModelMatrix();
+    shader->setUniformMat4("model", model);
+    shader->setUniformVec4("color", entity.getColorComp().getColor());
+
+    auto mesh = MeshManager::get(entity.getMeshComp().getMeshName());
+    if (mesh)
+        mesh->draw(*shader, mode);
 
     shader->unbind();
 }

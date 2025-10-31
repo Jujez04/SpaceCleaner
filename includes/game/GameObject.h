@@ -54,6 +54,7 @@ public:
 
 class MeshComponent : public Component {
 private:
+    std::string meshName;
     unsigned int meshId;
     unsigned int shaderId;
     bool visible;
@@ -72,6 +73,8 @@ public:
     unsigned int getShaderId() const { return shaderId; }
     void setMeshId(unsigned int id) { meshId = id; }
     void setShaderId(unsigned int id) { shaderId = id; }
+    const std::string& getMeshName() const { return meshName; }
+    void setMeshName(const std::string& name) { meshName = name; }
 };
 
 class ColorComponent : public Component {

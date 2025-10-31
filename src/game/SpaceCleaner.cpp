@@ -17,11 +17,8 @@ void SpaceCleaner::generateHermiteMesh(const std::vector<glm::vec2>& controlPoin
 {
     if (controlPoints.size() < 2) return;
 
-    // Calcolo dei tangenti (puoi regolare il tension a piacere)
     float tension = 0.5f;
     std::vector<glm::vec2> tangents = HermiteUtility::calculateTangents(controlPoints, tension);
-
-    // Generazione della curva chiusa
     std::vector<glm::vec2> curvePoints = HermiteUtility::generateClosedHermiteCurve(controlPoints, tangents, segmentsPerCurve);
 
     // Conversione in array di float per la mesh
@@ -30,5 +27,19 @@ void SpaceCleaner::generateHermiteMesh(const std::vector<glm::vec2>& controlPoin
         vertices.push_back(pt.x);
         vertices.push_back(pt.y);
         vertices.push_back(0.0f); // z = 0 per 2D
+        // Aggiungi anche il colore (deve corrispondere al layout dello shader!)
+        vertices.push_back(1.0f); // r
+        vertices.push_back(1.0f); // g
+        vertices.push_back(1.0f); // b
     }
+
+    std::vector<unsigned int> indices;
+    for (size_t i = 0; i < curvePoints.size(); ++i) {
+        indices.push_back(static_cast<unsigned int>(i));
+    }
+
+    std::string meshName = getName() + "_mesh";
+    MeshManager::registerMesh(meshName, vertices, indices);
+
+    mesh.setMeshName(meshName);
 }

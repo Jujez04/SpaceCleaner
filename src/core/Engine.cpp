@@ -11,6 +11,7 @@
 #include "math/Hermite.h"
 #include "graphics/Camera.h"
 #include "graphics/Mesh.h"
+#include "game/SpaceCleaner.h"
 
 Engine::Engine() {}
 
@@ -29,9 +30,11 @@ void Engine::update() {
 void Engine::rendering() {
     renderer->clear();
     renderer->setCamera(camera->getViewMatrix(), camera->getProjectionMatrix());
-    renderer->drawAll(GL_LINE_STRIP);
-	window->updateWindow();
+    if (player)
+        renderer->drawEntity(*player, GL_LINE_LOOP);
+    window->updateWindow();
 }
+
 
 void Engine::gameLoop() {
     while (window->windowIsOpen()) {
@@ -68,26 +71,11 @@ void Engine::init() {
         glm::vec2(-0.143229f,  0.016204f),
         glm::vec2(-0.227865f,  0.099537f)
     };
-
-
-    auto tangents = HermiteUtility::calculateTangents(controlPoints, 0.2f);
-    auto spaceshipOutline = HermiteUtility::generateClosedHermiteCurve(controlPoints, tangents, 60);
-
-    std::vector<float> vertices;
-    for (auto& p : spaceshipOutline) {
-        vertices.push_back(p.x);
-        vertices.push_back(p.y);
-        vertices.push_back(0.0f);
-        vertices.push_back(0.0f);    // R
-        vertices.push_back(0.4f);    // G
-        vertices.push_back(0.8f);    // B
-    }
-    std::vector<unsigned int> indices(vertices.size() / 6);
-    for (unsigned int i = 0; i < indices.size(); ++i)
-        indices[i] = i;
-
+    player = std::make_unique<SpaceCleaner>("SpaceCleaner");
+    player->generateHermiteMesh(controlPoints, 60);
+    player->getMeshComp().getMeshId();
+    player->getColorComp().setColor(glm::vec4(0.0f, 0.4f, 0.8f, 1.0f));
     renderer = std::make_unique<Renderer>("resource/vertex.glsl", "resource/fragment.glsl");
-    auto mesh = std::make_shared<Mesh>(vertices, indices);
-    renderer->addMesh(mesh);
+    
     camera = std::make_unique<Camera>(width, height);
 }

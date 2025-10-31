@@ -10,6 +10,7 @@ class Mesh;
 class MeshManager;
 class ShaderManager;
 class SpaceCleaner;
+class Entity;
 
 class Renderer {
 private:
@@ -26,4 +27,5 @@ public:
 	void clear();
 	void setCamera(const glm::mat4& viewMat, const glm::mat4& projMat);
 	void drawAll(GLenum mode);
+	void drawEntity(Entity& entity, GLenum mode = GL_TRIANGLES);
 };

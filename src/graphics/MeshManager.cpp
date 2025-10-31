@@ -2,6 +2,8 @@
 
 #include "graphics/Mesh.h"
 
+std::unordered_map<std::string, std::shared_ptr<Mesh>> MeshManager::meshMap;
+
 std::shared_ptr<Mesh> MeshManager::registerMesh(const std::string& name, const std::vector<float>& vertices, const std::vector<unsigned int>& indices)
 {
     auto mesh = std::make_shared<Mesh>(vertices, indices);

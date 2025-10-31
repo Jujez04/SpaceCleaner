@@ -20,7 +20,7 @@ void Shader::setUniform4f(const std::string& name, float v0, float v1, float v2,
 }
 
 void Shader::setUniformVec4(const std::string& name, glm::vec4 vec) {
-
+    glUniform4fv(getUniformLocationCached(name), 1, glm::value_ptr(vec));
 }
 
 void Shader::setUniformMat4(const std::string& name, const glm::mat4& matrix) {
