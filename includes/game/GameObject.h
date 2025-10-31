@@ -1,90 +1,133 @@
 #pragma once
-
 #include <string>
 #include <memory>
+#include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+// Forward declarations
+class Entity;
 
-class Component {};
+class Component {
+public:
+    virtual ~Component() = default;
+
+    bool enabled = true;
+    Entity* owner = nullptr;
+};
 
 class TransformComponent : public Component {
 private:
-	glm::vec2 position;
-	float rotation;
-	glm::vec2 scale;
+    glm::vec2 position;
+    glm::vec2 scale;
+    float rotation;
+
 public:
-	~TransformComponent();
-	TransformComponent(glm::vec2 pos = glm::vec2(0.0f),
-		float rot = 0.0f,
-		glm::vec2 scl = glm::vec2(1.0f))
-		: position(pos), rotation(rot), scale(scl) { }
+    TransformComponent(
+        const glm::vec2& pos = glm::vec2(0.0f),
+        float rot = 0.0f,
+        const glm::vec2& scl = glm::vec2(1.0f)
+    ) : position(pos), rotation(rot), scale(scl) {
+    }
 
-	virtual glm::mat4 getModelMatrix();
+    ~TransformComponent() override = default;
 
-	glm::vec2 getPosition() const { return position; }
-	void setPosition(const glm::vec2& pos) { position = pos; }
+    // Model matrix con caching
+    const glm::mat4& getModelMatrix() const;
+
+    // Getters
+    const glm::vec2& getPosition() const { return position; }
+    float getRotation() const { return rotation; }
+    const glm::vec2& getScale() const { return scale; }
+
+    // Setters con dirty flag
+    void setPosition(const glm::vec2& pos);
+    void setRotation(float rot);
+    void setScale(const glm::vec2& scl);
+
+    // Utility methods
+    void translate(const glm::vec2& offset);
+    void rotate(float angle);
+    void scaleBy(const glm::vec2& factor);
+
 };
 
 class MeshComponent : public Component {
 private:
-	bool visible;
-	unsigned int meshId;
+    unsigned int meshId;
+    bool visible;
+
 public:
+    MeshComponent() : meshId(0), visible(true) {}
+    explicit MeshComponent(unsigned int id) : meshId(id), visible(true) {}
+    ~MeshComponent() override = default;
 
-	MeshComponent() = default;
-	~MeshComponent() = default;
-	MeshComponent(unsigned int id) 
-	{ 
-		meshId = id; 
-		visible = true;
-	}
+    // Visibility
+    bool isVisible() const { return visible && enabled; }
+    void setVisible(bool vis) { visible = vis; }
 
-	void turnVisible() {
-		visible = true;
-	}
-
-	void turnInvisible() {
-		visible = false;
-	}
-
-	unsigned int getId() {
-		return meshId;
-	}
+    // Mesh ID
+    unsigned int getMeshId() const { return meshId; }
+    void setMeshId(unsigned int id) { meshId = id; }
 };
 
 class ColorComponent : public Component {
-private:	
-	glm::vec4 colorVec;
+private:
+    glm::vec4 color;
+
 public:
-	ColorComponent() = default;
-	~ColorComponent() = default;
-	void setColorVec(glm::vec4 cv) { this->colorVec = cv; }
-	glm::vec4 getColorVec() { return colorVec; }
+    ColorComponent() : color(1.0f) {}
+    explicit ColorComponent(const glm::vec4& col) : color(col) {}
+    explicit ColorComponent(const glm::vec3& col, float alpha = 1.0f)
+        : color(col, alpha) {
+    }
+    ~ColorComponent() override = default;
+
+    const glm::vec4& getColor() const { return color; }
+    void setColor(const glm::vec4& col) { color = col; }
+    void setColor(const glm::vec3& col, float alpha = 1.0f) {
+        color = glm::vec4(col, alpha);
+    }
+
+    float getAlpha() const { return color.a; }
+    void setAlpha(float alpha) { color.a = alpha; }
 };
 
 class Entity {
-protected:
-	static int nextId;
-	int id;
-	std::string name;
-	bool active;
+private:
+    static int nextId;
+
+    int id;
+    std::string name;
+    bool active;
 
 public:
-	TransformComponent transform;
-	MeshComponent mesh;
-	ColorComponent color;
+    // Components come membri pubblici (stile composition-based)
+    TransformComponent transform;
+    MeshComponent mesh;
+    ColorComponent color;
 
-	Entity() = default;
-	Entity(const std::string& entityName = "Entity");
-	virtual ~Entity() = default;
-	
-	virtual void update(float deltaTime) = 0;
-	virtual void onCollision(Entity* other);
+    Entity(const std::string& entityName = "Entity");
+    virtual ~Entity() = default;
 
-	int getId() const { return id; }
-	const std::string& getName() { return name;  }
-	bool isActive() const { return active; }
-	void turnActive() { active = true; }
-	void turnInactive() { active = false; }
+    // Prevent copying (use shared_ptr per condivisione)
+    Entity(const Entity&) = delete;
+    Entity& operator=(const Entity&) = delete;
+
+    // Allow moving
+    Entity(Entity&&) = default;
+    Entity& operator=(Entity&&) = default;
+
+    // Core methods
+    virtual void update(float deltaTime) = 0;
+    virtual void onCollision(Entity* other) {}
+
+    // Getters
+    int getId() const { return id; }
+    const std::string& getName() const { return name; }
+    bool isActive() const { return active; }
+
+    // State management
+    void setActive(bool state) { active = state; }
+    void setName(const std::string& newName) { name = newName; }
 };

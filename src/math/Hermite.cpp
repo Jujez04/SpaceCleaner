@@ -4,11 +4,11 @@
 
 
 float HermiteUtility::hP0(float t) {
-	return 2 * pow(t, 3) - 3 * pow(t, 2) + 1;
+	return 2 * t * t * t - 3 * pow(t, 2) + 1;
 }
 
 float HermiteUtility::hP1(float t) {
-	return -2*pow(t, 3) + 3 * pow(t, 2);
+	return -2 * t * t * t + 3 * t * t;
 }
 
 float HermiteUtility::hT0(float t) {

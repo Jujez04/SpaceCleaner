@@ -7,7 +7,6 @@ Camera::Camera(float screenWidth, float screenHeight)
 void Camera::setPosition(const glm::vec2& pos) {
     position = pos;
 }
-
 glm::mat4 Camera::getViewMatrix() const {
     glm::mat4 view(1.0f);
     // Trasla la scena in direzione opposta alla posizione della camera

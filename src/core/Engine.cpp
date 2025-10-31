@@ -10,6 +10,7 @@
 #include "graphics/Shader.h"
 #include "math/Hermite.h"
 #include "graphics/Camera.h"
+#include "graphics/Mesh.h"
 
 Engine::Engine() {}
 
@@ -28,7 +29,7 @@ void Engine::update() {
 void Engine::rendering() {
     renderer->clear();
     renderer->setCamera(camera->getViewMatrix(), camera->getProjectionMatrix());
-	renderer->draw();
+    renderer->drawAll(GL_LINE_STRIP);
 	window->updateWindow();
 }
 
@@ -81,12 +82,12 @@ void Engine::init() {
         vertices.push_back(0.4f);    // G
         vertices.push_back(0.8f);    // B
     }
-    renderer = std::make_unique<Renderer>(
-        vertices.data(),
-        vertices.size() * sizeof(float),
-        static_cast<unsigned int>(spaceshipOutline.size())
-    );
-    camera = std::make_unique<Camera>(width, height);
+    std::vector<unsigned int> indices(vertices.size() / 6);
+    for (unsigned int i = 0; i < indices.size(); ++i)
+        indices[i] = i;
 
-    gameLoop();
+    renderer = std::make_unique<Renderer>("resource/vertex.glsl", "resource/fragment.glsl");
+    auto mesh = std::make_shared<Mesh>(vertices, indices);
+    renderer->addMesh(mesh);
+    camera = std::make_unique<Camera>(width, height);
 }

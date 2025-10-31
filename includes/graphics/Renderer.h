@@ -1,36 +1,26 @@
 #pragma once
 #include <memory>
+#include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <string>
 
 class Shader;
-
-namespace vrtx {
-	class VertexArray;
-	class VertexBuffer;
-}
+class Mesh;
 
 class Renderer {
 private:
-	std::unique_ptr<vrtx::VertexArray> vertexArray;
-	std::unique_ptr<vrtx::VertexBuffer> vertexBuffer;
+	std::vector<std::shared_ptr<Mesh>> meshes;
 	std::unique_ptr<Shader> shader;
 	glm::mat4 projection;
 	glm::mat4 view;
-	unsigned int vertexCount;
 public:
 	Renderer() = default;
-	Renderer(const float* vertices, size_t size, unsigned int count);
+	Renderer(const std::string& vertexShader, const std::string& fragmentShader);
 	~Renderer();
 
-	void setup(const float* vertices, size_t size);
-
-	void clear() const {
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-	}
-
+	void addMesh(const std::shared_ptr<Mesh>& mesh);
+	void clear();
 	void setCamera(const glm::mat4& viewMat, const glm::mat4& projMat);
-
-	void draw();
+	void drawAll(GLenum mode);
 };

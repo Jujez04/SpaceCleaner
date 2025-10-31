@@ -7,6 +7,7 @@ int main() {
 	}
 	std::unique_ptr<Engine> app = std::make_unique<Engine>();
 	app->init();
+	app->gameLoop();
 	glfwTerminate();
 	return 0;
 }

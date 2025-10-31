@@ -1,57 +1,42 @@
 #include "graphics/Renderer.h"
 
-#include <memory>
-
 #include "graphics/MeshManager.h"
 #include "graphics/Shader.h"
 #include "graphics/Vertex.h"
+#include "graphics/Mesh.h"
 
-/**
-* Construttore del Renderer, in pratica inizializza tutto il processo di rendering
-* tramite vertex buffer, vertex array e shader.
-* @param vertices vertici da disegnare
-* @param size dimensione dei vertici
-*/
-Renderer::Renderer(const float* vertices, size_t size, unsigned int count)
-	: vertexCount(count) {
-	setup(vertices, size);
-	std::string vertexPath = "../resources/vertex.glsl";
-	std::string fragmentPath = "../resources/fragment.glsl";
-	shader = std::make_unique<Shader>(vertexPath, fragmentPath);
+Renderer::Renderer(const std::string& vertexPath, const std::string& fragmentPath) {
+    shader = std::make_unique<Shader>(vertexPath, fragmentPath);
+    this->setCamera(glm::mat4(1.0f), glm::mat4(0.0f));
 }
 
-/**
-* Distruttore di default
-*/
 Renderer::~Renderer() = default;
 
-void Renderer::setup(const float* vertices, size_t size) {
-	vertexArray = std::make_unique<vrtx::VertexArray>();
-	vertexBuffer = std::make_unique<vrtx::VertexBuffer>(vertices, size);
-
-	vrtx::VertexBufferLayout bufferLayout;
-	bufferLayout.push<float>(3);
-	bufferLayout.push<float>(3);
-
-	vertexArray->bind();
-	vertexBuffer->bind();
-	vertexArray->addBuffer(*vertexBuffer, bufferLayout);
-
-	vertexBuffer->unbind();
-	vertexArray->unbind();
-
+void Renderer::addMesh(const std::shared_ptr<Mesh>& mesh) {
+    meshes.push_back(mesh);
 }
 
 void Renderer::setCamera(const glm::mat4& viewMat, const glm::mat4& projMat) {
-	view = viewMat;
-	projection = projMat;
+    view = viewMat;
+    projection = projMat;
 }
 
-void Renderer::draw() {
-	shader->bind();
-	shader->setUniformMat4("view", view);
-	shader->setUniformMat4("projection", projection);
-	vertexArray->bind();
-	glDrawArrays(GL_LINE_LOOP, 0, vertexCount);
+void Renderer::clear() {
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void Renderer::drawAll(GLenum mode) {
+    if (!shader) return;
+
+    shader->bind();
+    shader->setUniformMat4("view", view);
+    shader->setUniformMat4("projection", projection);
+
+    for (const auto& mesh : meshes) {
+        if (mesh)
+            mesh->draw(*shader, mode);
+    }
+
+    shader->unbind();
+}
