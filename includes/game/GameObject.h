@@ -119,8 +119,8 @@ public:
     RenderComponent() = default;
     ~RenderComponent() override = default;
 
-    void addSubMesh(unsigned int meshId, unsigned int shaderId, const glm::vec4& color) {
-        subMeshes.emplace_back(meshId, shaderId, color);
+    void addSubMesh(SubMeshRenderInfo& meshInfo) {
+        subMeshes.push_back(meshInfo);
     }
 
     const std::vector<SubMeshRenderInfo>& getSubMeshes() const {
@@ -141,6 +141,12 @@ public:
     TransformComponent transform;
     MeshComponent mesh;
     ColorComponent color;
+
+    RenderComponent renderData;
+
+    void addMeshLayer(SubMeshRenderInfo meshInfo) {
+        renderData.addSubMesh(meshInfo);
+    }
 
     Entity(const std::string& entityName = "Entity");
     virtual ~Entity() = default;

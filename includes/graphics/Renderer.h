@@ -28,4 +28,5 @@ public:
 	void setCamera(const glm::mat4& viewMat, const glm::mat4& projMat);
 	void drawAll(GLenum mode);
 	void drawEntity(Entity& entity, GLenum mode = GL_TRIANGLES);
+	void drawEntityByInfo(Entity& entity, GLenum mode = GL_TRIANGLES);
 };

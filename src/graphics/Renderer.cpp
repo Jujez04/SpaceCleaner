@@ -62,3 +62,47 @@ void Renderer::drawEntity(Entity& entity, GLenum mode) {
 
     shader->unbind();
 }
+
+
+void Renderer::drawEntityByInfo(Entity& entity, GLenum mode) {
+    if (!entity.isActive() || !entity.renderData.enabled) return;
+
+    // 2. Ottieni la matrice di trasformazione GLOBALE dell'entità
+    // La matrice è la stessa per tutte le sub-mesh.
+    glm::mat4 entityModel = entity.transform.getModelMatrix();
+
+    // 3. Itera su TUTTE le sub-mesh da disegnare
+    for (const auto& subMesh : entity.renderData.getSubMeshes()) {
+        if (!subMesh.visible) continue;
+
+        // --- Per ogni Sub-Mesh, esegui un draw call completo ---
+
+        // 4. Seleziona e Binda lo Shader CORRETTO per questa sub-mesh
+        // NOTA: Per ora usiamo lo shader del Renderer (shader), ma in un sistema completo
+        // dovresti usare ShaderManager::get(subMesh.shaderId) per ottenere lo shader corretto.
+
+        // Supponiamo che tutti usino lo shader base del Renderer per il momento
+        if (!shader) continue;
+        shader->bind();
+
+        // 5. Imposta le matrici View e Projection (solo se cambiano, altrimenti meglio fuori dal ciclo)
+        shader->setUniformMat4("view", view);
+        shader->setUniformMat4("projection", projection);
+
+        // 6. Calcola la matrice MODEL finale (Globale * Locale)
+        glm::mat4 finalModel = entityModel * subMesh.localTransform;
+        shader->setUniformMat4("model", finalModel);
+
+        // 7. Imposta il COLORE specifico per questa sub-mesh
+        shader->setUniformVec4("color", subMesh.color);
+
+        // 8. Ottieni la Mesh e disegna
+        // Usiamo l'ID, assumendo che MeshManager::get() possa usare anche l'ID
+        auto mesh = MeshManager::getById(subMesh.meshId);
+        if (mesh) {
+            mesh->draw(*shader, mode);
+        }
+
+        shader->unbind();
+    }
+}

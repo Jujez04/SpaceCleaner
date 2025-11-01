@@ -13,6 +13,7 @@ namespace vrtx {
 
 class Mesh {
 private:
+    unsigned int meshId;
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
 
@@ -31,4 +32,8 @@ public:
     void setIndices(const std::vector<unsigned int>& indices);
 
     void draw(Shader& shader, GLenum usage) const;
+
+    unsigned int getId() const { return meshId; }
+    void setId(const unsigned int id) { meshId = id; }
+
 };
