@@ -2,24 +2,26 @@
 
 Camera::Camera(float screenWidth, float screenHeight)
     : position(0.0f), width(screenWidth), height(screenHeight) {
+    setProjection(static_cast<int>(screenWidth), static_cast<int>(screenHeight));
 }
 
 void Camera::setPosition(const glm::vec2& pos) {
     position = pos;
 }
+
+void Camera::setProjection(int width, int height) {
+    this->width = static_cast<float>(width);
+    this->height = static_cast<float>(height);
+
+    float aspectRatio = width / static_cast<float>(height);
+    projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -1.0f, 1.0f);
+}
+
 glm::mat4 Camera::getViewMatrix() const {
     glm::mat4 view(1.0f);
-    // Trasla la scena in direzione opposta alla posizione della camera
     return glm::translate(view, glm::vec3(-position, 0.0f));
 }
 
 glm::mat4 Camera::getProjectionMatrix() const {
-
-    float aspectRatio = width / height;
-
-    // Proiezione Orto: Mappa il centro dello schermo a (0,0).
-    // Copre da -aspectRatio a +aspectRatio su X
-    return glm::ortho(-1.0f * aspectRatio, 1.0f * aspectRatio,
-        -1.0f, 1.0f,
-        -1.0f, 1.0f);
+    return projection;
 }

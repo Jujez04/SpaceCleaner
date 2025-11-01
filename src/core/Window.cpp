@@ -1,14 +1,23 @@
 #include "core/Window.h"
 #include <glad/glad.h>
-#include "GLFW/glfw3.h"
 #include <stdexcept>
 
-static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-	glViewport(0, 0, width, height);
+// Callback GLFW per il resize
+void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+
+    // Recupera il puntatore alla classe Window associata
+    auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+    if (win) {
+        win->setSize(width, height);
+    }
+
+    if (win->resizeCallback)
+        win->resizeCallback(width, height);
 }
 
-Window::Window(int width, int height) {
-	createWindow(width, height);
+Window::Window(int width, int height) : width(width), height(height) {
+    createWindow(width, height);
 }
 
 Window::~Window() {
@@ -21,24 +30,37 @@ void Window::createWindow(int width, int height) {
         glfwTerminate();
         throw std::runtime_error("Failed to create GLFW window");
     }
+
     glfwMakeContextCurrent(window);
+    glfwSetWindowUserPointer(window, this);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         throw std::runtime_error("Failed to initialize GLAD");
     }
+
+    glViewport(0, 0, width, height);
+}
+
+void Window::setResizeCallback(std::function<void(int, int)> callback) {
+    resizeCallback = std::move(callback);
+}
+
+void Window::setSize(int w, int h) {
+    width = w;
+    height = h;
 }
 
 bool Window::windowIsOpen() {
-	return !glfwWindowShouldClose(window);
+    return !glfwWindowShouldClose(window);
 }
 
 void Window::updateWindow() {
-	glfwSwapBuffers(this->window);
+    glfwSwapBuffers(window);
 }
 
 void Window::pollEvents() {
-	glfwPollEvents();
+    glfwPollEvents();
 }
 
 void Window::close() {

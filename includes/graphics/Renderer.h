@@ -5,23 +5,19 @@
 #include <glm/glm.hpp>
 #include <string>
 
-class Shader;
 class Mesh;
 class MeshManager;
 class ShaderManager;
-class SpaceCleaner;
 class Entity;
 
 class Renderer {
 private:
 	std::vector<std::shared_ptr<Mesh>> meshes;
-	std::unique_ptr<Shader> shader;
 	glm::mat4 projection;
 	glm::mat4 view;
 public:
-	Renderer() = default;
-	Renderer(const std::string& vertexShader, const std::string& fragmentShader);
-	~Renderer();
+	Renderer();
+	~Renderer() = default;
 
 	void addMesh(const std::shared_ptr<Mesh>& mesh);
 	void clear();

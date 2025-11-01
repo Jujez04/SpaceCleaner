@@ -11,18 +11,16 @@
 #include "graphics/Shader.h"
 #include "graphics/Camera.h"
 #include "graphics/Mesh.h"
+#include "graphics/Renderer.h"
 #include "game/SpaceCleaner.h"
 #include "utilities/Utilities.h"
-
+#include "scene/Scene.h"
 #include "math/HermiteMesh.h"
 #include "graphics/ShaderManager.h"
 #include "graphics/MeshManager.h"
 
 Engine::Engine() {}
-
-Engine::~Engine() {
-    glfwTerminate();
-}
+Engine::~Engine() {}
 
 void Engine::processInput() {
     if (InputManager::isKeyPressed(GLFW_KEY_W))
@@ -38,31 +36,59 @@ void Engine::processInput() {
         player->transform.translate({ 0.001f, 0.0f });
 
     if (InputManager::isKeyPressed(GLFW_KEY_Q))
-        player->transform.rotate(0.005f);
+        player->transform.rotate(0.006f);
 
     if (InputManager::isKeyPressed(GLFW_KEY_E))
-        player->transform.rotate(-0.005f);
+        player->transform.rotate(-0.006f);
+
+    if (InputManager::isKeyPressed(GLFW_KEY_SPACE)) {
+        if (timeSinceLastShot >= fireCooldown) {
+            timeSinceLastShot = 0.0f;
+
+            glm::vec2 shipPos = player->transform.getPosition();
+            float angle = player->transform.getRotation();
+
+            glm::vec2 dir = glm::vec2(-sin(angle), cos(angle));
+
+            float speed = 1.2f;
+            glm::vec2 vel = dir * speed;
+            float lifetime = 3.0f;
+
+            if (scene)
+                scene->spawnProjectile(shipPos, vel, lifetime,
+                    this->projectileMeshId,
+                    this->defaultShaderId,
+                    glm::vec4(1.0f, 0.8f, 0.2f, 1.0f));
+        }
+    }
 }
 
-void Engine::update() {
-    // codice update
+void Engine::update(float deltaTime) {
+    timeSinceLastShot += deltaTime;
+    if (scene)
+        scene->update(deltaTime);
 }
 
 void Engine::rendering() {
     renderer->clear();
     renderer->setCamera(camera->getViewMatrix(), camera->getProjectionMatrix());
     if (player)
-        //renderer->drawEntity(*player, GL_TRIANGLES);
         renderer->drawEntityByInfo(*player, GL_TRIANGLES);
+    if (scene)
+        scene->render(*renderer, GL_TRIANGLES);
     window->updateWindow();
 }
 
 
 void Engine::gameLoop() {
+    lastFrameTime = glfwGetTime();
     while (window->windowIsOpen()) {
+        double currentFrameTime = glfwGetTime();
+        float deltaTime = static_cast<float>(currentFrameTime - lastFrameTime);
+        lastFrameTime = currentFrameTime;
         window->pollEvents();
         processInput();
-        update();
+        update(deltaTime);
         rendering();
     }
 }
@@ -71,13 +97,29 @@ void Engine::init() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
     int width = 800;
     int height = 600;
     window = std::make_unique<Window>(width, height);
+
+    camera = std::make_unique<Camera>(width, height);
+    renderer = std::make_unique<Renderer>();
+
+    // Callback per aggiornare la proiezione quando la finestra cambia dimensione
+    window->setResizeCallback([this](int newWidth, int newHeight) {
+        if (camera) {
+            camera->setProjection(newWidth, newHeight);
+        }
+        });
+
     InputManager::init(window->getWindowReference());
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    scene = std::make_unique<Scene>();
+
     std::vector<glm::vec2> controlPoints = {
         glm::vec2(-0.231771f,  0.099537f),
         glm::vec2(-0.282552f, -0.129630f),
@@ -99,9 +141,6 @@ void Engine::init() {
     std::string fragmentCode = readFile("resources/fragment.glsl");
     unsigned int defaultShaderId = ShaderManager::load("DefaultShader", vertexCode, fragmentCode);
     player = std::make_unique<SpaceCleaner>("SpaceCleaner");
-    // player->generateHermiteMesh(controlPoints, 60);
-    // player->getMeshComp().getMeshId();
-    // player->getColorComp().setColor(glm::vec4(0.0f, 0.4f, 0.8f, 1.0f));
     unsigned int bodyMeshId = HermiteMesh::baseHermiteToMesh(player->getName(), controlPoints, 60);
 
     SubMeshRenderInfo bodyLayer(
@@ -123,7 +162,7 @@ void Engine::init() {
         { -0.212f, -0.212f },
         { -0.3f,  0.0f },
         { -0.212f,  0.212f },
-        { 0.0f,  0.3f } // chiusura esplicita
+        { 0.0f,  0.3f }
     };
     unsigned int circleMeshId = HermiteMesh::baseHermiteToMesh(player->getName(), circlePoints, 60);
     SubMeshRenderInfo circleLayer(
@@ -136,7 +175,13 @@ void Engine::init() {
         glm::scale(glm::mat4(1.0f), glm::vec3(0.25f, 0.25f, 1.0f) * glm::vec3(0.3f, 0.3f, 1.0f));        // scala metà del corpo
 
     player->addMeshLayer(circleLayer);
-
-    renderer = std::make_unique<Renderer>(vertexCode, fragmentCode);
-    camera = std::make_unique<Camera>(width, height);
+    std::vector<glm::vec2> projectilePoints = {
+        glm::vec2(0.0f, 0.05f),
+        glm::vec2(0.015f, 0.0f),
+        glm::vec2(0.0f, -0.05f),
+        glm::vec2(-0.015f, 0.0f) 
+    };
+    unsigned int projectileMeshId = HermiteMesh::baseHermiteToMesh("ProjectileShape", projectilePoints, 10);
+    this->projectileMeshId = projectileMeshId;
+    this->defaultShaderId = defaultShaderId;
 }

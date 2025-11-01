@@ -8,12 +8,9 @@
 #include "graphics/ShaderManager.h"
 #include "game/GameObject.h"
 
-Renderer::Renderer(const std::string& vertexPath, const std::string& fragmentPath) {
-    shader = std::make_unique<Shader>(vertexPath, fragmentPath);
+Renderer::Renderer() {
     this->setCamera(glm::mat4(1.0f), glm::mat4(0.0f));
 }
-
-Renderer::~Renderer() = default;
 
 void Renderer::addMesh(const std::shared_ptr<Mesh>& mesh) {
     meshes.push_back(mesh);
@@ -29,21 +26,7 @@ void Renderer::clear() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Renderer::drawAll(GLenum mode) {
-    if (!shader) return;
-
-    shader->bind();
-    shader->setUniformMat4("view", view);
-    shader->setUniformMat4("projection", projection);
-
-    for (const auto& mesh : meshes) {
-        if (mesh)
-            mesh->draw(*shader, mode);
-    }
-
-    shader->unbind();
-}
-
+/*
 void Renderer::drawEntity(Entity& entity, GLenum mode) {
     if (!shader) return;
     if (!entity.getMeshComp().isVisible()) return;
@@ -62,7 +45,7 @@ void Renderer::drawEntity(Entity& entity, GLenum mode) {
 
     shader->unbind();
 }
-
+*/
 
 void Renderer::drawEntityByInfo(Entity& entity, GLenum mode) {
     if (!entity.isActive() || !entity.renderData.enabled) return;

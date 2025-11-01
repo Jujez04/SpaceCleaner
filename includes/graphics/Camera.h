@@ -7,7 +7,7 @@ public:
     Camera(float screenWidth, float screenHeight);
 
     void setPosition(const glm::vec2& pos);
-    //void move(const glm::vec2& delta);
+    void setProjection(int width, int height);
 
     glm::mat4 getViewMatrix() const;
     glm::mat4 getProjectionMatrix() const;
@@ -18,4 +18,6 @@ private:
     glm::vec2 position;
     float width;
     float height;
+
+    glm::mat4 projection = glm::mat4(1.0f);
 };

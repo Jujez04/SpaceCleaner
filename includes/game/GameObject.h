@@ -63,7 +63,7 @@ public:
     void scaleBy(const glm::vec2& factor);
 
 };
-
+/*
 class MeshComponent : public Component {
 private:
     std::string meshName;
@@ -110,7 +110,7 @@ public:
     float getAlpha() const { return color.a; }
     void setAlpha(float alpha) { color.a = alpha; }
 };
-
+*/
 class RenderComponent : public Component {
 private:
     std::vector<SubMeshRenderInfo> subMeshes;
@@ -139,8 +139,8 @@ private:
 public:
     // Components come membri pubblici (stile composition-based)
     TransformComponent transform;
-    MeshComponent mesh;
-    ColorComponent color;
+    //MeshComponent mesh;
+    //ColorComponent color;
 
     RenderComponent renderData;
 
@@ -167,9 +167,9 @@ public:
     int getId() const { return id; }
     const std::string& getName() const { return name; }
     bool isActive() const { return active; }
-    MeshComponent getMeshComp() const { return mesh; }
+    //MeshComponent getMeshComp() const { return mesh; }
     TransformComponent getTransform() const { return transform; }
-    ColorComponent getColorComp() const { return color; }
+    //ColorComponent getColorComp() const { return color; }
 
     // State management
     void setActive(bool state) { active = state; }

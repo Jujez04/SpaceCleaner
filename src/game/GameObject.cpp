@@ -47,6 +47,6 @@ Entity::Entity(const std::string& entityName)
 {
     // Associa i componenti all'owner
     transform.owner = this;
-    mesh.owner = this;
-    color.owner = this;
+    //mesh.owner = this;
+    //color.owner = this;
 }
