@@ -8,6 +8,18 @@
 // Forward declarations
 class Entity;
 
+struct SubMeshRenderInfo {
+    unsigned int meshId;
+    unsigned int shaderId;
+    glm::vec4 color;     
+    bool visible = true;
+    glm::mat4 localTransform = glm::mat4(1.0f);
+
+    SubMeshRenderInfo(unsigned int mId, unsigned int sId, const glm::vec4& col)
+        : meshId(mId), shaderId(sId), color(col) {
+    }
+};
+
 class Component {
 public:
     virtual ~Component() = default;
@@ -97,6 +109,23 @@ public:
 
     float getAlpha() const { return color.a; }
     void setAlpha(float alpha) { color.a = alpha; }
+};
+
+class RenderComponent : public Component {
+private:
+    std::vector<SubMeshRenderInfo> subMeshes;
+
+public:
+    RenderComponent() = default;
+    ~RenderComponent() override = default;
+
+    void addSubMesh(unsigned int meshId, unsigned int shaderId, const glm::vec4& color) {
+        subMeshes.emplace_back(meshId, shaderId, color);
+    }
+
+    const std::vector<SubMeshRenderInfo>& getSubMeshes() const {
+        return subMeshes;
+    }
 };
 
 class Entity {
