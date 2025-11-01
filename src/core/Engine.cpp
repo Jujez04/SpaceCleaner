@@ -13,6 +13,8 @@
 #include "graphics/Mesh.h"
 #include "game/SpaceCleaner.h"
 #include "utilities/Utilities.h"
+#include "graphics/ShaderManager.h"
+#include "graphics/MeshManager.h"
 
 Engine::Engine() {}
 
@@ -32,7 +34,8 @@ void Engine::rendering() {
     renderer->clear();
     renderer->setCamera(camera->getViewMatrix(), camera->getProjectionMatrix());
     if (player)
-        renderer->drawEntity(*player, GL_TRIANGLES);
+        //renderer->drawEntity(*player, GL_TRIANGLES);
+        renderer->drawEntityByInfo(*player, GL_TRIANGLES);
     window->updateWindow();
 }
 
@@ -73,15 +76,48 @@ void Engine::init() {
         glm::vec2(-0.143229f,  0.016204f),
         glm::vec2(-0.227865f,  0.099537f)
     };
-    player = std::make_unique<SpaceCleaner>("SpaceCleaner");
-    player->generateHermiteMesh(controlPoints, 60);
-    player->getMeshComp().getMeshId();
-    player->getColorComp().setColor(glm::vec4(0.0f, 0.4f, 0.8f, 1.0f)); 
     std::string vertexCode = readFile("resources/vertex.glsl");
     std::string fragmentCode = readFile("resources/fragment.glsl");
-    player->getColorComp().setColor(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
-    renderer = std::make_unique<Renderer>(vertexCode, fragmentCode);
+    unsigned int defaultShaderId = ShaderManager::load("DefaultShader", vertexCode, fragmentCode);
+    player = std::make_unique<SpaceCleaner>("SpaceCleaner");
+    // player->generateHermiteMesh(controlPoints, 60);
+    // player->getMeshComp().getMeshId();
+    // player->getColorComp().setColor(glm::vec4(0.0f, 0.4f, 0.8f, 1.0f));
+    unsigned int bodyMeshId = player->generateHermiteMesh(controlPoints, 60);
 
-    
+    SubMeshRenderInfo bodyLayer(
+        bodyMeshId,                                     // Mesh ID
+        defaultShaderId,                                // Shader ID
+        glm::vec4(0.0f, 0.4f, 0.8f, 1.0f)               // Colore azzurro solido
+    );
+    // La trasformazione locale è l'identità
+    bodyLayer.localTransform = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f, 0.3f, 1.0f));
+
+    player->addMeshLayer(bodyLayer);
+
+    std::vector<glm::vec2> circlePoints = {
+        { 0.0f,  0.3f },
+        { 0.212f,  0.212f },
+        { 0.3f,  0.0f },
+        { 0.212f, -0.212f },
+        { 0.0f, -0.3f },
+        { -0.212f, -0.212f },
+        { -0.3f,  0.0f },
+        { -0.212f,  0.212f },
+        { 0.0f,  0.3f } // chiusura esplicita
+    };
+    unsigned int circleMeshId = player->generateHermiteMesh(circlePoints, 40);
+    SubMeshRenderInfo circleLayer(
+        circleMeshId,                  // Mesh ID generato
+        defaultShaderId,               // Shader ID già caricato
+        glm::vec4(0.8f, 0.8f, 0.0f, 1.0f)  // Colore giallo pieno
+    );
+    circleLayer.localTransform =
+        glm::translate(glm::mat4(1.0f), glm::vec3(-0.0155f, -0.025f, 0.001f)) *  // piccolo offset
+        glm::scale(glm::mat4(1.0f), glm::vec3(0.25f, 0.25f, 1.0f) * glm::vec3(0.3f, 0.3f, 1.0f));        // scala metà del corpo
+
+    player->addMeshLayer(circleLayer);
+
+    renderer = std::make_unique<Renderer>(vertexCode, fragmentCode);
     camera = std::make_unique<Camera>(width, height);
 }

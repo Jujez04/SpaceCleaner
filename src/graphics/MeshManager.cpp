@@ -12,7 +12,7 @@ std::shared_ptr<Mesh> MeshManager::registerMesh(
     const std::vector<unsigned int>& indices
 ) {
     if (meshMap.count(name)) {
-        // Se la mesh esiste già, restituisce l'esistente (o gestisce l'errore)
+
         return meshMap[name];
     }
     auto mesh = std::make_shared<Mesh>(vertices, indices);
