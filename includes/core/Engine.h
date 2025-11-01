@@ -24,6 +24,8 @@ private:
     double lastFrameTime = 0.0;
     float fireCooldown = 0.2f;
     float timeSinceLastShot = 0.0f;
+    unsigned int asteroidMeshId = 0;
+    unsigned int cometMeshId = 0;   
 
     void processInput();
     void update(float deltaTime);

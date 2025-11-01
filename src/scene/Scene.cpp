@@ -5,6 +5,7 @@
 #include "game/GameObject.h"
 #include "graphics/Renderer.h"
 #include "game/Projectile.h"
+#include "game/Obstacle.h"
 
 void Scene::addEntity(const std::shared_ptr<Entity>& entity) {
     entities.push_back(entity);
@@ -45,4 +46,47 @@ void Scene::spawnProjectile(const glm::vec2& position, const glm::vec2& velocity
 
 void Scene::clear() {
     entities.clear();
+}
+
+Scene::Scene() : randomEngine(std::random_device()()) {}
+
+
+void Scene::updateSpawning(float deltaTime, unsigned int asteroidMeshId, unsigned int cometMeshId, unsigned int shaderId) {
+    timeSinceLastSpawn += deltaTime;
+
+    if (timeSinceLastSpawn >= spawnCooldown) {
+        timeSinceLastSpawn = 0.0f;
+
+        // 1. Calcola la posizione X casuale (in alto)
+        float spawnX = xDist(randomEngine);
+        glm::vec2 position(spawnX, 4.5f); // Spawna appena fuori schermo (Y=4.5)
+
+        // 2. Scegli il tipo di ostacolo (50/50)
+        Obstacle::Type type = (typeDist(randomEngine) < 0.5f) ? Obstacle::ASTEROID : Obstacle::COMET;
+
+        unsigned int meshId = (type == Obstacle::ASTEROID) ? asteroidMeshId : cometMeshId;
+        glm::vec4 color = (type == Obstacle::ASTEROID)
+            ? glm::vec4(0.5f, 0.4f, 0.3f, 1.0f) // Grigio roccioso
+            : glm::vec4(0.8f, 0.9f, 1.0f, 1.0f); // Azzurro ghiaccio
+
+        auto obstacle = std::make_shared<Obstacle>((type == Obstacle::ASTEROID) ? "Asteroid" : "Comet", type);
+        obstacle->transform.setPosition(position);
+
+        // 3. Assegna proprietà
+        float speed = (type == Obstacle::ASTEROID) ? 0.8f : 1.5f; // Comete più veloci
+        obstacle->setVelocity(glm::vec2(0.0f, -speed));
+
+        if (type == Obstacle::ASTEROID) {
+            // Rotazione casuale per gli asteroidi
+            std::uniform_real_distribution<float> rotDist(-1.5f, 1.5f);
+            obstacle->setRotationSpeed(rotDist(randomEngine));
+        }
+
+        // 4. Aggiungi il layer di rendering
+        SubMeshRenderInfo info(meshId, shaderId, color);
+        info.localTransform = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f)); // Scala l'ostacolo
+        obstacle->addMeshLayer(info);
+
+        addEntity(obstacle);
+    }
 }

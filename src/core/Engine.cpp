@@ -65,8 +65,13 @@ void Engine::processInput() {
 
 void Engine::update(float deltaTime) {
     timeSinceLastShot += deltaTime;
-    if (scene)
+    if (scene) {
         scene->update(deltaTime);
+        scene->updateSpawning(deltaTime,
+            this->asteroidMeshId,
+            this->cometMeshId,
+            this->defaultShaderId);
+    }
 }
 
 void Engine::rendering() {
@@ -175,6 +180,26 @@ void Engine::init() {
         glm::scale(glm::mat4(1.0f), glm::vec3(0.25f, 0.25f, 1.0f) * glm::vec3(0.3f, 0.3f, 1.0f));        // scala metà del corpo
 
     player->addMeshLayer(circleLayer);
+    std::vector<glm::vec2> asteroidPoints = {
+        glm::vec2(0.2f, 0.4f),
+        glm::vec2(0.6f, 0.2f),
+        glm::vec2(0.3f, -0.1f),
+        glm::vec2(0.5f, -0.4f),
+        glm::vec2(-0.2f, -0.5f),
+        glm::vec2(-0.6f, -0.1f),
+        glm::vec2(-0.4f, 0.3f)
+    };
+    asteroidMeshId = HermiteMesh::baseHermiteToMesh("AsteroidShape", asteroidPoints, 40);
+
+    std::vector<glm::vec2> cometPoints = {
+        glm::vec2(0.0f, 0.6f),
+        glm::vec2(0.1f, 0.3f),
+        glm::vec2(0.15f, 0.0f),
+        glm::vec2(0.0f, -0.1f),
+        glm::vec2(-0.15f, 0.0f),
+        glm::vec2(-0.1f, 0.3f)
+    };
+    cometMeshId = HermiteMesh::baseHermiteToMesh("CometShape", cometPoints, 30);
     std::vector<glm::vec2> projectilePoints = {
         glm::vec2(0.0f, 0.05f),
         glm::vec2(0.015f, 0.0f),

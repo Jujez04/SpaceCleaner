@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include <random>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
@@ -10,7 +11,8 @@ class Renderer;
 
 class Scene {
 public:
-    Scene() = default;
+    Scene();
+    ~Scene() = default;
 
     // Aggiunge una entità alla scena (ownership condivisa)
     void addEntity(const std::shared_ptr<Entity>& entity);
@@ -27,6 +29,15 @@ public:
     // Remove all
     void clear();
 
+    void updateSpawning(float deltaTime, unsigned int asteroidMeshId, unsigned int cometMeshId, unsigned int shaderId);
+
 private:
     std::vector<std::shared_ptr<Entity>> entities;
+    float spawnCooldown = 1.0f; // Ogni 1 secondo
+    float timeSinceLastSpawn = 0.0f;
+
+    // Generatore casuale
+    std::mt19937 randomEngine;
+    std::uniform_real_distribution<float> xDist = std::uniform_real_distribution<float>(-4.0f, 4.0f);
+    std::uniform_real_distribution<float> typeDist = std::uniform_real_distribution<float>(0.0f, 1.0f);
 };

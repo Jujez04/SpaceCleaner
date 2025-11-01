@@ -140,6 +140,7 @@
     <ClCompile Include="src\core\ResourceManager.cpp" />
     <ClCompile Include="src\core\SceneManager.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
+    <ClCompile Include="src\game\Obstacle.cpp" />
     <ClCompile Include="src\game\Projectile.cpp" />
     <ClCompile Include="src\game\SpaceCleaner.cpp" />
     <ClCompile Include="src\graphics\Camera.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="includes\core\Window.h" />
     <ClInclude Include="includes\dependencies\earcut.hpp" />
     <ClInclude Include="includes\game\GameObject.h" />
+    <ClInclude Include="includes\game\Obstacle.h" />
     <ClInclude Include="includes\game\Projectile.h" />
     <ClInclude Include="includes\game\SpaceCleaner.h" />
     <ClInclude Include="includes\graphics\Camera.h" />
