@@ -7,6 +7,7 @@
 #include "game/SpaceCleaner.h"
 #include "graphics/ShaderManager.h"
 #include "game/GameObject.h"
+#include "utilities/Timer.h"
 
 Renderer::Renderer() {
     this->setCamera(glm::mat4(1.0f), glm::mat4(0.0f));
@@ -34,7 +35,8 @@ void Renderer::drawMesh(unsigned int meshId, unsigned int shaderId, const glm::v
 
     // 3. Imposta la Matrice Modello fornita (Questa è la trasformazione del Cuore)
     shader->setUniformMat4("model", model);
-    shader->setUniformVec4("color", color);
+    shader->setUniformVec4("uColor", color);
+    shader->setUniform1f("uTime", Timer::totalTime);
 
     // 4. Ottieni e Disegna la Mesh
     auto mesh = MeshManager::getById(meshId);
@@ -47,7 +49,7 @@ void Renderer::drawMesh(unsigned int meshId, unsigned int shaderId, const glm::v
 }
 
 void Renderer::clear() {
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.05f, 0.05f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
@@ -97,7 +99,7 @@ void Renderer::drawEntityByInfo(Entity& entity, GLenum mode) {
         if (activeShader) {
             glm::mat4 finalModel = entityModel * subMesh.localTransform;
             activeShader->setUniformMat4("model", finalModel);
-            activeShader->setUniformVec4("color", subMesh.color);
+            activeShader->setUniformVec4("uColor", subMesh.color);
 
             auto mesh = MeshManager::getById(subMesh.meshId);
             if (mesh) {

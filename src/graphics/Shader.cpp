@@ -27,6 +27,14 @@ void Shader::setUniformMat4(const std::string& name, const glm::mat4& matrix) {
     glUniformMatrix4fv(getUniformLocationCached(name), 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
+void Shader::setUniform1f(const std::string& name, float value) {
+    glUniform1f(getUniformLocationCached(name), value);
+}
+
+void Shader::setUniformVec2(const std::string& name, const glm::vec2& vec) {
+    glUniform2fv(getUniformLocationCached(name), 1, glm::value_ptr(vec));
+}
+
 bool Shader::compileShader(unsigned int shader, const std::string& type) {
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);

@@ -147,9 +147,6 @@
     <ClCompile Include="src\ui\UISystem.cpp">
       <Filter>Source Files\ui</Filter>
     </ClCompile>
-    <ClCompile Include="src\utilities\Timer.cpp">
-      <Filter>Source Files\utilities</Filter>
-    </ClCompile>
     <ClCompile Include="src\utilities\Utilities.cpp">
       <Filter>Source Files\utilities</Filter>
     </ClCompile>
@@ -291,5 +288,6 @@
     <None Include="resources\fragmentSaturn.glsl" />
     <None Include="resources\fragmentEarthOrbitalFlight.glsl" />
     <None Include="resources\fragmentSun.glsl" />
+    <None Include="resources\background_vertex.glsl" />
   </ItemGroup>
 </Project>

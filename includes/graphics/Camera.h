@@ -14,6 +14,9 @@ public:
 
     const glm::vec2& GetPosition() const { return position; }
 
+    float getWidth() const { return width; }
+    float getHeight() const { return height; }
+
 private:
     glm::vec2 position;
     float width;

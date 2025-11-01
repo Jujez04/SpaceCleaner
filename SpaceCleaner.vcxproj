@@ -155,7 +155,6 @@
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\LaunchApp.cpp" />
     <ClCompile Include="src\ui\UISystem.cpp" />
-    <ClCompile Include="src\utilities\Timer.cpp" />
     <ClCompile Include="src\utilities\Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -195,6 +194,7 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="packages.config" />
+    <None Include="resources\background_vertex.glsl" />
     <None Include="resources\fragment.glsl" />
     <None Include="resources\fragmentEarthOrbitalFlight.glsl" />
     <None Include="resources\fragmentSaturn.glsl" />

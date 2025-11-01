@@ -25,7 +25,8 @@ public:
     void setUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
     void setUniformVec4(const std::string& name, const glm::vec4& vec);
     void setUniformMat4(const std::string& name, const glm::mat4& matrix);
-
+    void setUniform1f(const std::string& name, float value);
+    void setUniformVec2(const std::string& name, const glm::vec2& vec);
     // Utility
     unsigned int getId() const { return rendererId; }
     bool isValid() const { return rendererId != 0; }

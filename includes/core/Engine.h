@@ -27,8 +27,10 @@ private:
     unsigned int asteroidMeshId = 0;
     unsigned int cometMeshId = 0;  
     unsigned int heartMeshId = 0;
+    unsigned int backgroundMeshId = 0;
+    unsigned int backgroundShaderId = 0;
 
     void processInput();
-    void update(float deltaTime);
+    void update(float delta);
     void rendering();
 };

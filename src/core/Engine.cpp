@@ -14,6 +14,7 @@
 #include "graphics/Renderer.h"
 #include "game/SpaceCleaner.h"
 #include "utilities/Utilities.h"
+#include "utilities/Timer.h"
 #include "scene/Scene.h"
 #include "math/HermiteMesh.h"
 #include "graphics/ShaderManager.h"
@@ -63,12 +64,12 @@ void Engine::processInput() {
     }
 }
 
-void Engine::update(float deltaTime) {
-    timeSinceLastShot += deltaTime;
+void Engine::update(float delta) {
+    timeSinceLastShot += delta;
     if (scene) {
-        scene->update(deltaTime);
+        scene->update(delta);
         scene->checkCollisions();
-        scene->updateSpawning(deltaTime,
+        scene->updateSpawning(delta,
             this->asteroidMeshId,
             this->cometMeshId,
             this->defaultShaderId);
@@ -77,14 +78,45 @@ void Engine::update(float deltaTime) {
 
 void Engine::rendering() {
     renderer->clear();
-    renderer->setCamera(camera->getViewMatrix(), camera->getProjectionMatrix());
+    float orthoWidth = camera->getWidth() / camera->getHeight(); // aspectRatio
+    glm::mat4 bgModel = glm::scale(glm::mat4(1.0f), glm::vec3(orthoWidth, 1.0f, 1.0f));
+    glm::mat4 viewIdentity = glm::mat4(1.0f);
+
+    std::shared_ptr<Shader> backgroundShader = ShaderManager::get(this->backgroundShaderId);
+
+    if (backgroundShader) {
+        renderer->setCamera(viewIdentity, camera->getProjectionMatrix());
+        backgroundShader->bind();
+        backgroundShader->setUniformVec2("uResolution",
+            glm::vec2(window->getWidth(), window->getHeight()));
+
+        // 2. IMPOSTA UTIME (Solo una volta)
+        backgroundShader->setUniform1f("uTime", Timer::getTotalTime());
+
+        // 3. Imposta le Matrici
+        backgroundShader->setUniformMat4("view", viewIdentity);
+        backgroundShader->setUniformMat4("projection", camera->getProjectionMatrix());
+        backgroundShader->setUniformMat4("model", bgModel);
+
+        // 4. Imposta il Colore
+        backgroundShader->setUniformVec4("uColor", glm::vec4(0.05f, 0.05f, 0.1f, 1.0f));
+        auto mesh = MeshManager::getById(this->backgroundMeshId);
+        if (mesh) {
+            mesh->draw(*backgroundShader, GL_TRIANGLES);
+        }
+
+        backgroundShader->unbind();
+    }
+    float orthoHeight = 1.0f;
+
+    renderer->setCamera(viewIdentity, camera->getProjectionMatrix());
+
     if (scene)
         scene->render(*renderer, GL_TRIANGLES);
     if (player) {
-        float aspectRatio = window->getWidth() / window->getHeight();
-        float worldLeft = -aspectRatio;
+        float worldLeft = -(camera->getWidth() / camera->getHeight());
         renderer->drawEntityByInfo(*player, GL_TRIANGLES);
-        glm::vec2 startPos = glm::vec2(worldLeft, 1.0f - 0.05f);
+        glm::vec2 startPos = glm::vec2(worldLeft + 0.05f, 1.0f - 0.05f);
         float spacing = 0.08f;
         float heartScale = 0.1f;
         int currentHealth = player->getHealth();
@@ -117,12 +149,11 @@ void Engine::rendering() {
 void Engine::gameLoop() {
     lastFrameTime = glfwGetTime();
     while (window->windowIsOpen()) {
-        double currentFrameTime = glfwGetTime();
-        float deltaTime = static_cast<float>(currentFrameTime - lastFrameTime);
-        lastFrameTime = currentFrameTime;
+        Timer::update();
+        float delta = Timer::getDeltaTime();
         window->pollEvents();
         processInput();
-        update(deltaTime);
+        update(delta);
         rendering();
     }
 }
@@ -240,13 +271,29 @@ void Engine::init() {
     this->projectileMeshId = projectileMeshId;
     this->defaultShaderId = defaultShaderId;
     std::vector<glm::vec2> heartPoints = {
-        glm::vec2(0.0f, 0.45f),
-        glm::vec2(0.3f, 0.15f),
-        glm::vec2(0.15f, -0.3f),
-        glm::vec2(-0.15f, -0.3f),
-        glm::vec2(-0.3f, 0.15f),
-        glm::vec2(-0.0f, 0.45f)
+        glm::vec2(0.003f, 0.16f),
+        glm::vec2(0.124f, 0.301f),
+        glm::vec2(0.177f, 0.178f),
+        glm::vec2(0.186f, 0.012f),
+        glm::vec2(0.0013f, -0.42f),
+        glm::vec2(-0.186f, 0.012f),
+        glm::vec2(-0.177f, 0.178f),
+        glm::vec2(-0.124f, 0.301f),
+        glm::vec2(0.003f, 0.16f)
     };
     heartMeshId = HermiteMesh::baseHermiteToMesh("HeartShape", heartPoints, 30);
     this->heartMeshId = heartMeshId;
+
+    std::vector<glm::vec2> quadPoints = {
+    glm::vec2(-1.0f, 1.0f),  // Top Left
+    glm::vec2(1.0f, 1.0f),   // Top Right
+    glm::vec2(1.0f, -1.0f),  // Bottom Right
+    glm::vec2(-1.0f, -1.0f)  // Bottom Left
+    };
+    unsigned int backgroundMeshId = HermiteMesh::baseHermiteToMesh("BackgroundQuad", quadPoints, 4);
+    this->backgroundMeshId = backgroundMeshId;
+    std::string bgVertexCode = readFile("resources/background_vertex.glsl");
+    std::string bgFragmentCode = readFile("resources/fragmentSaturn.glsl");
+    unsigned int backgroundShaderId = ShaderManager::load("BackgroundShader", bgVertexCode, bgFragmentCode);
+    this->backgroundShaderId = backgroundShaderId;
 }
