@@ -1,5 +1,3 @@
-// graphics/ShaderManager.h (Corretto)
-
 #pragma once
 
 #include <memory>

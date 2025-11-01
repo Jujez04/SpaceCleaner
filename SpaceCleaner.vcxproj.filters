@@ -168,6 +168,9 @@
     <ClCompile Include="src\graphics\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\InputManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui.h">
@@ -250,6 +253,9 @@
     </ClInclude>
     <ClInclude Include="includes\dependencies\earcut.hpp">
       <Filter>Source Files\dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\core\InputManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

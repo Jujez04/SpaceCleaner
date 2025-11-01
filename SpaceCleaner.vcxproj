@@ -134,6 +134,7 @@
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_tables.cpp" />
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="..\..\..\..\..\Users\justi\Downloads\Laboratorio I-20250926\LaboratorioI\glad.c" />
+    <ClCompile Include="src\core\InputManager.cpp" />
     <ClCompile Include="src\game\GameObject.cpp" />
     <ClCompile Include="src\core\Engine.cpp" />
     <ClCompile Include="src\core\ResourceManager.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imstb_textedit.h" />
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imstb_truetype.h" />
     <ClInclude Include="includes\core\Engine.h" />
+    <ClInclude Include="includes\core\InputManager.h" />
     <ClInclude Include="includes\core\ResourceManager.h" />
     <ClInclude Include="includes\core\SceneManager.h" />
     <ClInclude Include="includes\core\Window.h" />

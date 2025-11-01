@@ -12,7 +12,7 @@ Window::Window(int width, int height) {
 }
 
 Window::~Window() {
-	glfwDestroyWindow(window);
+    close();
 }
 
 void Window::createWindow(int width, int height) {
@@ -39,4 +39,8 @@ void Window::updateWindow() {
 
 void Window::pollEvents() {
 	glfwPollEvents();
+}
+
+void Window::close() {
+    glfwDestroyWindow(window);
 }

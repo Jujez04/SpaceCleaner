@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <stdexcept>
 
+#include "core/InputManager.h"
 #include "core/Window.h"
 #include "graphics/Vertex.h"
 #include "graphics/Shader.h"
@@ -23,7 +24,23 @@ Engine::~Engine() {
 }
 
 void Engine::processInput() {
-    // codice input
+    if (InputManager::isKeyPressed(GLFW_KEY_W))
+        player->transform.translate({ 0.0f, 0.001f });
+
+    if (InputManager::isKeyPressed(GLFW_KEY_S))
+        player->transform.translate({ 0.0f, -0.001f });
+
+    if (InputManager::isKeyPressed(GLFW_KEY_A))
+        player->transform.translate({ -0.001f, 0.0f });
+
+    if (InputManager::isKeyPressed(GLFW_KEY_D))
+        player->transform.translate({ 0.001f, 0.0f });
+
+    if (InputManager::isKeyPressed(GLFW_KEY_Q))
+        player->transform.rotate(0.005f);
+
+    if (InputManager::isKeyPressed(GLFW_KEY_E))
+        player->transform.rotate(-0.005f);
 }
 
 void Engine::update() {
@@ -57,6 +74,7 @@ void Engine::init() {
     int width = 800;
     int height = 600;
     window = std::make_unique<Window>(width, height);
+    InputManager::init(window->getWindowReference());
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     std::vector<glm::vec2> controlPoints = {

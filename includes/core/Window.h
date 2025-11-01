@@ -9,9 +9,12 @@ class Window {
 public:
 	Window(int width, int height);
 	~Window();
-	virtual bool windowIsOpen();
-	virtual void pollEvents();
-	virtual void updateWindow();
+	bool windowIsOpen();
+	void pollEvents();
+	void updateWindow();
+	void close();
+
+	GLFWwindow* getWindowReference() const { return window; }
 private:
 	virtual void createWindow(int width, int height);
 	GLFWwindow* window;
