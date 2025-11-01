@@ -21,6 +21,31 @@ void Renderer::setCamera(const glm::mat4& viewMat, const glm::mat4& projMat) {
     projection = projMat;
 }
 
+void Renderer::drawMesh(unsigned int meshId, unsigned int shaderId, const glm::vec4& color, const glm::mat4& model, GLenum mode)
+{
+    std::shared_ptr<Shader> shader = ShaderManager::get(shaderId);
+    if (!shader) return;
+
+    shader->bind();
+
+    // 2. Imposta le Uniformi (Usa le matrici della telecamera già caricate)
+    shader->setUniformMat4("view", view);
+    shader->setUniformMat4("projection", projection);
+
+    // 3. Imposta la Matrice Modello fornita (Questa è la trasformazione del Cuore)
+    shader->setUniformMat4("model", model);
+    shader->setUniformVec4("color", color);
+
+    // 4. Ottieni e Disegna la Mesh
+    auto mesh = MeshManager::getById(meshId);
+    if (mesh) {
+        mesh->draw(*shader, mode);
+    }
+
+    // 5. Unbind
+    shader->unbind();
+}
+
 void Renderer::clear() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

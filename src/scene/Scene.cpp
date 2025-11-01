@@ -6,6 +6,8 @@
 #include "graphics/Renderer.h"
 #include "game/Projectile.h"
 #include "game/Obstacle.h"
+#include "game/Collision.h"
+#include "game/SpaceCleaner.h"
 
 void Scene::addEntity(const std::shared_ptr<Entity>& entity) {
     entities.push_back(entity);
@@ -88,5 +90,56 @@ void Scene::updateSpawning(float deltaTime, unsigned int asteroidMeshId, unsigne
         obstacle->addMeshLayer(info);
 
         addEntity(obstacle);
+    }
+}
+
+void Scene::checkCollisions() {
+    std::vector<std::shared_ptr<Projectile>> projectiles;
+    std::vector<std::shared_ptr<Obstacle>> obstacles;
+    std::shared_ptr<Entity> playerRef = nullptr;
+
+    // Ricaviamo tutti i vari riferimenti delle entità dalla scena
+    for (const auto& e : entities) {
+        if (e->isActive()) {
+            if (auto p = std::dynamic_pointer_cast<Projectile>(e)) {
+                projectiles.push_back(p);
+            }
+            else if(auto o = std::dynamic_pointer_cast<Obstacle>(e)) {
+                obstacles.push_back(o);
+            } else if (e->getName() == "SpaceCleaner") {
+                playerRef = e;
+            }
+        }
+    }
+
+    // Verifico se ci sono collisioni tra proiettili e ostacoli
+    for (const auto& proj : projectiles) {
+        if (proj->isActive()) {
+            AABB projBox = proj->getAABB();
+            for (const auto& obs : obstacles) {
+                if (obs->isActive()) {
+                    AABB obsBox = obs->getAABB();
+                    if (projBox.isColliding(obsBox)) {
+                        proj->setActive(false);
+                        obs->setActive(false);
+                    }
+                }
+            }
+        }
+    }
+
+    if (playerRef) {
+        AABB playerBox = playerRef->getAABB();
+        for (const auto& obs : obstacles) {
+            if (obs->isActive()) {
+                AABB obsBox = obs->getAABB();
+                if (playerBox.isColliding(obsBox)) {
+                    obs->setActive(false);
+                    if (auto playerCasted = std::dynamic_pointer_cast<SpaceCleaner>(playerRef)) {
+                        playerCasted->takeDamage();
+                    }
+                }
+            }
+        }
     }
 }

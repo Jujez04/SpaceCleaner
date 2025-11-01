@@ -31,6 +31,8 @@ public:
 
     void updateSpawning(float deltaTime, unsigned int asteroidMeshId, unsigned int cometMeshId, unsigned int shaderId);
 
+    void checkCollisions();
+
 private:
     std::vector<std::shared_ptr<Entity>> entities;
     float spawnCooldown = 1.0f; // Ogni 1 secondo

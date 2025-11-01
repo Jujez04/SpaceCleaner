@@ -22,7 +22,6 @@ public:
 	void addMesh(const std::shared_ptr<Mesh>& mesh);
 	void clear();
 	void setCamera(const glm::mat4& viewMat, const glm::mat4& projMat);
-	void drawAll(GLenum mode);
-	void drawEntity(Entity& entity, GLenum mode = GL_TRIANGLES);
+	void drawMesh(unsigned int meshId, unsigned int shaderId, const glm::vec4& color, const glm::mat4& model, GLenum mode);
 	void drawEntityByInfo(Entity& entity, GLenum mode = GL_TRIANGLES);
 };

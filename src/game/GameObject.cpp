@@ -1,5 +1,6 @@
 #include "game/GameObject.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "game/Collision.h"
 
 int Entity::nextId = 0;
 
@@ -49,4 +50,13 @@ Entity::Entity(const std::string& entityName)
     transform.owner = this;
     //mesh.owner = this;
     //color.owner = this;
+}
+
+AABB Entity::getAABB() const {
+    glm::vec2 pos = transform.getPosition();
+    glm::vec2 halfSize = glm::vec2(0.1f) * transform.getScale(); // Il problema di AABB: invariante rispetto alla rotazione
+    AABB box;
+    box.min = pos - halfSize;
+    box.max = pos + halfSize;
+    return box;
 }

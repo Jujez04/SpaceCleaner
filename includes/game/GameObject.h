@@ -5,6 +5,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+struct AABB;
+
 // Forward declarations
 class Entity;
 
@@ -162,6 +164,7 @@ public:
     // Core methods
     virtual void update(float deltaTime) = 0;
     virtual void onCollision(Entity* other) {}
+    virtual AABB getAABB() const;
 
     // Getters
     int getId() const { return id; }

@@ -67,6 +67,7 @@ void Engine::update(float deltaTime) {
     timeSinceLastShot += deltaTime;
     if (scene) {
         scene->update(deltaTime);
+        scene->checkCollisions();
         scene->updateSpawning(deltaTime,
             this->asteroidMeshId,
             this->cometMeshId,
@@ -77,11 +78,39 @@ void Engine::update(float deltaTime) {
 void Engine::rendering() {
     renderer->clear();
     renderer->setCamera(camera->getViewMatrix(), camera->getProjectionMatrix());
-    if (player)
-        renderer->drawEntityByInfo(*player, GL_TRIANGLES);
     if (scene)
         scene->render(*renderer, GL_TRIANGLES);
+    if (player) {
+        float aspectRatio = window->getWidth() / window->getHeight();
+        float worldLeft = -aspectRatio;
+        renderer->drawEntityByInfo(*player, GL_TRIANGLES);
+        glm::vec2 startPos = glm::vec2(worldLeft, 1.0f - 0.05f);
+        float spacing = 0.08f;
+        float heartScale = 0.1f;
+        int currentHealth = player->getHealth();
+        int maxHealth = player->getMaxHealth();
+        for (int i = 0; i < maxHealth; ++i) {
+            glm::vec4 color = (i < currentHealth) ?
+                glm::vec4(1.0f, 0.0f, 0.4f, 1.0f) :
+                glm::vec4(0.3f, 0.3f, 0.3f, 0.5f);
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(startPos.x + i * spacing, startPos.y, 0.0f));
+
+            model = glm::scale(model, glm::vec3(heartScale));
+
+            renderer->drawMesh(
+                this->heartMeshId,
+                this->defaultShaderId,
+                color,
+                model,
+                GL_TRIANGLES
+            );
+        }
+    }
+       
     window->updateWindow();
+
+    
 }
 
 
@@ -104,8 +133,8 @@ void Engine::init() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-    int width = 800;
-    int height = 600;
+    int width = 1000;
+    int height = 800;
     window = std::make_unique<Window>(width, height);
 
     camera = std::make_unique<Camera>(width, height);
@@ -145,7 +174,7 @@ void Engine::init() {
     std::string vertexCode = readFile("resources/vertex.glsl");
     std::string fragmentCode = readFile("resources/fragment.glsl");
     unsigned int defaultShaderId = ShaderManager::load("DefaultShader", vertexCode, fragmentCode);
-    player = std::make_unique<SpaceCleaner>("SpaceCleaner");
+    player = std::make_shared<SpaceCleaner>("SpaceCleaner");
     unsigned int bodyMeshId = HermiteMesh::baseHermiteToMesh(player->getName(), controlPoints, 60);
 
     SubMeshRenderInfo bodyLayer(
@@ -180,6 +209,7 @@ void Engine::init() {
         glm::scale(glm::mat4(1.0f), glm::vec3(0.25f, 0.25f, 1.0f) * glm::vec3(0.3f, 0.3f, 1.0f));        // scala metà del corpo
 
     player->addMeshLayer(circleLayer);
+    scene->addEntity(player);
     std::vector<glm::vec2> asteroidPoints = {
         glm::vec2(0.2f, 0.4f),
         glm::vec2(0.6f, 0.2f),
@@ -209,4 +239,14 @@ void Engine::init() {
     unsigned int projectileMeshId = HermiteMesh::baseHermiteToMesh("ProjectileShape", projectilePoints, 10);
     this->projectileMeshId = projectileMeshId;
     this->defaultShaderId = defaultShaderId;
+    std::vector<glm::vec2> heartPoints = {
+        glm::vec2(0.0f, 0.45f),
+        glm::vec2(0.3f, 0.15f),
+        glm::vec2(0.15f, -0.3f),
+        glm::vec2(-0.15f, -0.3f),
+        glm::vec2(-0.3f, 0.15f),
+        glm::vec2(-0.0f, 0.45f)
+    };
+    heartMeshId = HermiteMesh::baseHermiteToMesh("HeartShape", heartPoints, 30);
+    this->heartMeshId = heartMeshId;
 }

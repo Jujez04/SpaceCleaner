@@ -275,6 +275,9 @@
     <ClInclude Include="includes\game\Obstacle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="includes\game\Collision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -285,5 +288,8 @@
     <None Include="resources\vertex.glsl">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="resources\fragmentSaturn.glsl" />
+    <None Include="resources\fragmentEarthOrbitalFlight.glsl" />
+    <None Include="resources\fragmentSun.glsl" />
   </ItemGroup>
 </Project>
