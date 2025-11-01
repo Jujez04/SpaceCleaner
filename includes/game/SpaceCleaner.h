@@ -22,9 +22,6 @@ public:
 		return speed;
 	}
 
-	unsigned int generateHermiteMesh(const std::vector<glm::vec2>& controlPoints, int segment = 40);
-
-
 	void setDirection(const glm::vec2& dir) {
 		direction = dir;
 	}

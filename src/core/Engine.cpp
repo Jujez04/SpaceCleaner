@@ -9,11 +9,12 @@
 #include "core/Window.h"
 #include "graphics/Vertex.h"
 #include "graphics/Shader.h"
-#include "math/Hermite.h"
 #include "graphics/Camera.h"
 #include "graphics/Mesh.h"
 #include "game/SpaceCleaner.h"
 #include "utilities/Utilities.h"
+
+#include "math/HermiteMesh.h"
 #include "graphics/ShaderManager.h"
 #include "graphics/MeshManager.h"
 
@@ -101,7 +102,7 @@ void Engine::init() {
     // player->generateHermiteMesh(controlPoints, 60);
     // player->getMeshComp().getMeshId();
     // player->getColorComp().setColor(glm::vec4(0.0f, 0.4f, 0.8f, 1.0f));
-    unsigned int bodyMeshId = player->generateHermiteMesh(controlPoints, 60);
+    unsigned int bodyMeshId = HermiteMesh::baseHermiteToMesh(player->getName(), controlPoints, 60);
 
     SubMeshRenderInfo bodyLayer(
         bodyMeshId,                                     // Mesh ID
@@ -124,7 +125,7 @@ void Engine::init() {
         { -0.212f,  0.212f },
         { 0.0f,  0.3f } // chiusura esplicita
     };
-    unsigned int circleMeshId = player->generateHermiteMesh(circlePoints, 40);
+    unsigned int circleMeshId = HermiteMesh::baseHermiteToMesh(player->getName(), circlePoints, 60);
     SubMeshRenderInfo circleLayer(
         circleMeshId,                  // Mesh ID generato
         defaultShaderId,               // Shader ID già caricato

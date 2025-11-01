@@ -171,6 +171,9 @@
     <ClCompile Include="src\core\InputManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\math\HermiteMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui.h">
@@ -255,6 +258,9 @@
       <Filter>Source Files\dependencies</Filter>
     </ClInclude>
     <ClInclude Include="includes\core\InputManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\math\HermiteMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

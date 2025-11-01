@@ -147,6 +147,7 @@
     <ClCompile Include="src\graphics\ShaderManager.cpp" />
     <ClCompile Include="src\graphics\Vertex.cpp" />
     <ClCompile Include="src\math\Hermite.cpp" />
+    <ClCompile Include="src\math\HermiteMesh.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="includes\graphics\ShaderManager.h" />
     <ClInclude Include="includes\graphics\Vertex.h" />
     <ClInclude Include="includes\math\Hermite.h" />
+    <ClInclude Include="includes\math\HermiteMesh.h" />
     <ClInclude Include="includes\scene\Scene.h" />
     <ClInclude Include="includes\graphics\Renderer.h" />
     <ClInclude Include="includes\graphics\Shader.h" />
