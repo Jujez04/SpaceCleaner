@@ -1,6 +1,8 @@
 #include "game/GameObject.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "game/Collision.h"
+#include "graphics/Mesh.h"
+#include "graphics/MeshManager.h"
 
 int Entity::nextId = 0;
 
@@ -53,10 +55,21 @@ Entity::Entity(const std::string& entityName)
 }
 
 AABB Entity::getAABB() const {
-    glm::vec2 pos = transform.getPosition();
-    glm::vec2 halfSize = glm::vec2(0.1f) * transform.getScale(); // Il problema di AABB: invariante rispetto alla rotazione
     AABB box;
-    box.min = pos - halfSize;
-    box.max = pos + halfSize;
+
+    glm::mat4 entityTransform = transform.getModelMatrix();
+
+    for (const auto& subMeshInfo : renderData.getSubMeshes()) {
+        std::shared_ptr<Mesh> mesh = MeshManager::getById(subMeshInfo.meshId);
+        if (!mesh) continue;
+
+        // Combina transform locale della submesh con quello dell'entità
+        glm::mat4 finalTransform = entityTransform * subMeshInfo.localTransform;
+        AABB meshBox = calculateMeshAABB(mesh, finalTransform);
+
+        box.min = glm::min(box.min, meshBox.min);
+        box.max = glm::max(box.max, meshBox.max);
+    }
+
     return box;
 }

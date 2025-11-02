@@ -17,6 +17,10 @@ private:
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
 
+    //Per AABB
+    glm::vec2 minPoint = glm::vec2(0.0f);
+    glm::vec2 maxPoint = glm::vec2(0.0f);
+
     std::unique_ptr<vrtx::VertexArray> va;
     std::unique_ptr<vrtx::VertexBuffer> vb;
     std::unique_ptr<vrtx::IndexBuffer> ib;
@@ -30,10 +34,11 @@ public:
 
     void setVertices(const std::vector<float>& vertices);
     void setIndices(const std::vector<unsigned int>& indices);
-
+    std::vector<float> getVertices() const{ return vertices; }
     void draw(Shader& shader, GLenum usage) const;
 
     unsigned int getId() const { return meshId; }
     void setId(const unsigned int id) { meshId = id; }
-
+    void setMin(glm::vec2 vec) { minPoint = vec; }
+    void setMax(glm::vec2 vec) { maxPoint = vec; }
 };

@@ -32,7 +32,16 @@ unsigned int HermiteMesh::baseHermiteToMesh(const std::string& name, const std::
 
     static unsigned int meshCounter = 0;
     std::string meshName = name + "_mesh_" + std::to_string(meshCounter++);
-
+    glm::vec2 minPoint = curvePoints[0];
+    for (size_t i = 1; i < curvePoints.size(); ++i) {
+        minPoint = glm::min(minPoint, curvePoints[i]);
+    }
+    glm::vec2 maxPoint = curvePoints[0];
+    for (size_t i = 1; i < curvePoints.size(); ++i) {
+        minPoint = glm::max(minPoint, curvePoints[i]);
+    }
     std::shared_ptr<Mesh> newMesh = MeshManager::registerMesh(meshName, vertices, indices);
+    newMesh->setMin(minPoint);
+    newMesh->setMin(maxPoint);
     return newMesh ? newMesh->getId() : 0;
 }

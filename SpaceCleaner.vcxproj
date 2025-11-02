@@ -134,6 +134,7 @@
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_tables.cpp" />
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="..\..\..\..\..\Users\justi\Downloads\Laboratorio I-20250926\LaboratorioI\glad.c" />
+    <ClCompile Include="src\game\Collision.cpp" />
     <ClCompile Include="src\ui\ImGuiManager.cpp" />
     <ClCompile Include="src\core\InputManager.cpp" />
     <ClCompile Include="src\game\GameObject.cpp" />

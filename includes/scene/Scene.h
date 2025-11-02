@@ -40,6 +40,6 @@ private:
 
     // Generatore casuale
     std::mt19937 randomEngine;
-    std::uniform_real_distribution<float> xDist = std::uniform_real_distribution<float>(-4.0f, 4.0f);
+    std::uniform_real_distribution<float> xDist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
     std::uniform_real_distribution<float> typeDist = std::uniform_real_distribution<float>(0.0f, 1.0f);
 };
