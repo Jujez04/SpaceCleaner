@@ -1,5 +1,10 @@
 #pragma once
 #include <memory>
+#include <vector>
+#include <string>
+#include "core/BackGround.h" 
+#include "core/PlayerConfig.h"
+#include "core/ScoreManager.h"
 
 class Window;
 class Renderer;
@@ -22,14 +27,18 @@ public:
     void init();
     void gameLoop();
     Renderer* getRenderer() const { return renderer.get(); }
+    void adjustScore(int delta) { scoreManager.adjustScore(delta); }
+    int getScore() const { return scoreManager.getScore(); }
+    std::vector<BackgroundConfig> backgroundConfigs;
+    std::vector<PlayerConfig> playerConfigs;
 private:
     std::unique_ptr<Window> window;
     std::unique_ptr<Renderer> renderer;
     std::unique_ptr<Camera> camera;
     std::unique_ptr<Scene> scene;
     std::shared_ptr<SpaceCleaner> player;
-    
     GameState currentState = PLAYING;
+    ScoreManager scoreManager;
     bool imguiVisible = false;
     unsigned int defaultShaderId = 0;
     unsigned int projectileMeshId = 0;
@@ -43,7 +52,7 @@ private:
     unsigned int backgroundShaderId = 0;
     unsigned int gameOverMeshId = 0;
     unsigned int boundingBoxMeshId = 0;
-
+    void applyPlayerConfig(unsigned int configIndex);
     void processInput();
     void update(float delta);
     void rendering();

@@ -3,7 +3,8 @@
 #include <dependencies/imgui/imgui_internal.h>
 #include <dependencies/imgui/imgui_impl_glfw.h>
 #include <dependencies/imgui/imgui_impl_opengl3.h>
-
+#include "core/Engine.h"
+#include "core/BackGround.h"
 
 ImGuiManager::ImGuiManager(GLFWwindow* window) {
     IMGUI_CHECKVERSION();
@@ -50,11 +51,40 @@ void ImGuiManager::drawEditorWindow(Engine* engine) {
 
     ImGui::Separator();
     ImGui::Text("Scelta giocatore");
-    ImGui::SliderInt("Player Type", reinterpret_cast<int*>(&currentPlayerSelection), 0, 2);
+    const auto& playerConfigs = engine->playerConfigs;
+    std::vector<const char*> playerItems;
+    for (const auto& config : playerConfigs) {
+        playerItems.push_back(config.name.c_str());
+    }
 
-    ImGui::Text("Sfondo");
-    ImGui::SliderInt("Background", reinterpret_cast<int*>(&currentBackgroundSelection), 0, 3);
+    if (!playerItems.empty()) {
+        // currentPlayerSelection è l'indice (unsigned int)
+        if (ImGui::Combo("Player Model", (int*)&currentPlayerSelection, playerItems.data(), (int)playerItems.size())) {
+            // L'indice 'currentPlayerSelection' è stato aggiornato.
+            // La logica di applicazione è in Engine::update().
+        }
+    }
+    else {
+        ImGui::TextDisabled("Nessun modello di player configurato.");
+    }
+    const auto& bgConfigs = engine->backgroundConfigs;
+    std::vector<const char*> bgItems;
+    for (const auto& config : bgConfigs) {
+        bgItems.push_back(config.name.c_str());
+    }
 
+    if (!bgItems.empty()) {
+        // currentBackgroundSelection è l'indice (unsigned int) in ImGuiManager.h
+        if (ImGui::Combo("Shader Select", (int*)&currentBackgroundSelection, bgItems.data(), (int)bgItems.size())) {
+            // L'indice è ora aggiornato. Engine::rendering() lo userà nel frame successivo.
+        }
+    }
+    else {
+        ImGui::TextDisabled("Nessun background configurato.");
+    }
+    ImGui::Separator();
+    ImGui::Text("Current Score: %d", engine->getScore());
+    ImGui::Separator();
     ImGui::End();
 }
 

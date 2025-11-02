@@ -35,11 +35,16 @@ public:
 
     std::vector<std::shared_ptr<Entity>> getEntities() const { return entities; }
 
+    int getCollisions() { 
+        int temp = numCollisions;
+        numCollisions = 0;
+        return temp; 
+    }
 private:
     std::vector<std::shared_ptr<Entity>> entities;
     float spawnCooldown = 1.0f; // Ogni 1 secondo
     float timeSinceLastSpawn = 0.0f;
-
+    int numCollisions = 0;
     // Generatore casuale
     std::mt19937 randomEngine;
     std::uniform_real_distribution<float> xDist = std::uniform_real_distribution<float>(-1.0f, 1.0f);

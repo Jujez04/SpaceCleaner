@@ -174,11 +174,13 @@
     <ClInclude Include="includes\core\InputManager.h" />
     <ClInclude Include="includes\core\ResourceManager.h" />
     <ClInclude Include="includes\core\SceneManager.h" />
+    <ClInclude Include="includes\core\ScoreManager.h" />
     <ClInclude Include="includes\core\Window.h" />
     <ClInclude Include="includes\dependencies\earcut.hpp" />
     <ClInclude Include="includes\game\Collision.h" />
     <ClInclude Include="includes\game\GameObject.h" />
     <ClInclude Include="includes\game\Obstacle.h" />
+    <ClInclude Include="includes\core\PlayerConfig.h" />
     <ClInclude Include="includes\game\Projectile.h" />
     <ClInclude Include="includes\game\SpaceCleaner.h" />
     <ClInclude Include="includes\graphics\Camera.h" />
@@ -208,7 +210,9 @@
   <ItemGroup>
     <Text Include="..\..\hermite_curves\hermite_curves\mycurve.txt" />
     <Text Include="..\..\hermite_curves\hermite_curves\SWship.txt" />
+    <Text Include="resources\BaseFirstShip.txt" />
     <Text Include="resources\BaseSWship.txt" />
+    <Text Include="resources\CockpitFirstShip.txt" />
     <Text Include="resources\CockpitSWship.txt" />
     <Text Include="resources\LiverySWship.txt" />
   </ItemGroup>

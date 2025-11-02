@@ -22,9 +22,43 @@
 #include "ui/ImGuiManager.h"
 #include "game/Collision.h"
 #include "math/CatmullRom.h"
+#include "core/BackGround.h"
+#include "core/PlayerConfig.h"
+
 
 Engine::Engine() {}
 Engine::~Engine() {}
+
+void Engine::applyPlayerConfig(unsigned int configIndex) {
+    if (!player || configIndex >= playerConfigs.size()) {
+        return;
+    }
+
+    const auto& config = playerConfigs[configIndex];
+
+    // 1. Svuota tutte le mesh esistenti dal player
+    player->clearMeshLayers();
+
+    // 2. Aggiungi i nuovi layer basati sulla configurazione
+
+    // Layer Base
+    SubMeshRenderInfo baseLayer(config.baseMeshId, this->defaultShaderId, config.base.color);
+    baseLayer.localTransform = config.base.localTransform;
+    player->addMeshLayer(baseLayer);
+
+    // Layer Livrea
+    SubMeshRenderInfo liveryLayer(config.liveryMeshId, this->defaultShaderId, config.livery.color);
+    liveryLayer.localTransform = config.livery.localTransform;
+    player->addMeshLayer(liveryLayer);
+
+    // Layer Cockpit
+    SubMeshRenderInfo cockpitLayer(config.cockpitMeshId, this->defaultShaderId, config.cockpit.color);
+    cockpitLayer.localTransform = config.cockpit.localTransform;
+    player->addMeshLayer(cockpitLayer);
+
+    // Aggiorna la selezione corrente in ImGui
+    imguiManager->currentPlayerSelection = configIndex;
+}
 
 void Engine::processInput() {
     if (currentState == GameState::GAME_OVER) {
@@ -82,10 +116,18 @@ void Engine::update(float delta) {
     if (currentState == GameState::GAME_OVER) {
         return;
     }
+    if (imguiManager->currentPlayerSelection < playerConfigs.size()) {
+        static unsigned int lastPlayerSelection = imguiManager->currentPlayerSelection;
+        if (imguiManager->currentPlayerSelection != lastPlayerSelection) {
+            applyPlayerConfig(imguiManager->currentPlayerSelection);
+            lastPlayerSelection = imguiManager->currentPlayerSelection;
+        }
+    }
     timeSinceLastShot += delta;
     if (scene) {
         scene->update(delta);
         scene->checkCollisions();
+        scoreManager.adjustScore(scene->getCollisions() * 100);
         //Game over
         if (player->getHealth() == 0) {
             currentState = GameState::GAME_OVER;
@@ -103,8 +145,17 @@ void Engine::rendering() {
     glm::mat4 bgModel = glm::scale(glm::mat4(1.0f), glm::vec3(orthoWidth, 1.0f, 1.0f));
     glm::mat4 viewIdentity = glm::mat4(1.0f);
     
-    std::shared_ptr<Shader> backgroundShader = ShaderManager::get(this->backgroundShaderId);
+    if (imguiManager->currentBackgroundSelection < backgroundConfigs.size()) {
+        unsigned int selectedId = backgroundConfigs[imguiManager->currentBackgroundSelection].shaderId;
 
+        // 2. Aggiorna l'ID dello shader di background se la selezione è cambiata
+        if (selectedId != this->backgroundShaderId) {
+            this->backgroundShaderId = selectedId;
+        }
+    }
+
+    // Usa l'ID aggiornato per recuperare lo shared_ptr<Shader> tramite ShaderManager::get(ID)
+    std::shared_ptr<Shader> backgroundShader = ShaderManager::get(this->backgroundShaderId);
     if (backgroundShader) {
         renderer->setCamera(viewIdentity, camera->getProjectionMatrix());
         backgroundShader->bind();
@@ -180,6 +231,7 @@ void Engine::rendering() {
 void Engine::resetGame() {
     currentState = PLAYING;
     player->resetHealth();
+    scoreManager.reset();
 }
 
 
@@ -219,7 +271,7 @@ void Engine::init() {
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    imguiManager = std::make_unique<ImGuiManager>(window->getWindowReference());
     scene = std::make_unique<Scene>();
     /*
     std::vector<glm::vec2> controlPoints = {
@@ -243,7 +295,7 @@ void Engine::init() {
     std::string vertexCode = readFile("resources/vertex.glsl");
     std::string fragmentCode = readFile("resources/fragment.glsl");
     unsigned int defaultShaderId = ShaderManager::load("DefaultShader", vertexCode, fragmentCode);
-    player = std::make_shared<SpaceCleaner>("SpaceCleaner");
+    player = std::make_shared<SpaceCleaner>("SpaceCleaner", this);
     int segments = 80;
 
     /*
@@ -282,6 +334,45 @@ void Engine::init() {
 
     player->addMeshLayer(circleLayer);
     */
+    PlayerConfig model1 = {
+        "Star Cruiser A",
+        // Base
+        { "PlayerBase", glm::vec4(0.5f, 0.5f, 0.5f, 1.0f), glm::scale(glm::mat4(1.0f), glm::vec3(0.3f)) },
+        // Livrea (gialla)
+        { "PlayerLivery", glm::vec4(0.9f, 0.9f, 0.0f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.31f)), glm::vec3(-0.01f, 0.02f, 0.1f)) },
+        // Cockpit
+        { "PlayerCockpit", glm::vec4(0.1f, 0.1f, 0.1f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.3f)), glm::vec3(-0.04f, 0.1f, 0.2f)) }
+    };
+
+    // Definizione del Modello 2 (Esempio, usando i file base ma con trasformazioni/colori diversi)
+    PlayerConfig model2 = {
+        "Star Cruiser B (Red)",
+        // Base (più grande e scuro)
+        { "PlayerBase", glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::scale(glm::mat4(1.0f), glm::vec3(0.4f)) },
+        // Livrea (rossa)
+        { "PlayerLivery", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.41f)), glm::vec3(-0.01f, 0.02f, 0.1f)) },
+        // Cockpit (blu)
+        { "PlayerCockpit", glm::vec4(0.2f, 0.2f, 0.8f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.4f)), glm::vec3(-0.04f, 0.1f, 0.2f)) }
+    };
+
+    playerConfigs.push_back(model1);
+    playerConfigs.push_back(model2); // Aggiungi il secondo modello
+
+    // 1. Carica le mesh una sola volta
+    unsigned int baseId = HermiteMesh::catmullRomToMesh("PlayerBase", "resources/BaseSWship.txt", 40);
+    unsigned int liveryId = HermiteMesh::catmullRomToMesh("PlayerLivery", "resources/LiverySWship.txt", 40);
+    unsigned int cockpitId = HermiteMesh::catmullRomToMesh("PlayerCockpit", "resources/CockpitSWship.txt", 40);
+
+    // 2. Assegna gli ID delle mesh caricate a *tutte* le configurazioni
+    for (auto& config : playerConfigs) {
+        config.baseMeshId = baseId;
+        config.liveryMeshId = liveryId;
+        config.cockpitMeshId = cockpitId;
+    }
+
+    // 3. Applica la configurazione iniziale (Modello 1, indice 0)
+    applyPlayerConfig(0);
+    /*
     unsigned int baseId = HermiteMesh::catmullRomToMesh("PlayerBase", "resources/BaseSWship.txt", 40);
     unsigned int liveryId = HermiteMesh::catmullRomToMesh("PlayerLivery", "resources/LiverySWship.txt", 40);
     unsigned int cockpitId = HermiteMesh::catmullRomToMesh("PlayerCockpit", "resources/CockpitSWship.txt", 40);
@@ -297,6 +388,7 @@ void Engine::init() {
     player->addMeshLayer(baseLayer);
     player->addMeshLayer(liveryLayer);
     player->addMeshLayer(cockpitLayer);
+    */
     scene->addEntity(player);
     std::vector<glm::vec2> asteroidPoints = {
         glm::vec2(0.2f, 0.4f),
@@ -340,7 +432,7 @@ void Engine::init() {
     };
     heartMeshId = HermiteMesh::baseHermiteToMesh("HeartShape", heartPoints, 30);
     this->heartMeshId = heartMeshId;
-    imguiManager = std::make_unique<ImGuiManager>(window->getWindowReference());
+    
     std::vector<glm::vec2> quadPoints = {
         glm::vec2(-1.0f, 1.0f),  // Top Left
         glm::vec2(1.0f, 1.0f),   // Top Right
@@ -350,7 +442,34 @@ void Engine::init() {
     unsigned int backgroundMeshId = HermiteMesh::baseHermiteToMesh("BackgroundQuad", quadPoints, 4);
     this->backgroundMeshId = backgroundMeshId;
     std::string bgVertexCode = readFile("resources/background_vertex.glsl");
-    std::string bgFragmentCode = readFile("resources/fragmentSaturn.glsl");
-    unsigned int backgroundShaderId = ShaderManager::load("BackgroundShader", bgVertexCode, bgFragmentCode);
+
+    // 2. Definisci le configurazioni di background
+    backgroundConfigs.push_back({
+        "Default Blue",
+        "resources/fragmentDefaultBlue.glsl", // Assumi che esista
+        0
+        });
+    backgroundConfigs.push_back({
+        "Stellar",
+        "resources/fragmentSaturn.glsl", // Il tuo shader esistente
+        0
+        });
+    backgroundConfigs.push_back({
+        "Star Field",
+        "resources/fragmentStarField.glsl", // Assumi che esista
+        0
+        });
+
+    // 3. Pre-carica tutti gli shader e assegna gli ID
+    for (auto& config : backgroundConfigs) {
+        std::string fragmentCode = readFile(config.fragmentShaderPath);
+        config.shaderId = ShaderManager::load(config.name, bgVertexCode, fragmentCode);
+    }
+
+    // 4. Imposta lo shader iniziale sul primo della lista
+    if (!backgroundConfigs.empty()) {
+        this->backgroundShaderId = backgroundConfigs[0].shaderId;
+        imguiManager->currentBackgroundSelection = 0; // Inizializza l'indice ImGui
+    }
     this->backgroundShaderId = backgroundShaderId;
 }

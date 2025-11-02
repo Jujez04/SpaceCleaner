@@ -122,6 +122,7 @@ void Scene::checkCollisions() {
                     if (projBox.isColliding(obsBox)) {
                         proj->setActive(false);
                         obs->setActive(false);
+                        numCollisions++;
                     }
                 }
             }

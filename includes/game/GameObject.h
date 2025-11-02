@@ -128,6 +128,10 @@ public:
     const std::vector<SubMeshRenderInfo>& getSubMeshes() const {
         return subMeshes;
     }
+
+    void clearSubMesh() {
+        subMeshes.clear();
+    }
 };
 
 class Entity {
@@ -148,6 +152,10 @@ public:
 
     void addMeshLayer(SubMeshRenderInfo meshInfo) {
         renderData.addSubMesh(meshInfo);
+    }
+
+    void clearMeshLayers() {
+        renderData.clearSubMesh();
     }
 
     Entity(const std::string& entityName = "Entity");
