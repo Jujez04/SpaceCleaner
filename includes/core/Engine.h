@@ -7,6 +7,11 @@ class Camera;
 class SpaceCleaner;
 class Scene;
 
+enum GameState {
+    PLAYING,
+    GAME_OVER
+};
+
 class Engine {
 public:
     Engine();
@@ -19,6 +24,7 @@ private:
     std::unique_ptr<Camera> camera;
     std::unique_ptr<Scene> scene;
     std::shared_ptr<SpaceCleaner> player;
+    GameState currentState = PLAYING;
     unsigned int defaultShaderId = 0;
     unsigned int projectileMeshId = 0;
     double lastFrameTime = 0.0;
@@ -29,8 +35,10 @@ private:
     unsigned int heartMeshId = 0;
     unsigned int backgroundMeshId = 0;
     unsigned int backgroundShaderId = 0;
+    unsigned int gameOverMeshId = 0;
 
     void processInput();
     void update(float delta);
     void rendering();
+    void resetGame();
 };

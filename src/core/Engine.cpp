@@ -24,6 +24,13 @@ Engine::Engine() {}
 Engine::~Engine() {}
 
 void Engine::processInput() {
+    if (currentState == GameState::GAME_OVER) {
+        if (InputManager::isKeyPressed(GLFW_KEY_R)) {
+            resetGame();
+        }
+        return;
+    }
+
     if (InputManager::isKeyPressed(GLFW_KEY_W))
         player->transform.translate({ 0.0f, 0.001f });
 
@@ -65,10 +72,17 @@ void Engine::processInput() {
 }
 
 void Engine::update(float delta) {
+    if (currentState == GameState::GAME_OVER) {
+        return;
+    }
     timeSinceLastShot += delta;
     if (scene) {
         scene->update(delta);
         scene->checkCollisions();
+        //Game over
+        if (player->getHealth() == 0) {
+            currentState = GameState::GAME_OVER;
+        }
         scene->updateSpawning(delta,
             this->asteroidMeshId,
             this->cometMeshId,
@@ -90,15 +104,12 @@ void Engine::rendering() {
         backgroundShader->setUniformVec2("uResolution",
             glm::vec2(window->getWidth(), window->getHeight()));
 
-        // 2. IMPOSTA UTIME (Solo una volta)
         backgroundShader->setUniform1f("uTime", Timer::getTotalTime());
 
-        // 3. Imposta le Matrici
         backgroundShader->setUniformMat4("view", viewIdentity);
         backgroundShader->setUniformMat4("projection", camera->getProjectionMatrix());
         backgroundShader->setUniformMat4("model", bgModel);
 
-        // 4. Imposta il Colore
         backgroundShader->setUniformVec4("uColor", glm::vec4(0.05f, 0.05f, 0.1f, 1.0f));
         auto mesh = MeshManager::getById(this->backgroundMeshId);
         if (mesh) {
@@ -138,11 +149,17 @@ void Engine::rendering() {
                 GL_TRIANGLES
             );
         }
+        
     }
        
     window->updateWindow();
 
     
+}
+
+void Engine::resetGame() {
+    currentState = PLAYING;
+    player->resetHealth();
 }
 
 

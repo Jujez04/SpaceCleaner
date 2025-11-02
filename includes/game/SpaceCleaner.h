@@ -36,4 +36,6 @@ public:
 
 	unsigned int getHealth() const { return health; }
 	unsigned int getMaxHealth() const { return maxHealth; }
+
+	void resetHealth() { health = maxHealth; }
 };
