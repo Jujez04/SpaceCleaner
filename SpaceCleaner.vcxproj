@@ -135,6 +135,7 @@
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="..\..\..\..\..\Users\justi\Downloads\Laboratorio I-20250926\LaboratorioI\glad.c" />
     <ClCompile Include="src\game\Collision.cpp" />
+    <ClCompile Include="src\math\CatmullRom.cpp" />
     <ClCompile Include="src\ui\ImGuiManager.cpp" />
     <ClCompile Include="src\core\InputManager.cpp" />
     <ClCompile Include="src\game\GameObject.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="includes\graphics\Mesh.h" />
     <ClInclude Include="includes\graphics\ShaderManager.h" />
     <ClInclude Include="includes\graphics\Vertex.h" />
+    <ClInclude Include="includes\math\CatmullRom.h" />
     <ClInclude Include="includes\math\Hermite.h" />
     <ClInclude Include="includes\math\HermiteMesh.h" />
     <ClInclude Include="includes\scene\Scene.h" />
@@ -202,6 +204,13 @@
     <None Include="resources\fragmentSaturn.glsl" />
     <None Include="resources\fragmentSun.glsl" />
     <None Include="resources\vertex.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\hermite_curves\hermite_curves\mycurve.txt" />
+    <Text Include="..\..\hermite_curves\hermite_curves\SWship.txt" />
+    <Text Include="resources\BaseSWship.txt" />
+    <Text Include="resources\CockpitSWship.txt" />
+    <Text Include="resources\LiverySWship.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

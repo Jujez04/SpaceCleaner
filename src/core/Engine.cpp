@@ -21,6 +21,7 @@
 #include "graphics/MeshManager.h"
 #include "ui/ImGuiManager.h"
 #include "game/Collision.h"
+#include "math/CatmullRom.h"
 
 Engine::Engine() {}
 Engine::~Engine() {}
@@ -220,7 +221,7 @@ void Engine::init() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     scene = std::make_unique<Scene>();
-
+    /*
     std::vector<glm::vec2> controlPoints = {
         glm::vec2(-0.231771f,  0.099537f),
         glm::vec2(-0.282552f, -0.129630f),
@@ -238,10 +239,14 @@ void Engine::init() {
         glm::vec2(-0.143229f,  0.016204f),
         glm::vec2(-0.227865f,  0.099537f)
     };
+    */
     std::string vertexCode = readFile("resources/vertex.glsl");
     std::string fragmentCode = readFile("resources/fragment.glsl");
     unsigned int defaultShaderId = ShaderManager::load("DefaultShader", vertexCode, fragmentCode);
     player = std::make_shared<SpaceCleaner>("SpaceCleaner");
+    int segments = 80;
+
+    /*
     unsigned int bodyMeshId = HermiteMesh::baseHermiteToMesh(player->getName(), controlPoints, 60);
 
     SubMeshRenderInfo bodyLayer(
@@ -253,7 +258,7 @@ void Engine::init() {
     bodyLayer.localTransform = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f, 0.3f, 1.0f));
 
     player->addMeshLayer(bodyLayer);
-
+    
     std::vector<glm::vec2> circlePoints = {
         { 0.0f,  0.3f },
         { 0.212f,  0.212f },
@@ -276,6 +281,22 @@ void Engine::init() {
         glm::scale(glm::mat4(1.0f), glm::vec3(0.25f, 0.25f, 1.0f) * glm::vec3(0.3f, 0.3f, 1.0f));        // scala metà del corpo
 
     player->addMeshLayer(circleLayer);
+    */
+    unsigned int baseId = HermiteMesh::catmullRomToMesh("PlayerBase", "resources/BaseSWship.txt", 40);
+    unsigned int liveryId = HermiteMesh::catmullRomToMesh("PlayerLivery", "resources/LiverySWship.txt", 40);
+    unsigned int cockpitId = HermiteMesh::catmullRomToMesh("PlayerCockpit", "resources/CockpitSWship.txt", 40);
+
+    SubMeshRenderInfo baseLayer(baseId, defaultShaderId, glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+    SubMeshRenderInfo liveryLayer(liveryId, defaultShaderId, glm::vec4(0.9f, 0.9f, 0.0f, 1.0f));
+    SubMeshRenderInfo cockpitLayer(cockpitId, defaultShaderId, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+
+    baseLayer.localTransform = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f));
+    liveryLayer.localTransform = glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.31f)), glm::vec3(-0.01f, 0.02f, 0.1f));
+    cockpitLayer.localTransform = glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.3f)), glm::vec3(-0.04f, 0.1f, 0.2f));
+
+    player->addMeshLayer(baseLayer);
+    player->addMeshLayer(liveryLayer);
+    player->addMeshLayer(cockpitLayer);
     scene->addEntity(player);
     std::vector<glm::vec2> asteroidPoints = {
         glm::vec2(0.2f, 0.4f),

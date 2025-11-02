@@ -180,6 +180,9 @@
     <ClCompile Include="src\game\Collision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\math\CatmullRom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui.h">
@@ -281,6 +284,9 @@
     <ClInclude Include="includes\core\BackGround.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="includes\math\CatmullRom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -295,5 +301,12 @@
     <None Include="resources\fragmentEarthOrbitalFlight.glsl" />
     <None Include="resources\fragmentSun.glsl" />
     <None Include="resources\background_vertex.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\hermite_curves\hermite_curves\mycurve.txt" />
+    <Text Include="..\..\hermite_curves\hermite_curves\SWship.txt" />
+    <Text Include="resources\BaseSWship.txt" />
+    <Text Include="resources\LiverySWship.txt" />
+    <Text Include="resources\CockpitSWship.txt" />
   </ItemGroup>
 </Project>
