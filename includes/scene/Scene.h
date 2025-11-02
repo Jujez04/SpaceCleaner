@@ -33,6 +33,8 @@ public:
 
     void checkCollisions();
 
+    std::vector<std::shared_ptr<Entity>> getEntities() const { return entities; }
+
 private:
     std::vector<std::shared_ptr<Entity>> entities;
     float spawnCooldown = 1.0f; // Ogni 1 secondo

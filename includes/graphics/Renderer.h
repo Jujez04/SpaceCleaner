@@ -9,6 +9,7 @@ class Mesh;
 class MeshManager;
 class ShaderManager;
 class Entity;
+class AABB;
 
 class Renderer {
 private:
@@ -24,4 +25,6 @@ public:
 	void setCamera(const glm::mat4& viewMat, const glm::mat4& projMat);
 	void drawMesh(unsigned int meshId, unsigned int shaderId, const glm::vec4& color, const glm::mat4& model, GLenum mode);
 	void drawEntityByInfo(Entity& entity, GLenum mode = GL_TRIANGLES);
+
+	void drawBoundingBox(const AABB& box, const glm::vec4& color, const glm::mat4& view, const glm::mat4& projection);
 };

@@ -7,6 +7,7 @@
 #include "game/SpaceCleaner.h"
 #include "graphics/ShaderManager.h"
 #include "game/GameObject.h"
+#include "game/Collision.h"
 #include "utilities/Timer.h"
 
 Renderer::Renderer() {
@@ -112,3 +113,48 @@ void Renderer::drawEntityByInfo(Entity& entity, GLenum mode) {
         activeShader->unbind();
     }
 }
+
+void Renderer::drawBoundingBox(const AABB& box, const glm::vec4& color, const glm::mat4& view, const glm::mat4& projection)
+{
+    // Calcola vertici in 2D (x,y)
+    float minX = box.min.x;
+    float minY = box.min.y;
+    float maxX = box.max.x;
+    float maxY = box.max.y;
+
+    float vertices[] = {
+        minX, minY, 0.0f,
+        maxX, minY, 0.0f,
+        maxX, maxY, 0.0f,
+        minX, maxY, 0.0f
+    };
+
+    unsigned int VAO, VBO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+    // Usa uno shader semplice (puoi usare il default shader)
+    auto shader = ShaderManager::get("DefaultShader");
+    if (shader) {
+        shader->bind();
+        shader->setUniformMat4("view", view);
+        shader->setUniformMat4("projection", projection);
+        shader->setUniformMat4("model", glm::mat4(1.0f));
+        shader->setUniformVec4("uColor", color);
+
+        glDrawArrays(GL_LINE_LOOP, 0, 4);
+
+        shader->unbind();
+    }
+
+    glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(1, &VAO);
+}
+

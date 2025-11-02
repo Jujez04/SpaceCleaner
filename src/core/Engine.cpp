@@ -20,6 +20,7 @@
 #include "graphics/ShaderManager.h"
 #include "graphics/MeshManager.h"
 #include "ui/ImGuiManager.h"
+#include "game/Collision.h"
 
 Engine::Engine() {}
 Engine::~Engine() {}
@@ -33,16 +34,16 @@ void Engine::processInput() {
     }
 
     if (InputManager::isKeyPressed(GLFW_KEY_W))
-        player->transform.translate({ 0.0f, 0.001f });
+        player->transform.translate({ 0.0f, 0.002f });
 
     if (InputManager::isKeyPressed(GLFW_KEY_S))
-        player->transform.translate({ 0.0f, -0.001f });
+        player->transform.translate({ 0.0f, -0.002f });
 
     if (InputManager::isKeyPressed(GLFW_KEY_A))
-        player->transform.translate({ -0.001f, 0.0f });
+        player->transform.translate({ -0.002f, 0.0f });
 
     if (InputManager::isKeyPressed(GLFW_KEY_D))
-        player->transform.translate({ 0.001f, 0.0f });
+        player->transform.translate({ 0.002f, 0.0f });
 
     if (InputManager::isKeyPressed(GLFW_KEY_Q))
         player->transform.rotate(0.006f);
@@ -155,6 +156,15 @@ void Engine::rendering() {
             );
         }
         
+    }
+    if (imguiManager->boundingBoxMode) {
+        if (scene) {
+            for (const auto& entity : scene->getEntities()) {
+                AABB box = entity->getAABB();
+                renderer->drawBoundingBox(box, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
+                    viewIdentity, camera->getProjectionMatrix());
+            }
+        }
     }
     if (imguiVisible) {
         imguiManager->beginFrame();
@@ -311,10 +321,10 @@ void Engine::init() {
     this->heartMeshId = heartMeshId;
     imguiManager = std::make_unique<ImGuiManager>(window->getWindowReference());
     std::vector<glm::vec2> quadPoints = {
-    glm::vec2(-1.0f, 1.0f),  // Top Left
-    glm::vec2(1.0f, 1.0f),   // Top Right
-    glm::vec2(1.0f, -1.0f),  // Bottom Right
-    glm::vec2(-1.0f, -1.0f)  // Bottom Left
+        glm::vec2(-1.0f, 1.0f),  // Top Left
+        glm::vec2(1.0f, 1.0f),   // Top Right
+        glm::vec2(1.0f, -1.0f),  // Bottom Right
+        glm::vec2(-1.0f, -1.0f)  // Bottom Left
     };
     unsigned int backgroundMeshId = HermiteMesh::baseHermiteToMesh("BackgroundQuad", quadPoints, 4);
     this->backgroundMeshId = backgroundMeshId;
