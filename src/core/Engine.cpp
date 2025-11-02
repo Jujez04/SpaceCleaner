@@ -19,6 +19,7 @@
 #include "math/HermiteMesh.h"
 #include "graphics/ShaderManager.h"
 #include "graphics/MeshManager.h"
+#include "ui/ImGuiManager.h"
 
 Engine::Engine() {}
 Engine::~Engine() {}
@@ -69,6 +70,10 @@ void Engine::processInput() {
                     glm::vec4(1.0f, 0.8f, 0.2f, 1.0f));
         }
     }
+
+    if (InputManager::isKeyPressed(GLFW_KEY_F1)) {
+        imguiVisible = !imguiVisible;
+    }
 }
 
 void Engine::update(float delta) {
@@ -95,7 +100,7 @@ void Engine::rendering() {
     float orthoWidth = camera->getWidth() / camera->getHeight(); // aspectRatio
     glm::mat4 bgModel = glm::scale(glm::mat4(1.0f), glm::vec3(orthoWidth, 1.0f, 1.0f));
     glm::mat4 viewIdentity = glm::mat4(1.0f);
-
+    
     std::shared_ptr<Shader> backgroundShader = ShaderManager::get(this->backgroundShaderId);
 
     if (backgroundShader) {
@@ -151,7 +156,11 @@ void Engine::rendering() {
         }
         
     }
-       
+    if (imguiVisible) {
+        imguiManager->beginFrame();
+        imguiManager->drawEditorWindow(this);
+        imguiManager->endFrame();
+    }
     window->updateWindow();
 
     
@@ -300,7 +309,7 @@ void Engine::init() {
     };
     heartMeshId = HermiteMesh::baseHermiteToMesh("HeartShape", heartPoints, 30);
     this->heartMeshId = heartMeshId;
-
+    imguiManager = std::make_unique<ImGuiManager>(window->getWindowReference());
     std::vector<glm::vec2> quadPoints = {
     glm::vec2(-1.0f, 1.0f),  // Top Left
     glm::vec2(1.0f, 1.0f),   // Top Right

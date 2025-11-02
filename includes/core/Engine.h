@@ -6,6 +6,7 @@ class Renderer;
 class Camera;
 class SpaceCleaner;
 class Scene;
+class ImGuiManager;
 
 enum GameState {
     PLAYING,
@@ -14,17 +15,22 @@ enum GameState {
 
 class Engine {
 public:
+    std::unique_ptr<ImGuiManager> imguiManager;
+
     Engine();
     ~Engine();
     void init();
     void gameLoop();
+    Renderer* getRenderer() const { return renderer.get(); }
 private:
     std::unique_ptr<Window> window;
     std::unique_ptr<Renderer> renderer;
     std::unique_ptr<Camera> camera;
     std::unique_ptr<Scene> scene;
     std::shared_ptr<SpaceCleaner> player;
+    
     GameState currentState = PLAYING;
+    bool imguiVisible = false;
     unsigned int defaultShaderId = 0;
     unsigned int projectileMeshId = 0;
     double lastFrameTime = 0.0;
@@ -36,9 +42,11 @@ private:
     unsigned int backgroundMeshId = 0;
     unsigned int backgroundShaderId = 0;
     unsigned int gameOverMeshId = 0;
+    unsigned int boundingBoxMeshId = 0;
 
     void processInput();
     void update(float delta);
     void rendering();
     void resetGame();
+
 };
