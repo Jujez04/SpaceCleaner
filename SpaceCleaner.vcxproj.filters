@@ -129,9 +129,6 @@
     <ClCompile Include="src\core\ResourceManager.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\SceneManager.cpp">
-      <Filter>Source Files\core</Filter>
-    </ClCompile>
     <ClCompile Include="src\core\Window.cpp">
       <Filter>Source Files\core</Filter>
     </ClCompile>

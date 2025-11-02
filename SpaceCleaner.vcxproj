@@ -141,7 +141,6 @@
     <ClCompile Include="src\game\GameObject.cpp" />
     <ClCompile Include="src\core\Engine.cpp" />
     <ClCompile Include="src\core\ResourceManager.cpp" />
-    <ClCompile Include="src\core\SceneManager.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
     <ClCompile Include="src\game\Obstacle.cpp" />
     <ClCompile Include="src\game\Projectile.cpp" />
