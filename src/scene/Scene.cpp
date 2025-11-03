@@ -61,7 +61,7 @@ void Scene::updateSpawning(float deltaTime, unsigned int asteroidMeshId, unsigne
 
         // 1. Calcola la posizione X casuale (in alto)
         float spawnX = xDist(randomEngine);
-        glm::vec2 position(spawnX, 4.5f); // Spawna appena fuori schermo (Y=4.5)
+        glm::vec2 position(spawnX, 1.25f); // Spawna appena fuori schermo (Y=4.5)
 
         // 2. Scegli il tipo di ostacolo (50/50)
         Obstacle::Type type = (typeDist(randomEngine) < 0.5f) ? Obstacle::ASTEROID : Obstacle::COMET;

@@ -200,6 +200,7 @@
     <None Include=".gitignore" />
     <None Include="packages.config" />
     <None Include="resources\background_vertex.glsl" />
+    <None Include="resources\defaultbg_fragment_shader.glsl" />
     <None Include="resources\fragment.glsl" />
     <None Include="resources\fragmentEarthOrbitalFlight.glsl" />
     <None Include="resources\fragmentSaturn.glsl" />
@@ -211,9 +212,13 @@
     <Text Include="..\..\hermite_curves\hermite_curves\SWship.txt" />
     <Text Include="resources\BaseFirstShip.txt" />
     <Text Include="resources\BaseSWship.txt" />
+    <Text Include="resources\BaseXwingShip.txt" />
     <Text Include="resources\CockpitFirstShip.txt" />
     <Text Include="resources\CockpitSWship.txt" />
+    <Text Include="resources\CockpitXwingShip.txt" />
+    <Text Include="resources\LiveryBaseShip.txt" />
     <Text Include="resources\LiverySWship.txt" />
+    <Text Include="resources\LiveryXwingShip.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

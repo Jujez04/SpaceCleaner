@@ -304,6 +304,7 @@
     <None Include="resources\fragmentEarthOrbitalFlight.glsl" />
     <None Include="resources\fragmentSun.glsl" />
     <None Include="resources\background_vertex.glsl" />
+    <None Include="resources\defaultbg_fragment_shader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\hermite_curves\hermite_curves\mycurve.txt" />
@@ -313,5 +314,9 @@
     <Text Include="resources\CockpitSWship.txt" />
     <Text Include="resources\BaseFirstShip.txt" />
     <Text Include="resources\CockpitFirstShip.txt" />
+    <Text Include="resources\LiveryBaseShip.txt" />
+    <Text Include="resources\BaseXwingShip.txt" />
+    <Text Include="resources\LiveryXwingShip.txt" />
+    <Text Include="resources\CockpitXwingShip.txt" />
   </ItemGroup>
 </Project>

@@ -1,78 +1,101 @@
 #version 330 core
-out vec4 FragColor;
+#ifdef GL_ES
+precision highp float;
+#endif
 
-// Riceve le coordinate del quad dal Vertex Shader
-in vec2 vUV; 
+uniform vec3 uColor;       // Colore base (ad esempio, per la luce o l'atmosfera)
+uniform vec2 uResolution;  // Risoluzione del viewport
+uniform float uTime;       // Tempo trascorso in secondi
 
-uniform vec4 uColor; 
-uniform float uTime; 
-uniform vec2 uResolution;
-
-
-float hash21(vec2 p) {
-    p = fract(p * 0.3134597);
-    p += dot(p, p + 3.13);
-    return fract(p.x * p.y);
+// Funzione di rumore (per le stelle)
+float rand(vec2 co){
+    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
-float noise(vec2 p) {
-    vec2 i = floor(p);
-    vec2 f = fract(p);
-
-    vec2 u = f * f * (3.0 - 2.0 * f);
-
-    float a = hash21(i);
-    float b = hash21(i + vec2(1.0, 0.0));
-    float c = hash21(i + vec2(0.0, 1.0));
-    float d = hash21(i + vec2(1.0, 1.0));
-
-    return mix(mix(a, b, u.x), 
-               mix(c, d, u.x), u.y);
+// Funzione per generare un campo stellare
+vec3 stars(vec2 uv, float time) {
+    vec2 p = floor(uv * 100.0);
+    float star = rand(p) * 0.9;
+    
+    // Aggiunge un effetto scintillante basato sul tempo
+    star *= (sin(rand(p) * 20.0 + time * 5.0) * 0.5 + 0.5);
+    
+    // Rende alcune stelle più luminose
+    if (rand(p * 2.0) < 0.01) {
+        star = 1.0 + sin(time) * 0.1;
+    }
+    
+    return vec3(star * 0.5);
 }
 
-// --- Funzione Principale ---
-
-void main()
-{
-    // Normalizza le coordinate del frammento per la generazione di rumore
-    // Si basa sul World Space (vUV) e aggiunge un aspetto del World Space (Aspect Ratio)
-    vec2 uv = vUV;
-    uv.x *= uResolution.x / uResolution.y; // Applica l'Aspect Ratio
-
-    vec2 p = uv * 3.0; // Scala il rumore per la nebulosa
+// Funzione per disegnare il cerchio di Saturno
+vec3 saturn_body(vec2 uv, vec2 center, float radius) {
+    float dist = length(uv - center);
     
-    // Muove il campo di rumore nel tempo (effetto di gas che scorre)
-    p.x += uTime * 0.05; 
-    p.y += uTime * 0.03;
+    // Corpo del pianeta (semplice cerchio)
+    if (dist < radius) {
+        // Colore arancione-giallo tenue
+        float intensity = 1.0 - smoothstep(radius * 0.9, radius, dist);
+        return vec3(0.9, 0.65, 0.4) * intensity;
+    }
+    return vec3(0.0);
+}
 
-    // Applica due strati di rumore a scale diverse (per complessità)
-    float n = noise(p);
-    n += 0.5 * noise(p * 2.0); // Scala più piccola
-    n += 0.25 * noise(p * 4.0); // Scala ancora più piccola
-
-    // Normalizza il rumore in un intervallo di colore più visibile
-    n = pow(n * 0.8, 1.5); 
+// Funzione per disegnare gli anelli di Saturno
+vec3 saturn_rings(vec2 uv, vec2 center, float inner_radius, float outer_radius) {
+    float dist = length(uv - center);
     
-    // Mescola il rumore con un colore viola/ciano
-    vec3 nebulaColor = mix(vec3(0.0, 0.1, 0.4), vec3(0.4, 0.1, 0.5), n);
-    
+    // Gli anelli
+    if (dist > inner_radius && dist < outer_radius) {
+        // Simula la divisione degli anelli usando il modulo della distanza
+        float ring_pattern = mod(dist * 20.0, 1.0); 
+        float ring_color = smoothstep(0.4, 0.6, ring_pattern);
+        
+        // Colore grigio chiaro per gli anelli
+        return vec3(0.8, 0.8, 0.9) * ring_color * 0.5;
+    }
+    return vec3(0.0);
+}
 
-    vec2 st = gl_FragCoord.xy; // Usiamo le coordinate schermo per la densità stellare
 
-    // Aggiunge un offset di tempo per far sfarfallare le stelle
-    st += uTime * 10.0; 
+void main() {
+    // Coordinate normalizzate (da -1 a 1)
+    vec2 uv = (gl_FragCoord.xy / uResolution.xy) * 2.0 - 1.0;
+    uv.x *= uResolution.x / uResolution.y; // Correzione del rapporto d'aspetto
     
-    // Generazione del pattern stellare casuale
-    float starHash = fract(sin(st.x * 12.9898 + st.y * 78.233) * 43758.5453);
+    vec3 final_color = vec3(0.0);
     
-    float star = step(0.999, starHash); // Solo 1 su 1000 pixel sono stelle
+    // 1. Sfondo stellato
+    final_color += stars(uv * 5.0, uTime); 
     
-    vec3 starColor = vec3(1.0, 0.95, 0.8);
+    // 2. Posizione di Saturno
+    vec2 saturn_center = vec2(0.5, 0.0);
+    float saturn_radius = 0.3;
+    float rings_outer_radius = saturn_radius * 2.0;
+    float rings_inner_radius = saturn_radius * 1.1;
 
-    // Sfondo di base (uColor) + Nebulosa + Stelle
-    vec3 finalColor = uColor.rgb * 0.5; // Scuro
-    finalColor = mix(finalColor, nebulaColor, 0.8); // Aggiungi la Nebulosa
-    finalColor = mix(finalColor, starColor, star); // Aggiungi le Stelle
+    // Applica una piccola rotazione/oscillazione per effetto dinamico
+    saturn_center.x += sin(uTime * 0.1) * 0.1;
 
-    FragColor = vec4(finalColor, 1.0);
+    // 3. Disegna Saturno e gli Anelli (gli anelli devono essere disegnati prima)
+    vec3 rings_color = saturn_rings(uv, saturn_center, rings_inner_radius, rings_outer_radius);
+    
+    // Simula l'ombra del corpo sugli anelli
+    float shadow_factor = 1.0;
+    if (length(uv - saturn_center) > saturn_radius * 0.9) {
+        shadow_factor = smoothstep(saturn_radius, rings_outer_radius, length(uv - saturn_center));
+    }
+    rings_color *= shadow_factor;
+    
+    vec3 body_color = saturn_body(uv, saturn_center, saturn_radius);
+    
+    // Combina i colori di sfondo, anelli e corpo
+    final_color += rings_color;
+    final_color += body_color;
+    
+    // 4. Aggiungi un tocco di colore (uColor) - ad esempio, come luce atmosferica
+    final_color += uColor * 0.05; 
+
+    // Saturazione per un look più vivo
+    gl_FragColor = vec4(final_color, 1.0);
 }

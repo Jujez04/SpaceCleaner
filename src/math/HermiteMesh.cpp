@@ -64,7 +64,7 @@ unsigned int HermiteMesh::catmullRomToMesh(const std::string& name, const std::s
     }
 
     // 2. Genera la curva chiusa Catmull-Rom TBC
-    std::vector<glm::vec2> curvePoints = CatmullRomUtility::generateCatmullRomTBC(controlPoints, tbcParams, segmentsPerCurve);
+    std::vector<glm::vec2> curvePoints = SplineUtility::generateTBC(controlPoints, tbcParams, segmentsPerCurve);
 
     // 3. Prepara i dati per la triangolazione con Earcut
     std::vector<std::vector<std::array<double, 2>>> polygon;

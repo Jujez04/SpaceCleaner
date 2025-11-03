@@ -8,7 +8,7 @@ struct TBCParams {
     float continuity;
 };
 
-class CatmullRomUtility {
+class SplineUtility {
 public:
     static glm::vec2 kochanekBartelsTangent(
         const glm::vec2& prev,
@@ -18,7 +18,7 @@ public:
         bool isOutgoing
     );
 
-    static std::vector<glm::vec2> generateCatmullRomTBC(
+    static std::vector<glm::vec2> generateTBC(
         const std::vector<glm::vec2>& controlPoints,
         const std::vector<TBCParams>& params,
         int segmentsPerCurve

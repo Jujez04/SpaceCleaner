@@ -2,7 +2,7 @@
 
 #include "math/Hermite.h"
 
-glm::vec2 CatmullRomUtility::kochanekBartelsTangent(
+glm::vec2 SplineUtility::kochanekBartelsTangent(
     const glm::vec2& prev,
     const glm::vec2& curr,
     const glm::vec2& next,
@@ -20,7 +20,8 @@ glm::vec2 CatmullRomUtility::kochanekBartelsTangent(
     }
 }
 
-std::vector<glm::vec2> CatmullRomUtility::generateCatmullRomTBC(
+// Cambia il nome Catmull Rom in SplineCurveTBC e rimuovi ogni riferimento a CatmullRom
+std::vector<glm::vec2> SplineUtility::generateTBC(
     const std::vector<glm::vec2>& controlPoints,
     const std::vector<TBCParams>& params,
     int segmentsPerCurve

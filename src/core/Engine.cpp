@@ -334,8 +334,26 @@ void Engine::init() {
 
     player->addMeshLayer(circleLayer);
     */
+
+    // --- CARICAMENTO MESH PER IL MODELLO 1 (Star Cruiser A/B - SWship) ---
+    unsigned int swBaseId = HermiteMesh::catmullRomToMesh("SW_PlayerBase", "resources/BaseSWship.txt", 40);
+    unsigned int swLiveryId = HermiteMesh::catmullRomToMesh("SW_PlayerLivery", "resources/LiverySWship.txt", 40);
+    unsigned int swCockpitId = HermiteMesh::catmullRomToMesh("SW_PlayerCockpit", "resources/CockpitSWship.txt", 40);
+
+    // --- CARICAMENTO MESH PER IL MODELLO 2 (BaseShip) ---
+    // Supponendo che i tuoi file siano chiamati BaseShip.txt, LiveryShip.txt, CockpitShip.txt
+    unsigned int baseShipBaseId = HermiteMesh::catmullRomToMesh("BaseShip_PlayerBase", "resources/BaseFirstShip.txt", 40);
+    unsigned int baseShipLiveryId = HermiteMesh::catmullRomToMesh("BaseShip_PlayerLivery", "resources/LiveryBaseShip.txt", 40);
+    unsigned int baseShipCockpitId = HermiteMesh::catmullRomToMesh("BaseShip_PlayerCockpit", "resources/CockpitFirstShip.txt", 40);
+
+    unsigned int xwingShipBaseId = HermiteMesh::catmullRomToMesh("BaseShip_PlayerBase", "resources/BaseXwingShip.txt", 100);
+    unsigned int xwingShipLiveryId = HermiteMesh::catmullRomToMesh("BaseShip_PlayerLivery", "resources/LiveryXwingShip.txt", 90);
+    unsigned int xwingShipCockpitId = HermiteMesh::catmullRomToMesh("BaseShip_PlayerCockpit", "resources/CockpitXwingShip.txt", 40);
+    // --- CONFIGURAZIONE 1: ---
     PlayerConfig model1 = {
-        "Star Cruiser A",
+        "SW",
+        swBaseId, swLiveryId, swCockpitId,
+         // Assegna gli ID delle mesh SWship
         // Base
         { "PlayerBase", glm::vec4(0.5f, 0.5f, 0.5f, 1.0f), glm::scale(glm::mat4(1.0f), glm::vec3(0.3f)) },
         // Livrea (gialla)
@@ -344,34 +362,35 @@ void Engine::init() {
         { "PlayerCockpit", glm::vec4(0.1f, 0.1f, 0.1f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.3f)), glm::vec3(-0.04f, 0.1f, 0.2f)) }
     };
 
-    // Definizione del Modello 2 (Esempio, usando i file base ma con trasformazioni/colori diversi)
+    // --- CONFIGURAZIONE 2: ---
     PlayerConfig model2 = {
-        "Star Cruiser B (Red)",
+        "X-Wing",
+        xwingShipBaseId, xwingShipLiveryId, xwingShipCockpitId,
+         // Assegna gli ID delle mesh SWship
         // Base (più grande e scuro)
         { "PlayerBase", glm::vec4(0.3f, 0.3f, 0.3f, 1.0f), glm::scale(glm::mat4(1.0f), glm::vec3(0.4f)) },
         // Livrea (rossa)
-        { "PlayerLivery", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.41f)), glm::vec3(-0.01f, 0.02f, 0.1f)) },
+        { "PlayerLivery", glm::vec4(0.5f, 0.0f, 0.0f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.5f)), glm::vec3(0.03f, -0.03f, 0.1f)) },
         // Cockpit (blu)
-        { "PlayerCockpit", glm::vec4(0.2f, 0.2f, 0.8f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.4f)), glm::vec3(-0.04f, 0.1f, 0.2f)) }
+        { "PlayerCockpit", glm::vec4(0.2f, 0.2f, 0.8f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.6f)), glm::vec3(0.02f, -0.2f, 0.2f)) }
+    };
+
+    // --- CONFIGURAZIONE 3:---
+    PlayerConfig model3 = {
+        "BaseShip",
+        baseShipBaseId, baseShipLiveryId, baseShipCockpitId, // Assegna gli ID delle mesh BaseShip
+        // Base
+        { "PlayerBase", glm::vec4(0.2f, 0.2f, 0.7f, 1.0f), glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)) },
+        // Livrea (bianca)
+        { "PlayerLivery", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)), glm::vec3(-0.2f, 0.1f, 0.05f)) },
+        // Cockpit (giallo/arancione)
+        { "PlayerCockpit", glm::vec4(1.0f, 0.6f, 0.0f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)), glm::vec3(0.0f, 0.15f, 0.1f)) }
     };
 
     playerConfigs.push_back(model1);
-    playerConfigs.push_back(model2); // Aggiungi il secondo modello
-
-    // 1. Carica le mesh una sola volta
-    unsigned int baseId = HermiteMesh::catmullRomToMesh("PlayerBase", "resources/BaseSWship.txt", 40);
-    unsigned int liveryId = HermiteMesh::catmullRomToMesh("PlayerLivery", "resources/LiverySWship.txt", 40);
-    unsigned int cockpitId = HermiteMesh::catmullRomToMesh("PlayerCockpit", "resources/CockpitSWship.txt", 40);
-
-    // 2. Assegna gli ID delle mesh caricate a *tutte* le configurazioni
-    for (auto& config : playerConfigs) {
-        config.baseMeshId = baseId;
-        config.liveryMeshId = liveryId;
-        config.cockpitMeshId = cockpitId;
-    }
-
-    // 3. Applica la configurazione iniziale (Modello 1, indice 0)
-    applyPlayerConfig(0);
+    playerConfigs.push_back(model2);
+    playerConfigs.push_back(model3); // Aggiungi la nuova configurazione!
+    
     /*
     unsigned int baseId = HermiteMesh::catmullRomToMesh("PlayerBase", "resources/BaseSWship.txt", 40);
     unsigned int liveryId = HermiteMesh::catmullRomToMesh("PlayerLivery", "resources/LiverySWship.txt", 40);
@@ -389,7 +408,7 @@ void Engine::init() {
     player->addMeshLayer(liveryLayer);
     player->addMeshLayer(cockpitLayer);
     */
-    scene->addEntity(player);
+    
     std::vector<glm::vec2> asteroidPoints = {
         glm::vec2(0.2f, 0.4f),
         glm::vec2(0.6f, 0.2f),
@@ -446,30 +465,32 @@ void Engine::init() {
     // 2. Definisci le configurazioni di background
     backgroundConfigs.push_back({
         "Default Blue",
-        "resources/fragmentDefaultBlue.glsl", // Assumi che esista
+        "resources/defaultbg_fragment_shader.glsl",
         0
         });
     backgroundConfigs.push_back({
         "Stellar",
-        "resources/fragmentSaturn.glsl", // Il tuo shader esistente
+        "resources/fragmentSaturn.glsl",
         0
         });
     backgroundConfigs.push_back({
         "Star Field",
-        "resources/fragmentStarField.glsl", // Assumi che esista
+        "resources/fragmentEarthOrbitalFlight.glsl",
         0
         });
 
-    // 3. Pre-carica tutti gli shader e assegna gli ID
+    // Pre-carica tutti gli shader e assegna gli ID
     for (auto& config : backgroundConfigs) {
         std::string fragmentCode = readFile(config.fragmentShaderPath);
         config.shaderId = ShaderManager::load(config.name, bgVertexCode, fragmentCode);
     }
 
-    // 4. Imposta lo shader iniziale sul primo della lista
+    // Imposta lo shader iniziale sul primo della lista
     if (!backgroundConfigs.empty()) {
         this->backgroundShaderId = backgroundConfigs[0].shaderId;
         imguiManager->currentBackgroundSelection = 0; // Inizializza l'indice ImGui
     }
-    this->backgroundShaderId = backgroundShaderId;
+    scene->addEntity(player);
+    // 3. Applica la configurazione iniziale (Modello 1, indice 0)
+    applyPlayerConfig(0);
 }
