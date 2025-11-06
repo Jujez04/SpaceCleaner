@@ -61,12 +61,52 @@ void Engine::applyPlayerConfig(unsigned int configIndex) {
 }
 
 void Engine::processInput() {
+    // 1. Gestione dei timer di controllo (ESC e F1)
+
+    // Gestione del menu di pausa/uscita (ESC)
+    if (InputManager::isKeyPressed(GLFW_KEY_ESCAPE) && timeSinceLastEsc >= escCooldown) {
+        timeSinceLastEsc = 0.0f;
+
+        if (currentState == GameState::PLAYING) {
+            currentState = GameState::PAUSED;
+        }
+        else if (currentState == GameState::PAUSED) {
+            currentState = GameState::PLAYING;
+        }
+        else if (currentState == GameState::START) {
+            // Se nel menu di START, ESC esce dal gioco (comportamento desiderato)
+            window->setShouldClose(true);
+        }
+        // Se GAME_OVER, ESC non fa nulla (R è per resettare)
+        return;
+    }
+
+    // Gestione del toggle ImGui (F1)
+    if (InputManager::isKeyPressed(GLFW_KEY_F1) && timeSinceLastF1 >= f1Cooldown) {
+        imguiVisible = !imguiVisible;
+        timeSinceLastF1 = 0.0f;
+    }
+
+    // 2. Logica di riavvio (R) e blocco input di movimento/sparo
     if (currentState == GameState::GAME_OVER) {
         if (InputManager::isKeyPressed(GLFW_KEY_R)) {
             resetGame();
         }
+        return; // Blocca tutti gli altri input di gioco in GAME_OVER
+    }
+
+    if (currentState == GameState::START || currentState == GameState::PAUSED) {
+        // Se nel menu di START, SPACE avvia il gioco
+        if (currentState == GameState::START && InputManager::isKeyPressed(GLFW_KEY_SPACE)) {
+            currentState = GameState::PLAYING;
+            resetGame(); // Riporta la salute e il punteggio
+            return;
+        }
+        // Blocca tutti gli altri input di gioco in START e PAUSED
         return;
     }
+
+    // 3. Logica di Gioco (solo se currentState == GameState::PLAYING)
 
     if (InputManager::isKeyPressed(GLFW_KEY_W))
         player->transform.translate({ 0.0f, 0.002f });
@@ -106,15 +146,13 @@ void Engine::processInput() {
                     glm::vec4(1.0f, 0.8f, 0.2f, 1.0f));
         }
     }
-
-    if (InputManager::isKeyPressed(GLFW_KEY_F1)) {
-        imguiVisible = !imguiVisible;
-    }
 }
 
 void Engine::update(float delta) {
-    if (currentState == GameState::GAME_OVER) {
-        return;
+    timeSinceLastF1 += delta; // Aggiorna il timer di cooldown di F1
+    timeSinceLastEsc += delta;
+    if (currentState == GameState::GAME_OVER || currentState == GameState::PAUSED || currentState == GameState::START) {
+        return; // Salta l'aggiornamento della logica se in pausa o game over
     }
     if (imguiManager->currentPlayerSelection < playerConfigs.size()) {
         static unsigned int lastPlayerSelection = imguiManager->currentPlayerSelection;
@@ -140,6 +178,9 @@ void Engine::update(float delta) {
 }
 
 void Engine::rendering() {
+    if (!window) {
+        return;
+    }
     renderer->clear();
     float orthoWidth = camera->getWidth() / camera->getHeight(); // aspectRatio
     glm::mat4 bgModel = glm::scale(glm::mat4(1.0f), glm::vec3(orthoWidth, 1.0f, 1.0f));
@@ -218,9 +259,21 @@ void Engine::rendering() {
             }
         }
     }
-    if (imguiVisible) {
+    if (imguiVisible || currentState != GameState::PLAYING) {
         imguiManager->beginFrame();
-        imguiManager->drawEditorWindow(this);
+
+        if (imguiVisible) {
+            imguiManager->drawEditorWindow(this);
+        }
+        if (currentState == GameState::START) {
+            imguiManager->drawStartMenu(this); // << Disegna il menu di avvio
+        } else if (currentState == GameState::PAUSED) {
+            imguiManager->drawPauseMenu(this); // Chiama il nuovo metodo
+        }
+        else if (currentState == GameState::GAME_OVER) {
+            imguiManager->drawGameOverMenu(this); // Chiama il nuovo metodo
+        }
+
         imguiManager->endFrame();
     }
     window->updateWindow();
@@ -359,7 +412,7 @@ void Engine::init() {
         // Livrea (gialla)
         { "PlayerLivery", glm::vec4(0.9f, 0.9f, 0.0f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.31f)), glm::vec3(-0.01f, 0.02f, 0.1f)) },
         // Cockpit
-        { "PlayerCockpit", glm::vec4(0.1f, 0.1f, 0.1f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.3f)), glm::vec3(-0.04f, 0.1f, 0.2f)) }
+        { "PlayerCockpit", glm::vec4(0.1f, 0.1f, 0.1f, 0.7f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.3f)), glm::vec3(-0.04f, 0.1f, 0.2f)) }
     };
 
     // --- CONFIGURAZIONE 2: ---
@@ -372,7 +425,7 @@ void Engine::init() {
         // Livrea (rossa)
         { "PlayerLivery", glm::vec4(0.5f, 0.0f, 0.0f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.5f)), glm::vec3(0.03f, -0.03f, 0.1f)) },
         // Cockpit (blu)
-        { "PlayerCockpit", glm::vec4(0.2f, 0.2f, 0.8f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.6f)), glm::vec3(0.02f, -0.2f, 0.2f)) }
+        { "PlayerCockpit", glm::vec4(0.2f, 0.2f, 0.8f, 0.7f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.6f)), glm::vec3(0.02f, -0.2f, 0.2f)) }
     };
 
     // --- CONFIGURAZIONE 3:---
@@ -380,11 +433,11 @@ void Engine::init() {
         "BaseShip",
         baseShipBaseId, baseShipLiveryId, baseShipCockpitId, // Assegna gli ID delle mesh BaseShip
         // Base
-        { "PlayerBase", glm::vec4(0.2f, 0.2f, 0.7f, 1.0f), glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)) },
+        { "PlayerBase", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)) },
         // Livrea (bianca)
-        { "PlayerLivery", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)), glm::vec3(-0.2f, 0.1f, 0.05f)) },
+        { "PlayerLivery", glm::vec4(0.5f, 0.5f, 0.5f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)), glm::vec3(-0.05f, -0.1f, 0.05f)) },
         // Cockpit (giallo/arancione)
-        { "PlayerCockpit", glm::vec4(1.0f, 0.6f, 0.0f, 1.0f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)), glm::vec3(0.0f, 0.15f, 0.1f)) }
+        { "PlayerCockpit", glm::vec4(1.0f, 0.6f, 0.0f, 0.7f), glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)), glm::vec3(-0.06f, -0.05f, 0.1f)) }
     };
 
     playerConfigs.push_back(model1);

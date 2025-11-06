@@ -9,7 +9,7 @@ struct AABB {
     AABB()
         : min(std::numeric_limits<float>::max()),
         max(std::numeric_limits<float>::lowest()) {
-    }
+    }   
 
     AABB(const glm::vec2& minPt, const glm::vec2& maxPt)
         : min(minPt), max(maxPt) {

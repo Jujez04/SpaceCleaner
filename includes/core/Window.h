@@ -22,6 +22,7 @@ public:
     void setResizeCallback(std::function<void(int, int)> callback);
     void setSize(int w, int h);
 
+    void setShouldClose(bool value);
 private:
     GLFWwindow* window = nullptr;
     int width = 0;

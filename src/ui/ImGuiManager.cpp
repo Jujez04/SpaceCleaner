@@ -1,10 +1,12 @@
+#pragma once
 #include "ui/ImGuiManager.h"
-#include <dependencies/imgui/imgui.h>
-#include <dependencies/imgui/imgui_internal.h>
-#include <dependencies/imgui/imgui_impl_glfw.h>
-#include <dependencies/imgui/imgui_impl_opengl3.h>
+
 #include "core/Engine.h"
 #include "core/BackGround.h"
+#include "core/Window.h"
+
+// Nota: Assicurati che Engine.h dichiari Engine::GameState e Engine::resetGame() come pubblici
+// o che ImGuiManager sia una friend class, se necessario.
 
 ImGuiManager::ImGuiManager(GLFWwindow* window) {
     IMGUI_CHECKVERSION();
@@ -37,6 +39,113 @@ void ImGuiManager::endFrame() {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
+// ----------------------------------------------------
+// Nuove Funzioni per i Menu di Stato
+// ----------------------------------------------------
+
+void ImGuiManager::drawPauseMenu(Engine* engine) {
+    // Posiziona la finestra al centro dello schermo
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.5f),
+        ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowSize(ImVec2(350, 180));
+
+    ImGuiWindowFlags windowFlags =
+        ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_NoMove; // Rimuove bordi e titolo
+
+    if (ImGui::Begin("PauseMenu", nullptr, windowFlags)) {
+        ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "  >> GIOCO IN PAUSA <<");
+        ImGui::Separator();
+
+        // Riprendi (ESC è gestito in processInput, ma offriamo il bottone)
+        if (ImGui::Button("Riprendi", ImVec2(-1, 0))) {
+            engine->setCurrentState(PLAYING);
+        }
+
+        // Ricomincia
+        if (ImGui::Button("Ricomincia", ImVec2(-1, 0))) {
+            engine->resetGame();
+        }
+
+        // Esci
+        if (ImGui::Button("Esci dal Gioco", ImVec2(-1, 0))) {
+            // Assumendo che Engine abbia un modo per chiudere la finestra, ad esempio tramite il suo puntatore window
+            // Nota: Se Engine->window non è accessibile, questa parte andrebbe modificata.
+            if (engine && engine->window) {
+                engine->window->setShouldClose(true);
+            }
+        }
+    }
+    ImGui::End();
+}
+
+void ImGuiManager::drawGameOverMenu(Engine* engine) {
+    // Posiziona la finestra al centro dello schermo
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.5f),
+        ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+
+    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize;
+
+    if (ImGui::Begin("GameOver", nullptr, windowFlags)) {
+        ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "  >>> G A M E   O V E R <<<");
+        ImGui::Separator();
+
+        ImGui::Text("Punti totali: %d", engine->getScore());
+        ImGui::Separator();
+
+        if (ImGui::Button("Riprova (R)", ImVec2(-1, 0))) {
+            engine->resetGame();
+        }
+        if (ImGui::Button("Esci", ImVec2(-1, 0))) {
+            if (engine && engine->window) {
+                engine->window->setShouldClose(true);
+            }
+        }
+    }
+    ImGui::End();
+}
+
+void ImGuiManager::drawStartMenu(Engine* engine) {
+    // Posiziona la finestra al centro dello schermo
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.5f),
+        ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowSize(ImVec2(600, 200));
+
+    ImGuiWindowFlags windowFlags =
+        ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_NoMove;
+
+    if (ImGui::Begin("StartMenu", nullptr, windowFlags)) {
+        ImGui::TextColored(ImVec4(0.0f, 0.8f, 1.0f, 1.0f), "  >> SPACECLEANER <<");
+        ImGui::Separator();
+        ImGui::Spacing();
+
+        ImGui::Text("Sgombra lo spazio dai detriti!");
+        ImGui::Spacing();
+        ImGui::Separator();
+
+        if (ImGui::Button("Avvia Partita", ImVec2(-1, 0))) {
+            // Avvia il gioco!
+            engine->setCurrentState(PLAYING);
+            engine->resetGame(); // Opzionale: assicurati che il gioco sia pulito
+        }
+
+        ImGui::Spacing();
+
+        if (ImGui::Button("Esci", ImVec2(-1, 0))) {
+            if (engine && engine->window) {
+                engine->window->setShouldClose(true);
+            }
+        }
+    }
+    ImGui::End();
+}
+
+
+// Editor Window
+
 void ImGuiManager::drawEditorWindow(Engine* engine) {
     ImGui::Begin("SpaceCleaner Editor");
 
@@ -58,9 +167,7 @@ void ImGuiManager::drawEditorWindow(Engine* engine) {
     }
 
     if (!playerItems.empty()) {
-        // currentPlayerSelection è l'indice (unsigned int)
         if (ImGui::Combo("Player Model", (int*)&currentPlayerSelection, playerItems.data(), (int)playerItems.size())) {
-            // L'indice 'currentPlayerSelection' è stato aggiornato.
             // La logica di applicazione è in Engine::update().
         }
     }
@@ -74,9 +181,8 @@ void ImGuiManager::drawEditorWindow(Engine* engine) {
     }
 
     if (!bgItems.empty()) {
-        // currentBackgroundSelection è l'indice (unsigned int) in ImGuiManager.h
         if (ImGui::Combo("Shader Select", (int*)&currentBackgroundSelection, bgItems.data(), (int)bgItems.size())) {
-            // L'indice è ora aggiornato. Engine::rendering() lo userà nel frame successivo.
+            // Engine::rendering() userà l'indice aggiornato.
         }
     }
     else {
@@ -87,4 +193,3 @@ void ImGuiManager::drawEditorWindow(Engine* engine) {
     ImGui::Separator();
     ImGui::End();
 }
-

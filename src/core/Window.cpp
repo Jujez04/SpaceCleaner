@@ -10,10 +10,11 @@ void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height
     auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
     if (win) {
         win->setSize(width, height);
+        if (win->resizeCallback)
+            win->resizeCallback(width, height);
     }
 
-    if (win->resizeCallback)
-        win->resizeCallback(width, height);
+    
 }
 
 Window::Window(int width, int height) : width(width), height(height) {
@@ -64,5 +65,13 @@ void Window::pollEvents() {
 }
 
 void Window::close() {
-    glfwDestroyWindow(window);
+    if (window) { // Add null check
+        glfwDestroyWindow(window);
+        window = nullptr; // Set to nullptr to prevent further access
+    }
+}
+
+void Window::setShouldClose(bool value) {
+    if (window)
+        glfwSetWindowShouldClose(window, value ? GLFW_TRUE : GLFW_FALSE);
 }

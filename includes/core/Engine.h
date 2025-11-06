@@ -14,7 +14,9 @@ class Scene;
 class ImGuiManager;
 
 enum GameState {
+    START,
     PLAYING,
+    PAUSED,
     GAME_OVER
 };
 
@@ -29,15 +31,20 @@ public:
     Renderer* getRenderer() const { return renderer.get(); }
     void adjustScore(int delta) { scoreManager.adjustScore(delta); }
     int getScore() const { return scoreManager.getScore(); }
+    GameState getCurrentState() const { return currentState;  }
+    void setCurrentState(GameState state) { currentState = state; }
     std::vector<BackgroundConfig> backgroundConfigs;
     std::vector<PlayerConfig> playerConfigs;
-private:
     std::unique_ptr<Window> window;
+    void resetGame();
+
+private:
+    
     std::unique_ptr<Renderer> renderer;
     std::unique_ptr<Camera> camera;
     std::unique_ptr<Scene> scene;
     std::shared_ptr<SpaceCleaner> player;
-    GameState currentState = PLAYING;
+    GameState currentState = START;
     ScoreManager scoreManager;
     bool imguiVisible = false;
     unsigned int defaultShaderId = 0;
@@ -52,10 +59,13 @@ private:
     unsigned int backgroundShaderId = 0;
     unsigned int gameOverMeshId = 0;
     unsigned int boundingBoxMeshId = 0;
+    float f1Cooldown = 0.2f;
+    float timeSinceLastF1 = 0.0f;
+    float escCooldown = 0.2f;
+    float timeSinceLastEsc = 0.0f;
     void applyPlayerConfig(unsigned int configIndex);
     void processInput();
     void update(float delta);
     void rendering();
-    void resetGame();
 
 };

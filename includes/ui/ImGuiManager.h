@@ -1,8 +1,13 @@
 #pragma once
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h> // Richiesto per l'inizializzazione GLFW di ImGui
 #include <memory>
 #include <functional>
+#include <dependencies/imgui/imgui.h>
+#include <dependencies/imgui/imgui_internal.h>
+#include <dependencies/imgui/imgui_impl_glfw.h>
+#include <dependencies/imgui/imgui_impl_opengl3.h>
 
 class Engine;
 
@@ -23,10 +28,16 @@ public:
 
     // Metodo per disegnare la finestra dell'editor
     void drawEditorWindow(Engine* engine);
+    
+    void drawPauseMenu(Engine* engine);
 
+    void drawGameOverMenu(Engine* engine);
+
+    void drawStartMenu(Engine* engine);
     // Variabili di stato che verranno manipolate dall'Engine
     bool wireframeMode = false;
     bool boundingBoxMode = false;
     unsigned int currentPlayerSelection = 0;
     unsigned int currentBackgroundSelection = 0;
+
 };
