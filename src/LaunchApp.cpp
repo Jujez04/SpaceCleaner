@@ -1,5 +1,9 @@
 #include "LaunchApp.h"
 
+/**
+* @brief Punto di ingresso principale dell'applicazione.
+* Inizializza GLFW e crea un'istanza del motore di gioco.
+*/
 int main() {
 	// Inizializzo GLFW
 	if (!glfwInit()) {

@@ -133,14 +133,14 @@
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_tables.cpp" />
     <ClCompile Include="..\..\..\..\..\..\dependencies_GL_GLFW\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="..\..\..\..\..\Users\justi\Downloads\Laboratorio I-20250926\LaboratorioI\glad.c" />
+    <ClCompile Include="src\core\ResourceLoader.cpp" />
+    <ClCompile Include="src\dependencies\glad.c" />
     <ClCompile Include="src\game\Collision.cpp" />
     <ClCompile Include="src\math\CatmullRom.cpp" />
     <ClCompile Include="src\ui\ImGuiManager.cpp" />
     <ClCompile Include="src\core\InputManager.cpp" />
     <ClCompile Include="src\game\GameObject.cpp" />
     <ClCompile Include="src\core\Engine.cpp" />
-    <ClCompile Include="src\core\ResourceManager.cpp" />
     <ClCompile Include="src\core\Window.cpp" />
     <ClCompile Include="src\game\Obstacle.cpp" />
     <ClCompile Include="src\game\Projectile.cpp" />
@@ -171,7 +171,7 @@
     <ClInclude Include="includes\core\BackGround.h" />
     <ClInclude Include="includes\core\Engine.h" />
     <ClInclude Include="includes\core\InputManager.h" />
-    <ClInclude Include="includes\core\ResourceManager.h" />
+    <ClInclude Include="includes\core\ResourceLoader.h" />
     <ClInclude Include="includes\core\SceneManager.h" />
     <ClInclude Include="includes\core\ScoreManager.h" />
     <ClInclude Include="includes\core\Window.h" />
@@ -195,6 +195,8 @@
     <ClInclude Include="includes\graphics\Shader.h" />
     <ClInclude Include="includes\LaunchApp.h" />
     <ClInclude Include="includes\ui\ImGuiManager.h" />
+    <ClInclude Include="includes\utilities\Timer.h" />
+    <ClInclude Include="includes\utilities\Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

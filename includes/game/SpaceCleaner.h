@@ -13,6 +13,7 @@ private:
 	unsigned int maxHealth = 6; // Nel caso in cui volessi incrementare la vitalità della navicella
 	unsigned int health = 6;
 	Engine* engine;
+
 public:
 	SpaceCleaner(const std::string& name = "SpaceCleaner", Engine* engine = nullptr);
 	~SpaceCleaner() = default;
