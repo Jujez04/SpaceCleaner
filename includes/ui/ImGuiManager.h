@@ -11,33 +11,56 @@
 
 class Engine;
 
+/**
+ * @class ImGuiManager
+ * @brief Gestisce l'integrazione e il rendering di ImGui nel motore di gioco.
+ *
+ * Questa classe si occupa di:
+ *  - inizializzare ImGui e i backend OpenGL/GLFW;
+ *  - gestire il frame ImGui (inizio/fine);
+ *  - disegnare finestre specifiche: editor, pause, game over e start menu;
+ *  - memorizzare gli stati dell'interfaccia come wireframe o selezione giocatore.
+ */
 class ImGuiManager {
 public:
-    // Il costruttore di default
     ImGuiManager() = default;
-    // Il costruttore prende il puntatore alla finestra GLFW
+
+    /**
+     * @brief Costruttore principale
+     * @param window Puntatore alla finestra GLFW su cui renderizzare ImGui.
+     */
     ImGuiManager(GLFWwindow* window);
-    // Il distruttore gestirà il cleanup ImGui
+
+    /**
+     * @brief Distruttore: pulisce le risorse di ImGui.
+     */
     ~ImGuiManager();
 
-    // Metodo chiamato all'inizio di ogni frame di rendering del motore
+    /**
+     * @brief Inizia un nuovo frame ImGui. Da chiamare all’inizio del ciclo di rendering.
+     */
     void beginFrame();
 
-    // Metodo chiamato alla fine di ogni frame di rendering del motore
+    /**
+     * @brief Termina il frame ImGui e esegue il rendering dei dati GUI.
+     */
     void endFrame();
 
-    // Metodo per disegnare la finestra dell'editor
+    /** @brief Disegna la finestra editor per le impostazioni in tempo reale. */
     void drawEditorWindow(Engine* engine);
-    
+
+    /** @brief Disegna il menu di pausa. */
     void drawPauseMenu(Engine* engine);
 
+    /** @brief Disegna il menu Game Over. */
     void drawGameOverMenu(Engine* engine);
 
+    /** @brief Disegna il menu iniziale/start menu. */
     void drawStartMenu(Engine* engine);
-    // Variabili di stato che verranno manipolate dall'Engine
-    bool wireframeMode = false;
-    bool boundingBoxMode = false;
-    unsigned int currentPlayerSelection = 0;
-    unsigned int currentBackgroundSelection = 0;
 
+    // Stati modificabili dall'interfaccia
+    bool wireframeMode = false;            ///< Modalità wireframe per il rendering
+    bool boundingBoxMode = false;          ///< Mostra le bounding box
+    unsigned int currentPlayerSelection = 0; ///< Indice del player selezionato
+    unsigned int currentBackgroundSelection = 0; ///< Indice dello shader/background selezionato
 };

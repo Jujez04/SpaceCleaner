@@ -188,13 +188,6 @@ void Engine::update(float delta) {
     timeSinceLastF1 += delta;
     timeSinceLastEsc += delta;
 
-    // Non aggiornare la logica se non in PLAYING
-    if (currentState == GameState::GAME_OVER ||
-        currentState == GameState::PAUSED ||
-        currentState == GameState::START) {
-        return;
-    }
-
     // Controlla se l'utente ha cambiato nave nell'editor
     if (imguiManager->currentPlayerSelection < playerConfigs.size()) {
         static unsigned int lastPlayerSelection = imguiManager->currentPlayerSelection;
@@ -202,6 +195,13 @@ void Engine::update(float delta) {
             applyPlayerConfig(imguiManager->currentPlayerSelection);
             lastPlayerSelection = imguiManager->currentPlayerSelection;
         }
+    }
+
+    // Non aggiornare la logica se non in PLAYING
+    if (currentState == GameState::GAME_OVER ||
+        currentState == GameState::PAUSED ||
+        currentState == GameState::START) {
+        return;
     }
 
 	// Aggiornamento timer sparo

@@ -306,11 +306,10 @@
     <None Include="resources\vertex.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="resources\fragmentSaturn.glsl" />
-    <None Include="resources\fragmentEarthOrbitalFlight.glsl" />
     <None Include="resources\fragmentSun.glsl" />
     <None Include="resources\background_vertex.glsl" />
     <None Include="resources\defaultbg_fragment_shader.glsl" />
+    <None Include="resources\fragmentSaturn.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\hermite_curves\hermite_curves\mycurve.txt" />

@@ -1,80 +1,81 @@
 #version 330 core
 out vec4 FragColor;
 
-uniform float uTime;
-// Uniform uResolution implicita (necessaria per gl_FragCoord)
-// Uniform uColor non usata, ma puoi attivarla per la tinta
+uniform vec3 uColor;      // Tinta dello sfondo/bagliore esterno (impostalo su blu scuro/nero, e.g., vec3(0.01, 0.01, 0.05))
+uniform vec2 uResolution; // Risoluzione del viewport
+uniform float uTime;      // Tempo trascorso
 
-// Funzione di Rumore 1D (per il colore)
-float rand(float n) {
-    return fract(sin(n) * 43758.5453123);
-}
-
-// Funzione di Rumore 2D (simile al tuo)
+// Funzione di Rumore 2D
 float noise(vec2 p) {
     return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453123);
 }
 
-// Fractional Brownian Motion (FBM)
-// Usato per creare la struttura nuvolosa della nebulosa
-float fbm(vec2 p) {
-    float v = 0.0;
-    float a = 0.5;
-    mat2 rot = mat2(cos(0.5), -sin(0.5), sin(0.5), cos(0.5));
-    for (int i = 0; i < 4; i++) {
-        v += a * noise(p);
-        p = rot * p * 2.0;
-        a *= 0.5;
-    }
-    return v;
-}
-
 void main() {
-    // Coordinate normalizzate (centrate e scalate)
-    vec2 uv = (gl_FragCoord.xy / 600.0) * 2.0 - 1.0; // Assumo una risoluzione di base 800x600
-    uv.x *= 800.0 / 600.0; // Correzione dell'aspetto (adatta questi valori alla tua risoluzione effettiva)
+    // 1. Coordinate e Preparazione
+    vec2 R = uResolution.xy;
+    vec2 uv = (gl_FragCoord.xy * 2.0 - R) / R.y;
     
+    // Distanza dal centro (r) e angolo (a)
+    float r = length(uv);
+    float a = atan(uv.y, uv.x);
+
     vec3 finalColor = vec3(0.0);
     
-    // 1. Distorsione e Movimento
-    // Muove le coordinate UV nel tempo (effetto di scorrimento)
-    vec2 p = uv * 3.0 + vec2(uTime * 0.1, uTime * 0.05); 
+    // --- 2. GIGANTE BAGLIORE CENTRALE (Buchi Nero / Stella Lontana) ---
     
-    // Distorce le UV usando il rumore FBM, creando un effetto "nuvola"
-    float d = fbm(p);
-    d = abs(d * d - 0.5); // Sottrae e prende il valore assoluto per creare bordi più definiti
+    // Il fenomeno è molto più grande, usiamo un decadimento meno ripido (es. pow(r, 1.0) o pow(r, 1.5))
+    // La scala di r è modificata per rendere il fenomeno visivamente più grande.
+    float scaledR = r * 0.5; // Rende il bagliore circa il doppio più grande
     
-    // 2. Struttura del Colore
-    
-    // Modulazione del colore usando il tempo per un effetto pulsante
-    float hueShift = sin(uTime * 0.2) * 0.5 + 0.5; 
-    
-    // Combinazione di rumore FBM, distanza dal centro e tempo
-    float nebulaDensity = fbm(uv * 1.5 + d * 0.5 + uTime * 0.3) * 0.7;
-    
-    // Rende il centro più luminoso
-    nebulaDensity += pow(1.0 - length(uv), 3.0) * 0.2; 
-    
-    // 3. Mappatura del Colore (Gradienti Spaziali)
-    
-    vec3 colorA = vec3(0.0, 0.1, 0.4 + hueShift * 0.2);     // Blu scuro/Viola
-    vec3 colorB = vec3(0.9, 0.2, 0.5 - hueShift * 0.2);     // Rosso acceso/Magenta
-    vec3 colorC = vec3(1.0, 0.8, 0.4);                     // Giallo/Arancio
-    
-    // Miscela i colori in base alla densità
-    vec3 nebulaColor = mix(colorA, colorB, nebulaDensity);
-    nebulaColor = mix(nebulaColor, colorC, pow(nebulaDensity, 4.0)); // Aggiunge colore C alle zone più dense
+    // Nucleo (Rosso/Arancio per contrasto)
+    float coreGlow = 0.05 / pow(scaledR, 2.0);
+    vec3 coreColor = vec3(0.7, 0.2, 0.1) * coreGlow; // Rosso scuro/Arancio
 
-    finalColor += nebulaColor * 1.5; // Amplifica il colore
+    // Aggiungi un piccolo punto bianco al centro per l'aberrazione
+    coreColor += vec3(1.0, 1.0, 1.0) * (0.00001 / pow(r, 4.0));
     
-    // 4. Aggiungi le Stelle (Sfondo)
-    // Usa un rumore basico per le stelle lontane
-    float starfield = step(0.998, noise(uv * 200.0));
-    finalColor += vec3(starfield * 0.2);
+    finalColor += coreColor;
+
+    // Bagliore Esterno/Disco di Accrescimento (Tinta Blu/Viola - uColor)
+    float coronaGlow = 0.01 / pow(scaledR, 1.0); // Decadimento lento
     
-    // 5. Output
-    // Aggiusta la luminosità e l'esposizione
+    // Usa il rumore per simulare vortici o gas
+    float vortexNoise = noise(uv * 2.0 + uTime * 0.1) * 0.5 + 0.5;
+    
+    vec3 coronaColor = mix(uColor * 2.0, vec3(0.3, 0.1, 0.6), vortexNoise); // Tinta blu-viola
+    
+    finalColor += coronaColor * coronaGlow;
+    
+    // --- 3. RAGGI SOTTILI E LUNGHI ---
+    
+    // Raggi molto più sottili e distesi che sembrano estendersi fuori dall'inquadratura.
+    
+    // Applica una distorsione angolare costante per l'effetto raggio
+    float rays = pow(sin(a * 5.0) * 0.5 + 0.5, 5.0); // 5 raggi (più sottili grazie all'esponente 5.0)
+    
+    // Il raggio svanisce più lentamente (pow(r, 0.8)) per estendersi lontano dal centro
+    float rayFade = 0.001 / pow(r, 0.8);
+
+    // Tinta dei raggi (Blu Scuro)
+    finalColor += uColor * rays * rayFade * 0.5;
+
+    // --- 4. Sfondo: Spazio Profondo e Stelle Lontane ---
+
+    // Lo sfondo è dominato dal nero/blu scuro (uColor)
+    vec3 spaceColor = uColor * 0.1; // Scurisci l'uniforme
+    
+    // Aggiungi un leggero rumore per le nebulose lontane (appena percettibile)
+    float deepSpaceNoise = noise(uv * 10.0 + uTime * 0.01) * 0.02;
+    
+    finalColor += spaceColor + deepSpaceNoise;
+
+    // --- 5. Composizione Finale ---
+    
+    // Esposizione (per mantenere i colori scuri)
     finalColor = pow(finalColor, vec3(0.7)); 
+    
+    // Saturazione generale bassa per l'effetto "spazio freddo"
+    finalColor = mix(finalColor, dot(finalColor, vec3(0.333)) * vec3(1.0), 0.2); // Desaturazione leggera
     
     FragColor = vec4(finalColor, 1.0);
 }

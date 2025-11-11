@@ -1,5 +1,9 @@
-#include "graphics/Renderer.h"
+/**
+ * @file Renderer.cpp
+ * @brief Implementazione della classe Renderer, responsabile del disegno delle entità e delle mesh.
+ */
 
+#include "graphics/Renderer.h"
 #include "graphics/MeshManager.h"
 #include "graphics/Shader.h"
 #include "graphics/Vertex.h"
@@ -10,72 +14,73 @@
 #include "game/Collision.h"
 #include "utilities/Timer.h"
 
+ /**
+  * @brief Costruttore del Renderer. Inizializza la telecamera con matrici di identità e default.
+  */
 Renderer::Renderer() {
     this->setCamera(glm::mat4(1.0f), glm::mat4(0.0f));
 }
 
+/**
+ * @brief Aggiunge una mesh alla lista delle mesh gestite dal renderer.
+ * @param mesh Puntatore condiviso alla mesh da aggiungere.
+ */
 void Renderer::addMesh(const std::shared_ptr<Mesh>& mesh) {
     meshes.push_back(mesh);
 }
 
+/**
+ * @brief Imposta le matrici di vista e proiezione della telecamera.
+ * @param viewMat Matrice di vista.
+ * @param projMat Matrice di proiezione.
+ */
 void Renderer::setCamera(const glm::mat4& viewMat, const glm::mat4& projMat) {
     view = viewMat;
     projection = projMat;
 }
 
-void Renderer::drawMesh(unsigned int meshId, unsigned int shaderId, const glm::vec4& color, const glm::mat4& model, GLenum mode)
+/**
+ * @brief Disegna una singola mesh utilizzando uno shader specificato.
+ * @param meshId ID della mesh da disegnare.
+ * @param shaderId ID dello shader da utilizzare.
+ * @param color Colore da applicare come uniform.
+ * @param model Matrice modello (trasformazione dell'oggetto).
+ * @param mode Modalità di disegno (es. GL_TRIANGLES, GL_LINES, ecc.).
+ */
+void Renderer::drawMesh(const unsigned int meshId, const unsigned int shaderId, const glm::vec4& color, const glm::mat4& model, const GLenum mode)
 {
     std::shared_ptr<Shader> shader = ShaderManager::get(shaderId);
     if (!shader) return;
 
     shader->bind();
-
-    // 2. Imposta le Uniformi (Usa le matrici della telecamera già caricate)
     shader->setUniformMat4("view", view);
     shader->setUniformMat4("projection", projection);
-
-    // 3. Imposta la Matrice Modello fornita (Questa è la trasformazione del Cuore)
     shader->setUniformMat4("model", model);
     shader->setUniformVec4("uColor", color);
     shader->setUniform1f("uTime", static_cast<float>(Timer::totalTime));
 
-    // 4. Ottieni e Disegna la Mesh
     auto mesh = MeshManager::getById(meshId);
     if (mesh) {
         mesh->draw(*shader, mode);
     }
 
-    // 5. Unbind
     shader->unbind();
 }
 
+/**
+ * @brief Pulisce lo schermo impostando il colore di sfondo e resettando i buffer di colore e profondità.
+ */
 void Renderer::clear() {
     glClearColor(0.05f, 0.05f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-/*
-void Renderer::drawEntity(Entity& entity, GLenum mode) {
-    if (!shader) return;
-    if (!entity.getMeshComp().isVisible()) return;
-
-    shader->bind();
-    shader->setUniformMat4("view", view);
-    shader->setUniformMat4("projection", projection);
-
-    glm::mat4 model = entity.transform.getModelMatrix();
-    shader->setUniformMat4("model", model);
-    shader->setUniformVec4("color", entity.getColorComp().getColor());
-
-    auto mesh = MeshManager::get(entity.getMeshComp().getMeshName());
-    if (mesh)
-        mesh->draw(*shader, mode);
-
-    shader->unbind();
-}
-*/
-
-void Renderer::drawEntityByInfo(Entity& entity, GLenum mode) {
+/**
+ * @brief Disegna un'entità composta da più submesh, ciascuna con shader e trasformazione propri.
+ * @param entity Entità da disegnare.
+ * @param mode Modalità di disegno (default GL_TRIANGLES).
+ */
+void Renderer::drawEntityByInfo(Entity& entity, const GLenum mode) {
     if (!entity.isActive() || !entity.renderData.enabled) return;
 
     unsigned int currentShaderId = 0;
@@ -85,11 +90,9 @@ void Renderer::drawEntityByInfo(Entity& entity, GLenum mode) {
 
     for (const auto& subMesh : entity.renderData.getSubMeshes()) {
         if (subMesh.shaderId != currentShaderId && subMesh.visible) {
-
-            if (activeShader) {
-                activeShader->unbind();
-            }
+            if (activeShader) activeShader->unbind();
             activeShader = ShaderManager::get(subMesh.shaderId);
+
             if (activeShader) {
                 activeShader->bind();
                 currentShaderId = subMesh.shaderId;
@@ -97,42 +100,39 @@ void Renderer::drawEntityByInfo(Entity& entity, GLenum mode) {
                 activeShader->setUniformMat4("projection", projection);
             }
         }
+
         if (activeShader) {
             glm::mat4 finalModel = entityModel * subMesh.localTransform;
             activeShader->setUniformMat4("model", finalModel);
             activeShader->setUniformVec4("uColor", subMesh.color);
 
             auto mesh = MeshManager::getById(subMesh.meshId);
-            if (mesh) {
-                mesh->draw(*activeShader, mode);
-            }
+            if (mesh) mesh->draw(*activeShader, mode);
         }
     }
 
-    if (activeShader) {
-        activeShader->unbind();
-    }
+    if (activeShader) activeShader->unbind();
 }
 
+/**
+ * @brief Disegna un riquadro (bounding box) 2D per il debug delle collisioni.
+ * @param box Oggetto AABB contenente i punti minimo e massimo.
+ * @param color Colore del contorno.
+ * @param view Matrice di vista corrente.
+ * @param projection Matrice di proiezione corrente.
+ */
 void Renderer::drawBoundingBox(const AABB& box, const glm::vec4& color, const glm::mat4& view, const glm::mat4& projection)
 {
-    // Calcola vertici in 2D (x,y)
-    float minX = box.min.x;
-    float minY = box.min.y;
-    float maxX = box.max.x;
-    float maxY = box.max.y;
-
     float vertices[] = {
-        minX, minY, 0.0f,
-        maxX, minY, 0.0f,
-        maxX, maxY, 0.0f,
-        minX, maxY, 0.0f
+        box.min.x, box.min.y, 0.0f,
+        box.max.x, box.min.y, 0.0f,
+        box.max.x, box.max.y, 0.0f,
+        box.min.x, box.max.y, 0.0f
     };
 
     unsigned int VAO, VBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -140,7 +140,6 @@ void Renderer::drawBoundingBox(const AABB& box, const glm::vec4& color, const gl
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-    // Usa uno shader semplice (puoi usare il default shader)
     auto shader = ShaderManager::get("DefaultShader");
     if (shader) {
         shader->bind();
@@ -148,13 +147,10 @@ void Renderer::drawBoundingBox(const AABB& box, const glm::vec4& color, const gl
         shader->setUniformMat4("projection", projection);
         shader->setUniformMat4("model", glm::mat4(1.0f));
         shader->setUniformVec4("uColor", color);
-
         glDrawArrays(GL_LINE_LOOP, 0, 4);
-
         shader->unbind();
     }
 
     glDeleteBuffers(1, &VBO);
     glDeleteVertexArrays(1, &VAO);
 }
-

@@ -108,7 +108,7 @@ void ResourceLoader::loadPlayerConfigs(std::vector<PlayerConfig>& playerConfigs,
 
         // Base: grigio scuro, scala 0.4 (più grande)
         { "PlayerBase",
-          glm::vec4(0.3f),
+          glm::vec4(0.3f, 0.3f, 0.3f, 1.0f),
           glm::scale(glm::mat4(1.0f), glm::vec3(0.4f)) },
 
           // Livery: rosso scuro (tema X-Wing Rebel Alliance)
@@ -133,22 +133,22 @@ void ResourceLoader::loadPlayerConfigs(std::vector<PlayerConfig>& playerConfigs,
         "BaseShip",
         baseShipBaseId, baseShipLiveryId, baseShipCockpitId,
 
-        // Base: nero completo, scala 0.35
+        // Base: rosso scuro
         { "PlayerBase",
-          glm::vec4(0.0f),
+          glm::vec4(0.7f, 0.7f, 0.7f, 1.0f),
           glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)) },
 
           // Livery: grigio medio
           { "PlayerLivery",
-            glm::vec4(0.5f),
+            glm::vec4(0.5f, 0.5f, 0.5f, 1.0f),
             glm::translate(
                 glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)),
                 glm::vec3(-0.05f, -0.1f, 0.05f)
             ) },
 
-        // Cockpit: arancione trasparente (tema industriale)
+        // Cockpit: arancione trasparente
         { "PlayerCockpit",
-          glm::vec4(1.0f, 0.6f, 0.0f, 0.7f),
+          glm::vec4(1.0f, 0.8f, 0.0f, 0.7f),
           glm::translate(
               glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)),
               glm::vec3(-0.06f, -0.05f, 0.1f)
@@ -219,14 +219,14 @@ void ResourceLoader::loadBackgrounds(std::vector<BackgroundConfig>& backgroundCo
 
 	// CONFIGURAZIONI BACKGROUND DISPONIBILI
     backgroundConfigs = {
-        // Background 1: Blu uniforme semplice
-        {"Default Blue", "resources/defaultbg_fragment_shader.glsl", 0},
+        // Background 1: Campo stellato semplice
+        {"Default", "resources/defaultbg_fragment_shader.glsl", 0},
 
-        // Background 2: Effetto stellare con Saturno
-        {"Stellar", "resources/fragmentSaturn.glsl", 0},
+        // Background 2: Saturno
+        {"Saturn", "resources/fragmentSaturn.glsl", 0},
 
-        // Background 3: Campo stellare animato (orbita terrestre)
-        {"Star Field", "resources/fragmentEarthOrbitalFlight.glsl", 0}
+        // Background 3: Sole
+        {"Sun theme", "resources/fragmentSun.glsl", 0}
     };
 
     // PRE-COMPILAZIONE SHADER E CARICAMENTO NELLO SHADER MANAGER

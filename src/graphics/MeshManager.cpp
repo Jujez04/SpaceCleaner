@@ -1,5 +1,4 @@
 #include "graphics/MeshManager.h"
-
 #include "graphics/Mesh.h"
 
 std::unordered_map<std::string, std::shared_ptr<Mesh>> MeshManager::meshMap;
@@ -11,24 +10,29 @@ std::shared_ptr<Mesh> MeshManager::registerMesh(
     const std::vector<float>& vertices,
     const std::vector<unsigned int>& indices
 ) {
+    // Se esiste già una mesh con questo nome, restituiscila
     if (meshMap.count(name)) {
-
         return meshMap[name];
     }
+
+    // Crea una nuova mesh e registrala con un ID univoco
     auto mesh = std::make_shared<Mesh>(vertices, indices);
     unsigned int newId = nextId++;
+    mesh->setId(newId);
+
     idMeshMap[newId] = mesh;
     meshMap[name] = mesh;
-
-    mesh->setId(newId); 
 
     return mesh;
 }
 
-std::shared_ptr<Mesh> MeshManager::registerMeshById(const std::vector<float>& vertices, const std::vector<unsigned int>& indices)
-{
+std::shared_ptr<Mesh> MeshManager::registerMeshById(
+    const std::vector<float>& vertices,
+    const std::vector<unsigned int>& indices
+) {
     auto mesh = std::make_shared<Mesh>(vertices, indices);
     idMeshMap[nextId] = mesh;
+    mesh->setId(nextId);
     nextId++;
     return mesh;
 }

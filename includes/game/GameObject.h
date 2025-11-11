@@ -4,9 +4,9 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "game/Collision.h"
 
 // Forward declarations per ridurre le dipendenze circolari
-struct AABB;
 class Entity;
 
 /**
