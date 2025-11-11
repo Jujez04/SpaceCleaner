@@ -6,7 +6,7 @@
 namespace Timer {
 
     static constexpr double TARGET_FPS = 60.0;
-    static constexpr double FRAME_DURATION = 1.0 / TARGET_FPS; // ? 0.0166667 s (16.67 ms)
+    static constexpr double FRAME_DURATION = 1.0 / TARGET_FPS; // 0.0166667 s (16.67 ms)
 
     static double totalTime = 0.0;
     static double lastFrameTime = 0.0;

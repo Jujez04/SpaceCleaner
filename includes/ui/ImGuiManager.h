@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
-#include <GLFW/glfw3.h> // Richiesto per l'inizializzazione GLFW di ImGui
+#include <GLFW/glfw3.h>
 #include <memory>
 #include <functional>
 #include <dependencies/imgui/imgui.h>

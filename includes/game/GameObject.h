@@ -5,38 +5,66 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+// Forward declarations per ridurre le dipendenze circolari
 struct AABB;
-
-// Forward declarations
 class Entity;
 
+/**
+ * @brief Contiene informazioni di rendering per una sotto-mesh (SubMesh)
+ *
+ * Ogni entità può avere più SubMesh da renderizzare, ciascuna con un proprio
+ * shader, colore e trasformazione locale.
+ */
 struct SubMeshRenderInfo {
-    unsigned int meshId;
-    unsigned int shaderId;
-    glm::vec4 color;     
-    bool visible = true;
-    glm::mat4 localTransform = glm::mat4(1.0f);
+    unsigned int meshId;                 ///< Identificativo della mesh (gestito dal MeshManager)
+    unsigned int shaderId;               ///< Identificativo dello shader da usare per il rendering
+    glm::vec4 color;                     ///< Colore della mesh (RGBA)
+    bool visible = true;                 ///< Indica se la mesh è visibile
+    glm::mat4 localTransform = glm::mat4(1.0f); ///< Trasformazione locale della SubMesh
 
+    /**
+     * @brief Costruttore base per una SubMesh.
+     * @param mId ID della mesh
+     * @param sId ID dello shader
+     * @param col Colore iniziale
+     */
     SubMeshRenderInfo(unsigned int mId, unsigned int sId, const glm::vec4& col)
         : meshId(mId), shaderId(sId), color(col) {
     }
 };
 
+/**
+ * @brief Classe base per tutti i componenti di un'entità.
+ *
+ * Tutti i componenti derivano da questa classe e possiedono un riferimento
+ * al proprietario (`Entity`) e un flag di abilitazione.
+ */
 class Component {
 public:
     virtual ~Component() = default;
 
-    bool enabled = true;
-    Entity* owner = nullptr;
+    bool enabled = true;     ///< Indica se il componente è attivo
+    Entity* owner = nullptr; ///< Puntatore all'entità proprietaria
 };
 
+/**
+ * @brief Componente che gestisce posizione, rotazione e scala di un'entità.
+ *
+ * Fornisce metodi per manipolare la trasformazione e calcolare la matrice modello.
+ */
 class TransformComponent : public Component {
 private:
-    glm::vec2 position;
-    glm::vec2 scale;
-    float rotation;
+    glm::vec2 position; ///< Posizione 2D dell'entità
+    glm::vec2 scale;    ///< Scala dell'entità
+    float rotation;     ///< Rotazione in radianti
 
 public:
+    /**
+     * @brief Costruttore del TransformComponent.
+     * @param pos Posizione iniziale
+     * @param rot Rotazione iniziale
+     * @param scl Scala iniziale
+     */
     TransformComponent(
         const glm::vec2& pos = glm::vec2(0.0f),
         float rot = 0.0f,
@@ -46,7 +74,9 @@ public:
 
     ~TransformComponent() override = default;
 
-    // Model matrix con caching
+    /**
+     * @brief Restituisce la matrice modello (Model Matrix) calcolata da posizione, rotazione e scala.
+     */
     const glm::mat4 getModelMatrix() const;
 
     // Getters
@@ -54,7 +84,7 @@ public:
     float getRotation() const { return rotation; }
     const glm::vec2& getScale() const { return scale; }
 
-    // Setters con dirty flag
+    // Setters
     void setPosition(const glm::vec2& pos);
     void setRotation(float rot);
     void setScale(const glm::vec2& scl);
@@ -63,126 +93,83 @@ public:
     void translate(const glm::vec2& offset);
     void rotate(float angle);
     void scaleBy(const glm::vec2& factor);
-
-};
-/*
-class MeshComponent : public Component {
-private:
-    std::string meshName;
-    unsigned int meshId;
-    unsigned int shaderId;
-    bool visible;
-
-public:
-    MeshComponent() : meshId(0), shaderId(0), visible(true) {}
-    MeshComponent(unsigned int meshId, unsigned int shaderId) : meshId(meshId), shaderId(shaderId), visible(true) {}
-    ~MeshComponent() override = default;
-
-    // Visibility
-    bool isVisible() const { return visible && enabled; }
-    void setVisible(bool vis) { visible = vis; }
-
-    // Getter e Setter
-    unsigned int getMeshId() const { return meshId; }
-    unsigned int getShaderId() const { return shaderId; }
-    void setMeshId(unsigned int id) { meshId = id; }
-    void setShaderId(unsigned int id) { shaderId = id; }
-    const std::string& getMeshName() const { return meshName; }
-    void setMeshName(const std::string& name) { meshName = name; }
 };
 
-class ColorComponent : public Component {
-private:
-    glm::vec4 color;
-
-public:
-    ColorComponent() : color(1.0f) {}
-    explicit ColorComponent(const glm::vec4& col) : color(col) {}
-    explicit ColorComponent(const glm::vec3& col, float alpha = 1.0f)
-        : color(col, alpha) {
-    }
-    ~ColorComponent() override = default;
-
-    const glm::vec4& getColor() const { return color; }
-    void setColor(const glm::vec4& col) { color = col; }
-    void setColor(const glm::vec3& col, float alpha = 1.0f) {
-        color = glm::vec4(col, alpha);
-    }
-
-    float getAlpha() const { return color.a; }
-    void setAlpha(float alpha) { color.a = alpha; }
-};
-*/
+/**
+ * @brief Componente responsabile della gestione del rendering di un'entità.
+ *
+ * Contiene una lista di SubMeshRenderInfo che specificano le varie mesh e shader da renderizzare.
+ */
 class RenderComponent : public Component {
 private:
-    std::vector<SubMeshRenderInfo> subMeshes;
+    std::vector<SubMeshRenderInfo> subMeshes; ///< Lista delle sotto-mesh da disegnare
 
 public:
     RenderComponent() = default;
     ~RenderComponent() override = default;
 
-    void addSubMesh(SubMeshRenderInfo& meshInfo) {
-        subMeshes.push_back(meshInfo);
-    }
+    /**
+     * @brief Aggiunge una SubMesh da renderizzare.
+     * @param meshInfo Riferimento alle informazioni della SubMesh
+     */
+    void addSubMesh(SubMeshRenderInfo& meshInfo);
 
-    const std::vector<SubMeshRenderInfo>& getSubMeshes() const {
-        return subMeshes;
-    }
+    /**
+     * @brief Restituisce l'elenco completo delle SubMesh.
+     */
+    const std::vector<SubMeshRenderInfo>& getSubMeshes() const;
 
-    void clearSubMesh() {
-        subMeshes.clear();
-    }
+    /**
+     * @brief Rimuove tutte le SubMesh registrate.
+     */
+    void clearSubMesh();
 };
 
+/**
+ * @brief Classe base per tutte le entità del gioco (giocatore, nemici, proiettili, ecc.)
+ *
+ * Ogni entità possiede un identificativo unico, un nome, e una serie di componenti.
+ * La classe è astratta e deve essere derivata per implementare il comportamento (`update`).
+ */
 class Entity {
 private:
-    static int nextId;
-
-    int id;
-    std::string name;
-    bool active;
+    static int nextId;  ///< Contatore statico per assegnare ID univoci
+    int id;             ///< Identificativo dell'entità
+    std::string name;   ///< Nome leggibile dell'entità
+    bool active;        ///< Stato di attivazione
 
 public:
-    // Components come membri pubblici (stile composition-based)
-    TransformComponent transform;
-    //MeshComponent mesh;
-    //ColorComponent color;
+    // Componenti principali (composition-based)
+    TransformComponent transform;  ///< Gestisce posizione, rotazione e scala
+    RenderComponent renderData;    ///< Contiene le informazioni di rendering
 
-    RenderComponent renderData;
-
-    void addMeshLayer(SubMeshRenderInfo meshInfo) {
-        renderData.addSubMesh(meshInfo);
-    }
-
-    void clearMeshLayers() {
-        renderData.clearSubMesh();
-    }
-
-    Entity(const std::string& entityName = "Entity");
+    // Costruttori e distruttori
+    explicit Entity(const std::string& entityName = "Entity");
     virtual ~Entity() = default;
 
-    // Prevent copying (use shared_ptr per condivisione)
+    // Evita copia per mantenere unicità dell'entità
     Entity(const Entity&) = delete;
     Entity& operator=(const Entity&) = delete;
 
-    // Allow moving
+    // Abilita lo spostamento (move semantics)
     Entity(Entity&&) = default;
     Entity& operator=(Entity&&) = default;
 
-    // Core methods
-    virtual void update(float deltaTime) = 0;
-    virtual void onCollision(Entity* other) {}
-    virtual AABB getAABB() const;
+    // Gestione rendering
+    void addMeshLayer(SubMeshRenderInfo meshInfo);
+    void clearMeshLayers();
 
-    // Getters
+    // Metodi virtuali base
+    virtual void update(float deltaTime) = 0;   ///< Aggiorna lo stato logico dell'entità
+    virtual void onCollision(Entity* other) {}  ///< Gestisce eventuali collisioni
+    virtual AABB getAABB() const;               ///< Restituisce il bounding box dell'entità
+
+    // Getter e Setter
     int getId() const { return id; }
     const std::string& getName() const { return name; }
     bool isActive() const { return active; }
-    //MeshComponent getMeshComp() const { return mesh; }
     TransformComponent getTransform() const { return transform; }
-    //ColorComponent getColorComp() const { return color; }
 
-    // State management
     void setActive(bool state) { active = state; }
     void setName(const std::string& newName) { name = newName; }
 };

@@ -2,12 +2,13 @@
 #include <glad/glad.h>
 #include <stdexcept>
 
-// Callback GLFW per il resize
+// Documentazione nel file header
+
+
 void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 
-    // Recupera il puntatore alla classe Window associata
-    auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+	auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window)); // Cast safe al tipo Window
     if (win) {
         win->setSize(width, height);
         if (win->resizeCallback)
@@ -31,11 +32,12 @@ void Window::createWindow(int width, int height) {
         glfwTerminate();
         throw std::runtime_error("Failed to create GLFW window");
     }
-
+    // Chiamate di GLFW per inserire il contesto OpenGL
     glfwMakeContextCurrent(window);
     glfwSetWindowUserPointer(window, this);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+	// Inizializza GLAD per caricare le funzioni OpenGL
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         throw std::runtime_error("Failed to initialize GLAD");
     }
@@ -65,9 +67,9 @@ void Window::pollEvents() {
 }
 
 void Window::close() {
-    if (window) { // Add null check
+    if (window) {
         glfwDestroyWindow(window);
-        window = nullptr; // Set to nullptr to prevent further access
+		window = nullptr; // Messo nullptr per evitare dangling pointer
     }
 }
 

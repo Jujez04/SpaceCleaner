@@ -37,7 +37,7 @@ void Renderer::drawMesh(unsigned int meshId, unsigned int shaderId, const glm::v
     // 3. Imposta la Matrice Modello fornita (Questa è la trasformazione del Cuore)
     shader->setUniformMat4("model", model);
     shader->setUniformVec4("uColor", color);
-    shader->setUniform1f("uTime", Timer::totalTime);
+    shader->setUniform1f("uTime", static_cast<float>(Timer::totalTime));
 
     // 4. Ottieni e Disegna la Mesh
     auto mesh = MeshManager::getById(meshId);

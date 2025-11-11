@@ -6,8 +6,15 @@
 
 int Entity::nextId = 0;
 
-const glm::mat4 TransformComponent::getModelMatrix() const
-{
+/**
+ * @brief Calcola la matrice modello combinando traslazione, rotazione e scala.
+ *
+ * Usa le funzioni GLM (compatibili con OpenGL) per costruire una Model Matrix:
+ *  - `translate` sposta l'oggetto nello spazio;
+ *  - `rotate` applica una rotazione sul piano Z;
+ *  - `scale` ridimensiona la mesh.
+ */
+const glm::mat4 TransformComponent::getModelMatrix() const {
     glm::mat4 model(1.0f);
     model = glm::translate(model, glm::vec3(position, 0.0f));
     model = glm::rotate(model, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -15,61 +22,91 @@ const glm::mat4 TransformComponent::getModelMatrix() const
     return model;
 }
 
-void TransformComponent::setPosition(const glm::vec2& pos)
-{
-    position = pos;
+// Metodi di modifica del transform (autoesplicativi)
+void TransformComponent::setPosition(const glm::vec2& pos) { position = pos; }
+void TransformComponent::setRotation(float rot) { rotation = rot; }
+void TransformComponent::setScale(const glm::vec2& scl) { scale = scl; }
+void TransformComponent::translate(const glm::vec2& offset) { position += offset; }
+void TransformComponent::rotate(float angle) { rotation += angle; }
+void TransformComponent::scaleBy(const glm::vec2& factor) { scale *= factor; }
+
+void RenderComponent::addSubMesh(SubMeshRenderInfo& meshInfo) {
+    subMeshes.push_back(meshInfo);
 }
 
-void TransformComponent::setRotation(float rot)
-{
-    rotation = rot;
+const std::vector<SubMeshRenderInfo>& RenderComponent::getSubMeshes() const {
+    return subMeshes;
 }
 
-void TransformComponent::setScale(const glm::vec2& scl)
-{
-    scale = scl;
+void RenderComponent::clearSubMesh() {
+    subMeshes.clear();
 }
 
-void TransformComponent::translate(const glm::vec2& offset)
-{
-    position += offset;
-}
-
-void TransformComponent::rotate(float angle)
-{
-    rotation += angle;
-}
-
-void TransformComponent::scaleBy(const glm::vec2& factor)
-{
-    scale *= factor;
-}
-
+// ---------- Entity: constructor e gestione layers ----------
 Entity::Entity(const std::string& entityName)
-    : id(nextId++), name(entityName), active(true)
-{
-    // Associa i componenti all'owner
-    transform.owner = this;
-    //mesh.owner = this;
-    //color.owner = this;
+    : id(nextId++), name(entityName), active(true), transform(), renderData() {
+    // Costruttore: assegna un id univoco, nome e abilita l'entità.
+    // I componenti (transform, renderData) vengono inizializzati con i loro costruttori di default.
 }
 
+void Entity::addMeshLayer(SubMeshRenderInfo meshInfo) {
+    renderData.addSubMesh(meshInfo);
+}
+
+void Entity::clearMeshLayers() {
+    renderData.clearSubMesh();
+}
+
+/*
+ * @brief Restituisce l'AABB dell'entità combinando tutte le sub-mesh.
+ *
+ * Strategia:
+ *  - Per ogni SubMesh presente in renderData, otteniamo la Mesh dal MeshManager.
+ *  - Calcoliamo l'AABB della mesh applicando la trasformazione globale dell'entità
+ *    moltiplicata per la trasformazione locale della sub-mesh.
+ *  - Accumuliamo min/max per ottenere l'AABB complessiva dell'entità.
+ *
+ * Nota: dipende da calculateMeshAABB(mesh, transformMatrix) definita in game/Collision.h.
+ */
 AABB Entity::getAABB() const {
-    AABB box;
+    // Inizializziamo un AABB "vuoto" che si espanderà via via.
+    AABB result;
 
-    glm::mat4 entityTransform = transform.getModelMatrix();
-
-    for (const auto& subMeshInfo : renderData.getSubMeshes()) {
-        std::shared_ptr<Mesh> mesh = MeshManager::getById(subMeshInfo.meshId);
-        if (!mesh) continue;
-
-        // Combina transform locale della submesh con quello dell'entità
-        glm::mat4 finalTransform = entityTransform * subMeshInfo.localTransform;
-        AABB meshBox = calculateMeshAABB(mesh, finalTransform);
-
-        box.min = glm::min(box.min, meshBox.min);
-        box.max = glm::max(box.max, meshBox.max);
+    // Se non ci sono submesh, ritorniamo un AABB vuoto (min > max)
+    const auto& subs = renderData.getSubMeshes();
+    if (subs.empty()) {
+        return result;
     }
 
-    return box;
+    // Trasformazione globale dell'entità (model matrix)
+    glm::mat4 globalModel = transform.getModelMatrix();
+
+    bool first = true;
+    for (const auto& sub : subs) {
+        // Ottieni la mesh dal MeshManager
+        auto meshPtr = MeshManager::getById(sub.meshId);
+        if (meshPtr) {
+            // Componiamo la trasformazione: globale * locale della submesh
+            glm::mat4 composed = globalModel * sub.localTransform;
+
+            // Calcoliamo l'AABB per questa mesh trasformata
+            AABB meshAabb = calculateMeshAABB(meshPtr, composed);
+
+            if (first) {
+                result = meshAabb;
+                first = false;
+            }
+            else {
+                // Espandiamo il risultato con i nuovi min/max
+                result.min.x = std::min(result.min.x, meshAabb.min.x);
+                result.min.y = std::min(result.min.y, meshAabb.min.y);
+                result.max.x = std::max(result.max.x, meshAabb.max.x);
+                result.max.y = std::max(result.max.y, meshAabb.max.y);
+            }
+        }
+
+        
+    }
+
+    return result;
 }

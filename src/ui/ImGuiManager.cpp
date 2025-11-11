@@ -5,9 +5,6 @@
 #include "core/BackGround.h"
 #include "core/Window.h"
 
-// Nota: Assicurati che Engine.h dichiari Engine::GameState e Engine::resetGame() come pubblici
-// o che ImGuiManager sia una friend class, se necessario.
-
 ImGuiManager::ImGuiManager(GLFWwindow* window) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -38,10 +35,6 @@ void ImGuiManager::endFrame() {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
-
-// ----------------------------------------------------
-// Nuove Funzioni per i Menu di Stato
-// ----------------------------------------------------
 
 void ImGuiManager::drawPauseMenu(Engine* engine) {
     // Posiziona la finestra al centro dello schermo
