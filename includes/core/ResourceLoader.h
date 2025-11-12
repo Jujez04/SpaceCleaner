@@ -20,7 +20,7 @@
  * - Mesh (player, proiettili, UI, background)
  * - Configurazioni (modelli navicelle, sfondi animati)
  * 
- * Pattern utilizzato: Facade + Builder
+ * Pattern utilizzato: Facade
  * - Espone un'interfaccia semplice (loadAllResources)
  * - Delega a metodi privati specializzati
  */
